@@ -2,5 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SharePointSiteUrl>http://spf2010/sites/biuromagda/</SharePointSiteUrl>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
 </Project>

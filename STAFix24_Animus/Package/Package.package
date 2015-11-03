@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="1e96213e-4c6f-48a5-afd2-106a06e268a8" solutionId="1e96213e-4c6f-48a5-afd2-106a06e268a8" resetWebServer="false" name="STAFix24_BR5" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
   <assemblies>
-    <projectOutputAssembly location="STAFix24.BR5.BLL.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\BLL\BLL.csproj" />
-    <projectOutputAssembly location="STAFix24.BR5.PdfSharp.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\PdfSharp\PdfSharp.csproj" />
-    <projectOutputAssembly location="STAFix24.BR5.GeneratorDrukow.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\GeneratorDrukow\GeneratorDrukow.csproj" />
-    <projectOutputAssembly location="STAFix24.BR5.DAL.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\DAL\DAL.csproj" />
+    <projectOutputAssembly location="STAFix24.Animus.BLL.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\BLL\BLL.csproj" />
+    <projectOutputAssembly location="STAFix24.Animus.DAL.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\DAL\DAL.csproj" />
+    <projectOutputAssembly location="STAFix24.Animus.PdfSharp.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\PdfSharp\PdfSharp.csproj" />
+    <projectOutputAssembly location="STAFix24.Animus.GeneratorDrukow.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\GeneratorDrukow\GeneratorDrukow.csproj" />
   </assemblies>
   <features>
     <featureReference itemId="9ef1ce9f-6f7d-4505-a24b-24f5e8672b2d" />

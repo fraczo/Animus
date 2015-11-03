@@ -2,3 +2,7 @@ C:\_GitHub\BR5\STAFix24_BR5\DAL\bin\Debug\STAFix24.BR5.DAL.dll
 C:\_GitHub\BR5\STAFix24_BR5\DAL\bin\Debug\STAFix24.BR5.DAL.pdb
 C:\_GitHub\BR5\STAFix24_BR5\DAL\obj\Debug\STAFix24.BR5.DAL.dll
 C:\_GitHub\BR5\STAFix24_BR5\DAL\obj\Debug\STAFix24.BR5.DAL.pdb
+C:\_GitHub\Animus\DAL\bin\Debug\STAFix24.Animus.DAL.dll
+C:\_GitHub\Animus\DAL\bin\Debug\STAFix24.Animus.DAL.pdb
+C:\_GitHub\Animus\DAL\obj\Debug\STAFix24.Animus.DAL.dll
+C:\_GitHub\Animus\DAL\obj\Debug\STAFix24.Animus.DAL.pdb
