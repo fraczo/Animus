@@ -14,10 +14,10 @@ C:\_GitHub\BR5\STAFix24_BR5\GeneratorDrukow\obj\Debug\STAFix24.BR5.GeneratorDruk
 C:\_GitHub\BR5\STAFix24_BR5\GeneratorDrukow\obj\Debug\STAFix24.BR5.GeneratorDrukow.pdb
 C:\_GitHub\Animus\GeneratorDrukow\bin\Debug\STAFix24.Animus.GeneratorDrukow.dll
 C:\_GitHub\Animus\GeneratorDrukow\bin\Debug\STAFix24.Animus.GeneratorDrukow.pdb
+C:\_GitHub\Animus\GeneratorDrukow\obj\Debug\GeneratorDrukow.csprojResolveAssemblyReference.cache
+C:\_GitHub\Animus\GeneratorDrukow\obj\Debug\STAFix24.Animus.GeneratorDrukow.dll
+C:\_GitHub\Animus\GeneratorDrukow\obj\Debug\STAFix24.Animus.GeneratorDrukow.pdb
 C:\_GitHub\Animus\GeneratorDrukow\bin\Debug\STAFix24.Animus.PdfSharp.dll
 C:\_GitHub\Animus\GeneratorDrukow\bin\Debug\STAFix24.Animus.PdfSharp.pdb
 C:\_GitHub\Animus\GeneratorDrukow\bin\Debug\STAFix24.Animus.PdfSharp.xml
 C:\_GitHub\Animus\GeneratorDrukow\bin\Debug\de\STAFix24.Animus.PdfSharp.resources.dll
-C:\_GitHub\Animus\GeneratorDrukow\obj\Debug\GeneratorDrukow.csprojResolveAssemblyReference.cache
-C:\_GitHub\Animus\GeneratorDrukow\obj\Debug\STAFix24.Animus.GeneratorDrukow.dll
-C:\_GitHub\Animus\GeneratorDrukow\obj\Debug\STAFix24.Animus.GeneratorDrukow.pdb

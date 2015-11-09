@@ -113,5 +113,86 @@ namespace BLL
             return item[col] != null ? new SPFieldLookupValue(item[col].ToString()).LookupId : 0;
         }
         #endregion
+
+        public static void CreateMailMessage(SPListItem item)
+        {
+            string cmd = BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc");
+            if (!string.IsNullOrEmpty(cmd))
+            {
+                switch (item.ContentType.Name)
+                {
+                    case "Wiadomość z ręki":
+                        CreateMailMessage_WiadomoscZReki(item);
+                        break;
+                    case "Wiadomość z szablonu":
+                        CreateMailMessage_WiadomoscZSzablonu(item);
+                        break;
+                    case "Wiadomość grupowa":
+                        CreateMailMessage_WiadomoscDoGrupy(item);
+                        break;
+                    case "Wiadomość grupowa z szablonu":
+                        CreateMailMessage_WiadomoscDoGrupyZSzablonu(item);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private static void CreateMailMessage_WiadomoscZReki(SPListItem item)
+        {
+            int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
+            if (klientId > 0)
+            {
+                string odbiorca = BLL.tabKlienci.Get_EmailById(item.Web, klientId);
+                if (BLL.Tools.Is_ValidEmail(odbiorca))
+                {
+                    string kopiaDla = string.Empty;
+                    bool KopiaDoNadawcy = false;
+                    bool KopiaDoBiura = false;
+
+                    string nadawca = BLL.Tools.Get_CurrentUser(item);
+                    string cmd = BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc");
+                    if (cmd == "Wyślij z kopią do mnie")
+                    {
+                        KopiaDoNadawcy = true;
+                    }
+
+                    if (cmd == "Wyślij"
+                        || cmd == "Wyślij z kopią do mnie")
+                    {
+                        // przygotuj wiadomość
+                        string temat = string.Empty;
+                        string tresc = string.Empty;
+                        string trescHTML = string.Empty;
+
+                        BLL.dicSzablonyKomunikacji.Get_TemplateByKod(item, "EMAIL_DEFAULT_BODY.Include", out temat, out trescHTML, nadawca);
+                        temat = item.Title;
+                        trescHTML = trescHTML.Replace("___BODY___", BLL.Tools.Get_Text(item, "colTresc"));
+                        
+
+                        BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, BLL.Tools.Get_Date(item, "colPlanowanaDataNadania"), item.ID, klientId);
+                    }
+
+
+                }
+            }
+
+        }
+
+        private static void CreateMailMessage_WiadomoscZSzablonu(SPListItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void CreateMailMessage_WiadomoscDoGrupy(SPListItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void CreateMailMessage_WiadomoscDoGrupyZSzablonu(SPListItem item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

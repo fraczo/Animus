@@ -64,12 +64,6 @@
       <DependentUpon>ObslugaWiadomosci.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ZatwierdzenieZadania\ZatwierdzenieZadania.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ZatwierdzenieZadania\ZatwierdzenieZadania.Designer.cs">
-      <DependentUpon>ZatwierdzenieZadania.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="key.snk" />
@@ -82,16 +76,14 @@
     <None Include="Package\Package.Template.xml">
       <DependentUpon>Package.package</DependentUpon>
     </None>
-    <None Include="ZatwierdzenieZadania\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{d711dbaf-91fe-4e8d-99a5-b850ec9b60b9}</SharePointProjectItemId>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ObslugaWiadomosci\Elements.xml" />
-    <Content Include="ZatwierdzenieZadania\Elements.xml" />
+    <Content Include="ObslugaWiadomosci\Elements.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">

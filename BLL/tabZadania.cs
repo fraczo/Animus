@@ -223,7 +223,7 @@ namespace BLL
                 {
                     preOkresId = BLL.tabOkresy.Get_PoprzedniOkresIdById(web, okresId);
                 }
-                
+
                 if (preOkresId > 0)
                 {
                     item["colVAT_WartoscNadwyzkiZaPoprzedniMiesiac"] = BLL.tabKartyKontrolne.Get_WartoscNadwyzkiDoPrzeniesienia(web, klientId, preOkresId);
@@ -773,7 +773,7 @@ namespace BLL
         {
             SPList list = web.Lists.TryGetList(targetList);
             Array result = list.Items.Cast<SPListItem>()
-                .Where(i => i["enumStatusZadania"].ToString() == "Nowe" || i["enumStatusZadania"].ToString()=="Obsługa")
+                .Where(i => i["enumStatusZadania"].ToString() == "Nowe" || i["enumStatusZadania"].ToString() == "Obsługa")
                 .Where(i => i["selProcedura"] != null)
                 .Where(i => new SPFieldLookupValue(i["selProcedura"].ToString()).LookupId == proceduraId)
                 .ToArray();
@@ -781,13 +781,6 @@ namespace BLL
             return result;
         }
 
-        public static void CreateMail(SPListItem item)
-        {
-            string cmd = BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc");
-            if (!string.IsNullOrEmpty(cmd))
-            {
-                string nadawca = BLL.Tools.Get_UserEmail(item, "Editor");
-            }
-        }
+
     }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solution xmlns="http://schemas.microsoft.com/sharepoint/" SolutionId="cb7f1ef2-df8a-4fd8-ad8f-69c33190df7c" SharePointProductVersion="14.0">
+  <Assemblies>
+    <Assembly Location="STAFix24.Animus.DAL.dll" DeploymentTarget="GlobalAssemblyCache" />
+  </Assemblies>
+</Solution>

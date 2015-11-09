@@ -5,6 +5,9 @@ using System.Text;
 using Microsoft.SharePoint;
 using BLL.Models;
 using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Net;
+using System.Net.Sockets;
 
 namespace BLL
 {
@@ -191,7 +194,7 @@ namespace BLL
 
         internal static string Get_UserEmail(SPListItem item, string col)
         {
-            string result = item[col]!=null ? new SPFieldUserValue(item.Web, item[col].ToString()).User.Email:string.Empty;
+            string result = item[col] != null ? new SPFieldUserValue(item.Web, item[col].ToString()).User.Email : string.Empty;
             if (BLL.Tools.Is_ValidEmail(result)) return result;
             else return string.Empty;
         }
@@ -207,6 +210,82 @@ namespace BLL
             {
                 return false;
             }
+        }
+
+        internal static string Get_CurrentUser(SPListItem item)
+        {
+            string result = item["Editor"] != null ? new SPFieldUserValue(item.Web, item["Editor"].ToString()).User.Email : string.Empty;
+
+            if (string.IsNullOrEmpty(result))
+            {
+                //ustaw domyślnie adres biura
+                result = BLL.admSetup.GetValue(item.Web, "EMAIL_BIURA");
+            }
+
+            if (BLL.Tools.Is_ValidEmail(result))
+            {
+                return result;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        public static string Cleanup_Text(SPListItem item, string col)
+        {
+            string s = item[col] != null ? item[col].ToString() : string.Empty;
+            string s0;
+            do
+            {
+                s0 = s;
+                s = Regex.Replace(s.Trim(), @"\s\s", " ");
+            } while (!s.Equals(s0));
+
+            return s;
+        }
+
+        public static bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+
+                if (addr.Address == email)
+                {
+                    //Additional validation
+
+                    string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                                    @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                                    @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+                    
+                    Regex re = new Regex(strRegex);
+
+                    if (re.IsMatch(email)) return true;
+                    else return (false);
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static string AppendNote_Top(SPListItem item, string col, string memo, bool forceTimeStamp)
+        {
+            StringBuilder sb = new StringBuilder(@"#" + memo);
+
+            if (forceTimeStamp)
+            {
+                sb = new StringBuilder(@"#" + DateTime.Now.ToString());
+                sb.AppendLine(memo);
+            }
+
+            sb.AppendLine(item[col] != null ? item[col].ToString() : string.Empty);
+
+            return sb.ToString();
         }
     }
 }

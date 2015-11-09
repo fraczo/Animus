@@ -728,12 +728,11 @@ namespace EventReceivers.tabZadaniaER
                         break;
                     case "Rozliczenie ZUS":
                         break;
-
-                    case "Wiadomość indywidualna":
-                    case "Wiadomość indywidualna z szablonu":
-                    case "Wiadomość do grupy":
-                    case "Wiadomość do grupy z szablonu":
-                        BLL.tabZadania.CreateMail(item);
+                    case "Wiadomość z ręki":
+                    case "Wiadomość z szablonu":
+                    case "Wiadomość grupowa":
+                    case "Wiadomość grupowa z szablonu":
+                        BLL.tabWiadomosci.CreateMailMessage(item);
                         break;
 
                     default:

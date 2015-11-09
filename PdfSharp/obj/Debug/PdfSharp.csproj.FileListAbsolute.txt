@@ -22,7 +22,6 @@ C:\_GitHub\BR5\STAFix24_BR5\PdfSharp\obj\Debug\de\STAFix24.BR5.PdfSharp.resource
 C:\_GitHub\BR5\STAFix24_BR5\PdfSharp\obj\Debug\STAFix24.BR5.PdfSharp.dll
 C:\_GitHub\BR5\STAFix24_BR5\PdfSharp\obj\Debug\STAFix24.BR5.PdfSharp.pdb
 C:\_GitHub\BR5\STAFix24_BR5\PdfSharp\obj\Debug\PdfSharp.csprojResolveAssemblyReference.cache
-C:\_GitHub\Animus\PdfSharp\bin\Debug\STAFix24.Animus.PdfSharp.xml
 C:\_GitHub\Animus\PdfSharp\bin\Debug\STAFix24.Animus.PdfSharp.dll
 C:\_GitHub\Animus\PdfSharp\bin\Debug\STAFix24.Animus.PdfSharp.pdb
 C:\_GitHub\Animus\PdfSharp\bin\Debug\de\STAFix24.Animus.PdfSharp.resources.dll
@@ -35,3 +34,4 @@ C:\_GitHub\Animus\PdfSharp\obj\Debug\PdfSharp.csproj.GenerateResource.Cache
 C:\_GitHub\Animus\PdfSharp\obj\Debug\de\STAFix24.Animus.PdfSharp.resources.dll
 C:\_GitHub\Animus\PdfSharp\obj\Debug\STAFix24.Animus.PdfSharp.dll
 C:\_GitHub\Animus\PdfSharp\obj\Debug\STAFix24.Animus.PdfSharp.pdb
+C:\_GitHub\Animus\PdfSharp\bin\Debug\STAFix24.Animus.PdfSharp.xml

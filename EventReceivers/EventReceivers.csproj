@@ -51,37 +51,14 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="admProcessRequestsER\BR_Forms.cs" />
-    <Compile Include="admProcessRequestsER\ObslugaADO.cs" />
-    <Compile Include="admProcessRequestsER\PDS_Forms.cs" />
-    <Compile Include="admProcessRequestsER\EventReceiver1.cs" />
-    <Compile Include="admProcessRequestsER\GeneratorFormatekRozliczeniowych.cs" />
-    <Compile Include="admProcessRequestsER\ImportBuforaWiadomosci.cs" />
-    <Compile Include="admProcessRequestsER\ImportFakturElektronicznych.cs" />
-    <Compile Include="admProcessRequestsER\ImportFakturZaObsluge.cs" />
-    <Compile Include="admProcessRequestsER\ImportKlientow.cs" />
-    <Compile Include="admProcessRequestsER\ImportPrzeterminowanychNaleznosci.cs" />
-    <Compile Include="admProcessRequestsER\ObslugaWiadomosci.cs" />
-    <Compile Include="admProcessRequestsER\ObslugaZadan.cs" />
-    <Compile Include="admProcessRequestsER\PD_Forms.cs" />
-    <Compile Include="admProcessRequestsER\Reminder_Forms.cs" />
-    <Compile Include="admProcessRequestsER\VAT_Forms.cs" />
-    <Compile Include="admProcessRequestsER\ZUS_Forms.cs" />
-    <Compile Include="dicUrzedySkarboweER\EventReceiver1.cs" />
+    <Compile Include="dicUrzedySkarbowe\dicUrzedySkarbowe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tabDochodyWspolnikow\tabDochodyWspolnikow.cs" />
-    <Compile Include="tabDochodyZInnychSpolek\tabDochodyZInnychSpolek.cs" />
-    <Compile Include="tabKlienciER\tabKlienciER.cs" />
-    <Compile Include="tabProceduryER\tabProceduryER.cs" />
-    <Compile Include="tabStratyZLatUbieglych\tabStratyZLatUbieglych.cs" />
-    <Compile Include="tabWiadomosciER\tabWiadomosciER.cs" />
-    <Compile Include="tabZadaniaER\tabZadaniaER.cs" />
+    <Compile Include="tabKlienci\tabKlienci.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="admProcessRequestsER\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{4c1049d2-a8dc-40ca-b2f5-b261c223be23}</SharePointProjectItemId>
-    </None>
-    <None Include="dicUrzedySkarboweER\SharePointProjectItem.spdata">
+    <None Include="dicUrzedySkarbowe\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{95c6a07b-c9ed-4adb-bd85-f16c5275766b}</SharePointProjectItemId>
       <SubType>Designer</SubType>
     </None>
@@ -92,26 +69,8 @@
     <None Include="Package\Package.Template.xml">
       <DependentUpon>Package.package</DependentUpon>
     </None>
-    <None Include="tabDochodyWspolnikow\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{120820b4-d51d-493d-b5b0-26974eb70190}</SharePointProjectItemId>
-    </None>
-    <None Include="tabDochodyZInnychSpolek\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{01988e7b-cd65-42ff-b731-7b5e1cb575f6}</SharePointProjectItemId>
-    </None>
-    <None Include="tabKlienciER\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{e109c7f7-8b03-45c4-bd29-bc61ece9e2c4}</SharePointProjectItemId>
-    </None>
-    <None Include="tabProceduryER\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{e35d7acd-2753-4101-aa33-f927658a7b2a}</SharePointProjectItemId>
-    </None>
-    <None Include="tabStratyZLatUbieglych\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{1757ec00-a6d1-4d85-b415-093e804743d1}</SharePointProjectItemId>
-    </None>
-    <None Include="tabWiadomosciER\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{729bc35d-6d4d-4042-b489-7c02051fe584}</SharePointProjectItemId>
-    </None>
-    <None Include="tabZadaniaER\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{bc9550aa-9739-41a7-a4ca-8e86069d2a66}</SharePointProjectItemId>
+    <None Include="tabKlienci\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{0273b94d-9933-4fd1-819f-f789514aeef3}</SharePointProjectItemId>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -132,15 +91,10 @@
     <Folder Include="Features\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="tabDochodyWspolnikow\Elements.xml" />
-    <Content Include="tabDochodyZInnychSpolek\Elements.xml" />
-    <Content Include="tabProceduryER\Elements.xml" />
-    <Content Include="tabStratyZLatUbieglych\Elements.xml" />
-    <Content Include="tabWiadomosciER\Elements.xml" />
-    <None Include="tabZadaniaER\Elements.xml" />
-    <None Include="admProcessRequestsER\Elements.xml" />
-    <None Include="dicUrzedySkarboweER\Elements.xml" />
-    <Content Include="tabKlienciER\Elements.xml">
+    <None Include="dicUrzedySkarbowe\Elements.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tabKlienci\Elements.xml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

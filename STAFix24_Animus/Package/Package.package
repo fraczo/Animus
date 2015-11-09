@@ -7,9 +7,8 @@
     <projectOutputAssembly location="STAFix24.Animus.GeneratorDrukow.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\GeneratorDrukow\GeneratorDrukow.csproj" />
   </assemblies>
   <features>
-    <featureReference itemId="9ef1ce9f-6f7d-4505-a24b-24f5e8672b2d" />
-    <featureReference itemId="32ef8c7b-938d-42bb-943e-071887b10231" />
-    <featureReference itemId="e0c46946-1b95-4e78-80e6-03b50f307a8e" />
+    <featureReference itemId="ff73ecc0-01be-4d33-bf28-a44534b11562" />
+    <featureReference itemId="238ee3f0-273f-4479-8f86-e8795048cec7" />
   </features>
   <projectItems>
     <projectItemReference itemId="348bef8e-f411-4079-adeb-8646bc1f082e" />

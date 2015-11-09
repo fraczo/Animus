@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Workflows" Id="67a1a31a-e59a-45fa-b5c6-6fb77df40881" Scope="Site">
+  <ElementManifests>
+    <ElementManifest Location="ObslugaWiadomosci\Elements.xml" />
+  </ElementManifests>
+</Feature>
