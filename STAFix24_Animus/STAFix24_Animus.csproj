@@ -66,7 +66,7 @@
       <FeatureId>{238ee3f0-273f-4479-8f86-e8795048cec7}</FeatureId>
     </None>
     <None Include="Features\Workflows\Workflows.feature">
-      <FeatureId>{ff73ecc0-01be-4d33-bf28-a44534b11562}</FeatureId>
+      <FeatureId>{4d389d2d-9dab-46c5-9d22-66072383dd1b}</FeatureId>
     </None>
     <None Include="Images\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{348bef8e-f411-4079-adeb-8646bc1f082e}</SharePointProjectItemId>

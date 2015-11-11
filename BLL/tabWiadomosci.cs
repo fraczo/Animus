@@ -139,7 +139,7 @@ namespace BLL
             }
         }
 
-        private static void CreateMailMessage_WiadomoscZReki(SPListItem item)
+        private static void CreateMailMessage_Wiadomosc(SPListItem item, string subject, string bodyHTML)
         {
             int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
             if (klientId > 0)
@@ -167,8 +167,8 @@ namespace BLL
                         string trescHTML = string.Empty;
 
                         BLL.dicSzablonyKomunikacji.Get_TemplateByKod(item, "EMAIL_DEFAULT_BODY.Include", out temat, out trescHTML, nadawca);
-                        temat = item.Title;
-                        trescHTML = trescHTML.Replace("___BODY___", BLL.Tools.Get_Text(item, "colTresc"));
+                        temat = subject;
+                        trescHTML = trescHTML.Replace("___BODY___", bodyHTML);
                         
 
                         BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, BLL.Tools.Get_Date(item, "colPlanowanaDataNadania"), item.ID, klientId);
@@ -180,9 +180,24 @@ namespace BLL
 
         }
 
+
+        private static void CreateMailMessage_WiadomoscZReki(SPListItem item)
+        {
+            string bodyHTML = BLL.Tools.Get_Text(item, "colTresc");
+            //string subject = BLL.Tools.Get_Text(item, "colTematWiadomosci");
+            string subject = item.Title;
+            CreateMailMessage_Wiadomosc(item, subject, bodyHTML);
+        }
+
         private static void CreateMailMessage_WiadomoscZSzablonu(SPListItem item)
         {
-            throw new NotImplementedException();
+            
+            int szablonId = BLL.Tools.Get_LookupId(item, "selSzablonWiadomosci");
+            string bodyHTML = BLL.Tools.Get_Text(item, "colInformacjaDlaKlienta");
+            string subject = string.Empty;
+            BLL.tabSzablonyWiadomosci.GetSzablonId(item.Web, szablonId, out subject, ref bodyHTML);
+
+            CreateMailMessage_Wiadomosc(item, subject, bodyHTML);
         }
 
         private static void CreateMailMessage_WiadomoscDoGrupy(SPListItem item)

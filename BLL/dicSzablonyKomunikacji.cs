@@ -60,7 +60,7 @@ namespace BLL
                 BLL.Models.Operator op = new Models.Operator(item.Web, operatorId);
 
                 footerTR = footerTR.Replace("___NAME___", op.Name);
-                footerTR = footerTR.Replace("___CONTACT___", string.Format(@"email: {0}<br>tel.: {1}", op.Email, op.Telefon));
+                footerTR = footerTR.Replace("___CONTACT___", string.Format(@"{0}<br>{1}", op.Email, op.Telefon));
             }
             else
             {

@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SharePointSiteUrl>http://spf2010/sites/animus/</SharePointSiteUrl>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
@@ -15,9 +15,9 @@
           <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
           <AutoAssociate>true</AutoAssociate>
           <ManualStart>true</ManualStart>
-          <ListURL>http://spf2010/sites/animus/Lists/admProcessRequests/AllItems.aspx</ListURL>
-          <TargetList>admProcessRequests</TargetList>
-          <TargetListGuid>{49764870-46ba-43ab-be09-58b2f2c7fdb3}</TargetListGuid>
+          <ListURL>http://spf2010/sites/animus/Lists/tabWiadomosci/Kolejka%20wiadomoci.aspx</ListURL>
+          <TargetList>Wiadomości</TargetList>
+          <TargetListGuid>{a757bac9-6dc1-4ea3-aa50-8813fcd31495}</TargetListGuid>
           <StartOnCreate>false</StartOnCreate>
           <StartOnChange>false</StartOnChange>
         </ProjectItemStore>

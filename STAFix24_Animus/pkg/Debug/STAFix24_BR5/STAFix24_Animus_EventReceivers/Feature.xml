@@ -3,5 +3,6 @@
   <ElementManifests>
     <ElementManifest Location="tabKlienci\Elements.xml" />
     <ElementManifest Location="dicUrzedySkarbowe\Elements.xml" />
+    <ElementManifest Location="tabZadania\Elements.xml" />
   </ElementManifests>
 </Feature>
