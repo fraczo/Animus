@@ -7,6 +7,13 @@ using Microsoft.SharePoint.Workflow;
 
 namespace EventReceivers.tabZadania
 {
+
+//Obsługa
+//Gotowe
+//Wysyłka
+//Zakończone
+//Anulowane
+
     public class tabZadania : SPItemEventReceiver
     {
         public override void ItemAdded(SPItemEventProperties properties)
@@ -25,6 +32,11 @@ namespace EventReceivers.tabZadania
             SPListItem item = properties.ListItem;
             BLL.Logger.LogEvent_EventReceiverInitiated(item);
 
+            if (BLL.Tools.Get_Text(item, "enumStatusZadania").Equals("Nowe"))
+            {
+                BLL.Tools.Set_Text(item, "enumStatusZadania", "Obsługa", true);
+            }
+
             try
             {
                 switch (item.ContentType.Name)
@@ -41,6 +53,7 @@ namespace EventReceivers.tabZadania
             }
             catch (Exception ex)
             {
+                BLL.Tools.Set_Text(item, "enumStatusZadania", "Anulowane", true);
                 BLL.Logger.LogEvent(properties.WebUrl, ex.ToString());
                 var result = ElasticEmail.EmailGenerator.ReportError(ex, properties.WebUrl.ToString());
             }

@@ -780,7 +780,5 @@ namespace BLL
 
             return result;
         }
-
-
     }
 }

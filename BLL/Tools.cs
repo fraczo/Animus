@@ -153,6 +153,11 @@ namespace BLL
             return item[col] != null ? item[col].ToString() : string.Empty;
         }
 
+        internal static bool Get_Flag(SPListItem item, string col)
+        {
+            return item[col] != null ? bool.Parse(item[col].ToString()) : false;
+        }
+
 
         // zakłada format wejściowy YYYY-MM
         public static string Get_KwartalDisplayName(string okres)
@@ -258,7 +263,7 @@ namespace BLL
                     string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                                     @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                                     @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-                    
+
                     Regex re = new Regex(strRegex);
 
                     if (re.IsMatch(email)) return true;
@@ -286,6 +291,28 @@ namespace BLL
             sb.AppendLine(item[col] != null ? item[col].ToString() : string.Empty);
 
             return sb.ToString();
+        }
+
+
+
+        internal static Array Get_LookupValueCollection(SPListItem item, string col)
+        {
+            return item[col] != null ? new SPFieldLookupValueCollection(item[col].ToString()).ToArray() : null;
+        }
+
+
+        public static void Set_Text(SPListItem item, string col, string val, bool updateRequest)
+        {
+            if (item[col] != null && item[col].ToString() != val.ToString())
+            {
+                item[col] = val.ToString();
+
+                if (updateRequest)
+                {
+                    item.SystemUpdate();
+                }
+            }
+
         }
     }
 }

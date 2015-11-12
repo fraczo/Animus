@@ -106,7 +106,7 @@ namespace BLL
             SPListItem item = targetList.GetItemById(klientId);
 
             return item.ContentType.Name;
-            
+
         }
 
         public static int Get_KlientId(SPWeb web, string nazwaSkrocona)
@@ -670,15 +670,15 @@ namespace BLL
             return string.Format("{0}, {1} {2}", k.Adres, k.KodPocztowy, k.Miejscowosc);
         }
 
-        public static bool Has_ServiceById(SPWeb web,int klientId, string serviceName)
+        public static bool Has_ServiceById(SPWeb web, int klientId, string serviceName)
         {
             bool result = false;
             SPList list = web.Lists.TryGetList(listName);
             SPListItem item = list.GetItemById(klientId);
-            
+
             //sprawdź Serwisy
             SPFieldLookupValueCollection serwisy = item["selSewisy"] != null ? new SPFieldLookupValueCollection(item["selSewisy"].ToString()) : null;
-            if (serwisy.Count>0)
+            if (serwisy.Count > 0)
             {
                 foreach (SPFieldLookupValue s in serwisy)
                 {
@@ -705,6 +705,111 @@ namespace BLL
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// tworzy listę docelowych odbiorców wiadomości na podstawie wybranych w zadaniu parametrów
+        /// </summary>
+        internal static Array Get_WybraniKlienci(SPListItem item)
+        {
+            if (BLL.Tools.Get_Flag(item, "colWyslijDoWszystkich"))
+            {
+                //wybierz wszystkich aktywnych
+                return BLL.tabKlienci.Get_AktywniKlienci(item.Web);
+            }
+            else
+            {
+                //wybierz aktywnych spełniających kryteria wyboru
+                Array klientItems = BLL.tabKlienci.Get_AktywniKlienci(item.Web);
+                ArrayList results = new ArrayList();
+
+                foreach (SPListItem klientItem in klientItems)
+                {
+                    //dodaj w/g selSerwisy
+                    Append_BasedOn_ZgodneParametryWyboru(item, klientItem, ref results, "selSewisy");
+
+                    //dodaj w/g selParametry
+                    Append_BasedOn_ZgodneParametryWyboru(item, klientItem, ref results, "selParametry");
+
+                    //dodaj w/g selKlienci
+                    Append_BasedOn_ZgodneIDKlienta(item, ref results);
+                }
+
+                return results.ToArray();
+            }
+        }
+
+        private static void Append_BasedOn_ZgodneIDKlienta(SPListItem item, ref ArrayList results)
+        {
+            string col = "selKlienci";
+            Array selectedKlientItems = BLL.Tools.Get_LookupValueCollection(item, col);
+
+            foreach (SPFieldLookupValue value in selectedKlientItems)
+            {
+                bool found = false;
+
+                int klientId = value.LookupId;
+                foreach (SPListItem result in results)
+                {
+                    if (result.ID == klientId)
+                    {
+                        //klient już dodany do wyników
+                        found = true;
+                        break;
+                    }
+                }
+
+                //dodaj klienta do listy wyników
+                if (!found)
+                {
+                    results.Add(BLL.tabKlienci.Get_KlientById(item.Web,klientId));
+                }
+            }
+        }
+
+
+        private static void Append_BasedOn_ZgodneParametryWyboru(SPListItem item, SPListItem klientItem, ref ArrayList results, string col)
+        {
+            Array klientOptions = BLL.Tools.Get_LookupValueCollection(klientItem, col);
+            Array selectedOptions = BLL.Tools.Get_LookupValueCollection(item, col);
+
+            bool found = false;
+
+            foreach (var option in selectedOptions)
+            {
+                foreach (var kOption in klientOptions)
+                {
+                    if (option.ToString().Equals(kOption.ToString()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) break;
+            }
+
+            if (found)
+            {
+                //sprawdź czy już dodany do wyników
+                if (results.Count > 0)
+                {
+                    int klientId = klientItem.ID;
+                    foreach (SPListItem result in results)
+                    {
+                        if (result.ID == klientId)
+                        {
+                            //klient już dodany do wyników
+                            return;
+                        }
+                    }
+                }
+
+                //dodaj klienta do listy wyników
+                results.Add(klientItem);
+
+                return;
+            }
         }
     }
 }
