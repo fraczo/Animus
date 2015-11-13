@@ -1,0 +1,7 @@
+C:\_GitHub\Animus\STAFix24_Animus\bin\Release\STAFix24.Animus.dll
+C:\_GitHub\Animus\STAFix24_Animus\bin\Release\STAFix24.Animus.pdb
+C:\_GitHub\Animus\STAFix24_Animus\bin\Release\STAFix24.Animus.TimerJobs.dll
+C:\_GitHub\Animus\STAFix24_Animus\bin\Release\STAFix24.Animus.TimerJobs.pdb
+C:\_GitHub\Animus\STAFix24_Animus\obj\Release\STAFix24_Animus.csprojResolveAssemblyReference.cache
+C:\_GitHub\Animus\STAFix24_Animus\obj\Release\STAFix24.Animus.dll
+C:\_GitHub\Animus\STAFix24_Animus\obj\Release\STAFix24.Animus.pdb

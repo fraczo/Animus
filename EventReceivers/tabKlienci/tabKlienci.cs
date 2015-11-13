@@ -118,7 +118,7 @@ namespace EventReceivers.tabKlienci
 
         private static void Set_NazwaPrezentowana_OsobaFizyczna(SPListItem item)
         {
-            string firma = BLL.Tools.Get_LookupValue(item,"selKlient_NazwaSkrocona");
+            string firma = BLL.Tools.Get_LookupValue(item, "selKlient_NazwaSkrocona");
 
             string result = BLL.Tools.Get_Text(item, "colNazwisko");
             string imie = BLL.Tools.Get_Text(item, "colImie");
@@ -126,7 +126,7 @@ namespace EventReceivers.tabKlienci
             {
                 result = result + ", " + imie;
             }
-            
+
             string pesel = BLL.Tools.Get_Text(item, "colPESEL");
             if (!string.IsNullOrEmpty(pesel))
             {
@@ -138,7 +138,246 @@ namespace EventReceivers.tabKlienci
 
         private void Update_Serwisy(SPListItem item)
         {
+            Update_Serwisy_PD(item);
+            Update_Serwisy_VAT(item);
+            Update_Serwisy_ZUS(item);
+            Update_Serwisy_ZP(item); //zatrudnia pracowników
+            Update_Serwisy_AD(item); //audyt danych
+            Update_Serwisy_GBW(item); //generowanie blankietu wpłaty
+            Update_Serwisy_RBR(item); //rozliczenie z biurem rachunkowym
+            Update_Serwisy_POT(item); //przypomnienia o terminie płatności
+            Update_Serwisy_WKB(item); //wymagany kontakt bezpośredni
 
+        }
+
+        private void Update_Serwisy_WKB(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "WKB");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+
+                //jeżeli adres email jest nieprawidłowy lub wskazana jest inna preferowana forma komunikacji    
+                if (!BLL.Tools.IsValidEmail(BLL.Tools.Get_Text(item, "colEmail"))
+                    || BLL.Tools.IsSelectorAssigned(item, "enumPreferowanaFormaKomunikacji", "Email"))
+                    {
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "WKB");
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_POT(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "POT");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+
+                    if (BLL.Tools.Get_Flag(item, "colPrzypomnienieOTerminiePlatnosci"))
+                    {
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "POT");
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_RBR(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "RBR");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+
+                    if (BLL.Tools.Get_Value(item, "colOplataMiesieczna")>0)
+                    {
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "RBR");
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_GBW(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "GBW");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+
+                    if (BLL.Tools.Get_Flag(item, "colDrukWplaty"))
+                    {
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "GBW");
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_AD(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "AD");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+
+                    if (BLL.Tools.Get_Flag(item, "colAudytDanych"))
+                    {
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "AD");
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_ZP(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "ZP");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+
+                    if (BLL.Tools.Get_Flag(item, "colZatrudniaPracownikow"))
+                    {
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "ZP");
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_PD(SPListItem item)
+        {
+
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "PD-*");
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "PDS-*");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+
+                    if (BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowy", string.Empty)
+                        && BLL.Tools.IsSelectorAssigned(item, "colFormaOpodatkowaniaPD_KPiR", "Nie dotyczy")
+                        && BLL.Tools.IsSelectorAssigned(item, "enumRozliczeniePD", "Nie dotyczy"))
+                    {
+                        switch (BLL.Tools.Get_Text(item, "enumRozliczeniePD"))
+                        {
+                            case "Miesięcznie":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "PD-M");
+                                break;
+                            case "Kwartalnie":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "PD-KW");
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_VAT(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "VAT-*");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                    if ((BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowyVAT", string.Empty)
+                        || BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowy", string.Empty))
+                        && BLL.Tools.IsSelectorAssigned(item, "enumRozliczenieVAT", "Nie dotyczy"))
+                    {
+                        switch (BLL.Tools.Get_Text(item, "enumRozliczenieVAT"))
+                        {
+                            case "Miesięcznie":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "VAT-M");
+                                break;
+                            case "Kwartalnie":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "VAT-KW");
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Update_Serwisy_ZUS(SPListItem item)
+        {
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "ZUS-*");
+
+            switch (item.ContentType.Name)
+            {
+                case "KPiR":
+                case "Osoba fizyczna":
+                    if (BLL.Tools.IsSelectorAssigned(item, "selOddzialZUS", string.Empty)
+                        && BLL.Tools.IsSelectorAssigned(item, "colFormaOpodakowania_ZUS", "Nie dotyczy"))
+                    {
+                        switch (BLL.Tools.Get_Text(item, "colFormaOpodakowania_ZUS"))
+                        {
+                            case "Mały ZUS":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-M");
+                                break;
+                            case "Mały ZUS + Chorobowa":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-D");
+                                break;
+                            case "Duży ZUS":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-M+C");
+                                break;
+                            case "Duży ZUS + Chorobowa":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-D+C");
+                                break;
+                            case "Tylko zdrowotna":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-ZD");
+                                break;
+                            case "Tylko pracownicy":
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-PRAC");
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         //private static void Update_LookupRefFields(SPListItem item)

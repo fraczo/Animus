@@ -1,0 +1,4 @@
+C:\_GitHub\Animus\DAL\bin\Release\STAFix24.Animus.DAL.dll
+C:\_GitHub\Animus\DAL\bin\Release\STAFix24.Animus.DAL.pdb
+C:\_GitHub\Animus\DAL\obj\Release\STAFix24.Animus.DAL.dll
+C:\_GitHub\Animus\DAL\obj\Release\STAFix24.Animus.DAL.pdb

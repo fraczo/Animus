@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <Receivers ListUrl="Lists/tabZadania">
+      <Receiver>
+        <Name>tabZadaniaItemAdded</Name>
+        <Type>ItemAdded</Type>
+        <Assembly>STAFix24.Animus.EventReceivers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d98099de718d7615</Assembly>
+        <Class>EventReceivers.tabZadania.tabZadania</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+      <Receiver>
+        <Name>tabZadaniaItemUpdated</Name>
+        <Type>ItemUpdated</Type>
+        <Assembly>STAFix24.Animus.EventReceivers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d98099de718d7615</Assembly>
+        <Class>EventReceivers.tabZadania.tabZadania</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+
+  </Receivers>
+</Elements>

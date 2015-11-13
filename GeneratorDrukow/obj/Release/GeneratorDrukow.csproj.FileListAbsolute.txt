@@ -3,3 +3,8 @@ C:\_GitHub\Biuromagda\STAFix24_Biuromagda\GeneratorDrukow\bin\Release\BRMagda.Ge
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\GeneratorDrukow\obj\Release\GeneratorDrukow.csprojResolveAssemblyReference.cache
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\GeneratorDrukow\obj\Release\BRMagda.GeneratorDrukow.dll
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\GeneratorDrukow\obj\Release\BRMagda.GeneratorDrukow.pdb
+C:\_GitHub\Animus\GeneratorDrukow\bin\Release\STAFix24.Animus.GeneratorDrukow.dll
+C:\_GitHub\Animus\GeneratorDrukow\bin\Release\STAFix24.Animus.GeneratorDrukow.pdb
+C:\_GitHub\Animus\GeneratorDrukow\obj\Release\GeneratorDrukow.csprojResolveAssemblyReference.cache
+C:\_GitHub\Animus\GeneratorDrukow\obj\Release\STAFix24.Animus.GeneratorDrukow.dll
+C:\_GitHub\Animus\GeneratorDrukow\obj\Release\STAFix24.Animus.GeneratorDrukow.pdb

@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Id="acba811c-0be2-4af6-9a42-d5d5bdb484cb" Scope="Web" Title="EventReceivers Feature1"></Feature>
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="EventReceivers Feature1" Id="f193c11f-f8b2-4f6c-b909-de113de8fe30" Scope="Web"></Feature>

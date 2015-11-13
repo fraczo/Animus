@@ -143,7 +143,7 @@ namespace BLL
             else return emptyMarker;
         }
 
-        internal static DateTime Get_Date(SPListItem item, string col)
+        public static DateTime Get_Date(SPListItem item, string col)
         {
             return item[col] != null ? DateTime.Parse(item[col].ToString()) : new DateTime();
         }
@@ -153,7 +153,7 @@ namespace BLL
             return item[col] != null ? item[col].ToString() : string.Empty;
         }
 
-        internal static bool Get_Flag(SPListItem item, string col)
+        public static bool Get_Flag(SPListItem item, string col)
         {
             return item[col] != null ? bool.Parse(item[col].ToString()) : false;
         }
@@ -313,6 +313,55 @@ namespace BLL
                 }
             }
 
+        }
+
+        public static bool IsSelectorAssigned(SPListItem item, string col, string exceptValue)
+        {
+            if (item[col]==null) return false;
+
+            string v = item[col].ToString();
+            if (string.IsNullOrEmpty(v)) return false;
+            if (v.Equals(exceptValue)) return false;
+
+            return true;
+        }
+
+        public static void Remove_Services(ref SPListItem item, string col, string mask)
+        {
+            SPFieldLookupValueCollection newOptions = new SPFieldLookupValueCollection();
+            SPFieldLookupValueCollection options = new SPFieldLookupValueCollection(item[col].ToString());
+            foreach (SPFieldLookupValue option in options)
+            {
+                if (mask.EndsWith("*"))
+                {
+                    mask = mask.Substring(0, mask.Length - 1);
+                    if (!option.LookupValue.StartsWith(mask))
+                    {
+                        newOptions.Add(option);
+                    }
+                }
+                else
+                {
+                    if (!option.LookupValue.Equals(mask))
+                    {
+                        newOptions.Add(option);
+                    }
+                }
+            }
+
+            item[col] = newOptions;
+        }
+
+        public static void Assign_Service(ref SPListItem item, string col, string serwisName)
+        {
+            int serwisId = BLL.dicSerwisy.Get_IdByKod(item.Web, serwisName);
+            if (serwisId > 0)
+            {
+                SPFieldLookupValue option = new SPFieldLookupValue(serwisId, serwisName);
+                SPFieldLookupValueCollection options = new SPFieldLookupValueCollection(item[col].ToString());
+                options.Add(option);
+                item[col] = options;
+            }
         }
     }
 }
