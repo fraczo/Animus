@@ -36,12 +36,12 @@ namespace EventReceivers.admProcesy
                         case @"PDS-M":
                             if (createKK) BLL.tabKartyKontrolne.Create_KartaKontrolna(web, item.ID, okresId);
 
-                            Create_PDS_M_Form(web, item.ID, okresId);
+                            //Create_PDS_M_Form(web, item.ID, okresId);
                             break;
                         case @"PDS-KW":
                             if (createKK) BLL.tabKartyKontrolne.Create_KartaKontrolna(web, item.ID, okresId);
 
-                            Create_PDS_KW_Form(web, item.ID, okresId);
+                            //Create_PDS_KW_Form(web, item.ID, okresId);
                             break;
                         default:
                             break;
@@ -73,10 +73,10 @@ namespace EventReceivers.admProcesy
                     switch (kod.LookupValue)
                     {
                         case @"PDS-M":
-                            Create_PDS_M_Form(web, item.ID, okresId);
+                            //Create_PDS_M_Form(web, item.ID, okresId);
                             break;
                         case @"PDS-KW":
-                            Create_PDS_KW_Form(web, item.ID, okresId);
+                            //Create_PDS_KW_Form(web, item.ID, okresId);
                             break;
                         default:
                             break;
@@ -101,7 +101,7 @@ namespace EventReceivers.admProcesy
                     //terminy płatności VAT KSH jak dla KPiR
                     tabOkresy.Get_PD_KW(web, okresId, klientId, out terminPlatnosci, out terminPrzekazania);
 
-                    BLL.tabZadania.Create_ctPDS_Form(web, ctPDS, klientId, okresId, key, terminPlatnosci, terminPrzekazania, true);
+                    //BLL.tabZadania.Create_ctPDS_Form(web, ctPDS, klientId, okresId, key, terminPlatnosci, terminPrzekazania, true);
                 }
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace EventReceivers.admProcesy
                     //terminy płatności VAT KSH jak dla KPiR
                     tabOkresy.Get_PD_M(web, okresId, klientId, out terminPlatnosci, out terminPrzekazania);
 
-                    BLL.tabZadania.Create_ctPDS_Form(web, ctPDS, klientId, okresId, key, terminPlatnosci, terminPrzekazania, false);
+                    //BLL.tabZadania.Create_ctPDS_Form(web, ctPDS, klientId, okresId, key, terminPlatnosci, terminPrzekazania, false);
                 }
             }
             catch (Exception ex)

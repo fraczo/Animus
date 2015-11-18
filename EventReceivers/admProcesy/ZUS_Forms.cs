@@ -19,8 +19,7 @@ namespace EventReceivers.admProcesy
                 string key = BLL.tabZadania.Define_KEY(ctZUS, klientItem.ID, okresId);
                 if (BLL.tabZadania.Check_KEY_IsAllowed(key, web, 0))
                 {
-                    string ct = "Rozliczenie ZUS";
-                    BLL.tabZadania.Create_ctZUS_Form(web, ct, klientItem.ID, okresId, key, klientItem, iok);
+                    BLL.tabZadania.Create_ctZUS_Form(web, ctZUS, klientItem.ID, okresId, key, klientItem, iok);
                 }
             }
 

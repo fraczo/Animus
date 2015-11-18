@@ -23,21 +23,6 @@ namespace BLL
             return result;
         }
 
-        public static Array Get_AktywniKlienci_Serwis(SPWeb web, string typKlienta)
-        {
-            SPList targetList = web.Lists.TryGetList(listName);
-            Array result = null;
-
-            result = targetList.Items.Cast<SPListItem>()
-                .Where(i => i["enumStatus"].ToString() == "Aktywny")
-                .Where(i => i["ContentType"].ToString() == typKlienta)
-                .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0
-                || new SPFieldLookupValueCollection(i["selSerwisyWspolnicy"].ToString()).Count > 0)
-                .ToArray();
-
-            return result;
-        }
-
         public static Array Get_AktywniKlienci_Serwis(SPWeb web)
         {
             SPList targetList = web.Lists.TryGetList(listName);
@@ -45,8 +30,7 @@ namespace BLL
 
             result = targetList.Items.Cast<SPListItem>()
                 .Where(i => i["enumStatus"].ToString() == "Aktywny")
-                .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0
-                || new SPFieldLookupValueCollection(i["selSerwisyWspolnicy"].ToString()).Count > 0)
+                .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0)
                 .ToArray();
 
             return result;
@@ -753,7 +737,6 @@ namespace BLL
             }
         }
 
-
         private static void Append_BasedOn_ZgodneParametryWyboru(SPListItem item, SPListItem klientItem, ref ArrayList results, string col)
         {
             Array klientOptions = BLL.Tools.Get_LookupValueCollection(klientItem, col);
@@ -798,53 +781,96 @@ namespace BLL
             }
         }
 
+        public static Array Get_AktywniKlienci_ByTypKlientaMask(SPWeb web, string kmask)
+        {
+            SPList targetList = web.Lists.TryGetList(listName);
+            Array result = null;
+
+            result = targetList.Items.Cast<SPListItem>()
+                    .Where(i => i["enumStatus"].ToString().Equals("Aktywny"))
+                    .Where(i => i.ContentType.Name.Equals(kmask))
+                    .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0)
+                    .ToArray();
+
+            return result;
+        }
+
+        public static Array Get_AktywniKlienci_ByTypKlienta_BySerwisMask(SPWeb web, string kmask, string mask)
+        {
+            SPList targetList = web.Lists.TryGetList(listName);
+            Array result = null;
+
+            if (!string.IsNullOrEmpty(kmask))
+            {
+                result = targetList.Items.Cast<SPListItem>()
+                        .Where(i => i["enumStatus"].ToString().Equals("Aktywny"))
+                        .Where(i => i.ContentType.Name.Equals(kmask))
+                        .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0)
+                        .ToArray();
+            }
+            else
+            {
+                result = targetList.Items.Cast<SPListItem>()
+                        .Where(i => i["enumStatus"].ToString().Equals("Aktywny"))
+                        .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0)
+                        .ToArray();
+            }
+
+            // usuń rekordy nie pasujące do wzorca
+
+            if (result.Length > 0)
+                result = Refine_KlienciBySerwisMask(mask, result);
+
+            return result;
+        }
+
         public static Array Get_AktywniKlienci_BySerwisMask(SPWeb web, string mask)
         {
-
-
             SPList targetList = web.Lists.TryGetList(listName);
-            ArrayList result = new ArrayList();
 
-            Array tempResult = targetList.Items.Cast<SPListItem>()
+            Array results = targetList.Items.Cast<SPListItem>()
                                 .Where(i => i["enumStatus"].ToString() == "Aktywny")
                                 .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0)
                                 .ToArray();
-            if (tempResult.Length > 0)
+
+            if (results.Length > 0)
+                results = Refine_KlienciBySerwisMask(mask, results);
+
+            return results;
+        }
+
+        private static Array Refine_KlienciBySerwisMask(string mask, Array klienci)
+        {
+            ArrayList newResults = new ArrayList();
+            foreach (SPListItem k in klienci)
             {
+                Array serwisy = BLL.Tools.Get_LookupValueCollection(k, "selSewisy");
+
                 if (mask.EndsWith("*"))
                 {
-                    mask = mask.Substring(0, mask.Length - 1);
-                    foreach (SPListItem item in tempResult)
+                    mask = mask.Substring(1, mask.Length - 1);
+                    foreach (SPFieldLookupValue v in serwisy)
                     {
-                        Array lvc = BLL.Tools.Get_LookupValueCollection(item, "selSewisy");
-                        foreach (SPFieldLookupValue lv in lvc)
+                        if (v.LookupValue.StartsWith(mask))
                         {
-                            if (lv.LookupValue.StartsWith(mask))
-                            {
-                                result.Add(item);
-                                break;
-                            }
+                            newResults.Add(k);
+                            break;
                         }
                     }
                 }
                 else
                 {
-                    foreach (SPListItem item in tempResult)
+                    foreach (SPFieldLookupValue v in serwisy)
                     {
-                        Array lvc = BLL.Tools.Get_LookupValueCollection(item, "selSewisy");
-                        foreach (SPFieldLookupValue lv in lvc)
+                        if (v.LookupValue.Equals(mask))
                         {
-                            if (lv.LookupValue.Equals(mask))
-                            {
-                                result.Add(item);
-                                break;
-                            }
+                            newResults.Add(k);
+                            break;
                         }
                     }
                 }
-
             }
-            return result.ToArray();
+            return newResults.ToArray();
         }
     }
 }

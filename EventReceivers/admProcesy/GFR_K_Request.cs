@@ -12,6 +12,8 @@ namespace EventReceivers.admProcesy
         {
             int okresId = BLL.Tools.Get_LookupId(item, "selOkres");
             int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
+            string mask = BLL.Tools.Get_Text(item, "colMaskaSerwisu");
+
             if (okresId > 0 && klientId > 0)
             {
                 BLL.Models.Klient iok = new BLL.Models.Klient(item.Web, klientId);
@@ -21,8 +23,10 @@ namespace EventReceivers.admProcesy
                 switch (iok.TypKlienta)
                 {
                     case "KPiR":
-                        ZUS_Forms.Manage_ZUS_Form(item.Web, okresId, klientItem, iok);
-                        //PD_Forms.Create(item.Web, klientId, okresId);
+                        if (mask.StartsWith("ZUS-") || string.IsNullOrEmpty(mask))
+                            ZUS_Forms.Manage_ZUS_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.StartsWith("PD-") || string.IsNullOrEmpty(mask))
+                            PD_Forms.Create_PD_Form(item.Web, okresId, klientItem, iok);
                         //VAT_Forms.Create(item.Web, klientId, okresId);
                         break;
                     case "KSH":
@@ -34,8 +38,10 @@ namespace EventReceivers.admProcesy
                         //PDS_Forms.Create(item.Web, klientId, okresId);
                         break;
                     case "Osoba fizyczna":
-                        ZUS_Forms.Manage_ZUS_Form(item.Web, okresId, klientItem, iok);
-                        //PD_Forms.Create(item.Web, klientId, okresId);
+                        if (mask.StartsWith("ZUS-") || string.IsNullOrEmpty(mask))
+                            ZUS_Forms.Manage_ZUS_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.StartsWith("PD-") || string.IsNullOrEmpty(mask))
+                            PD_Forms.Create_PD_Form(item.Web, okresId, klientItem, iok);
                         //PDS_Forms.Create(item.Web, klientId, okresId);
                         //VAT_Forms.Create(item.Web, klientId, okresId);
                         break;

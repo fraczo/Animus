@@ -61,7 +61,7 @@ namespace BLL.Models
 
         public double TerminPrzekazaniaWynikow_ZUS_Ofset { get; set; }
 
-        public object TerminPlatnosciPodatkuPD { get; set; }
+        public DateTime TerminPlatnosciPodatkuPD { get; set; }
 
         public DateTime TerminPlatnosciPodatkuPD_KW { get; set; }
 

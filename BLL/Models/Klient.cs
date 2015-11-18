@@ -85,9 +85,6 @@ namespace BLL.Models
                 NazwaFirmy = item.Title;
                 Regon = item["colRegon"] != null ? item["colRegon"].ToString() : string.Empty;
 
-                this.UwagiKadrowe = item["colUwagiKadrowe"] != null ? item["colUwagiKadrowe"].ToString() : string.Empty;
-                this.Uwagi = item["colUwagi"] != null ? item["colUwagi"].ToString() : string.Empty;
-
                 this.ZatrudniaPracownikow = item["colZatrudniaPracownikow"] != null ? bool.Parse(item["colZatrudniaPracownikow"].ToString()) : false ;
 
 
@@ -209,6 +206,13 @@ namespace BLL.Models
 #endif
                 }
 
+                //uwagi
+
+                this.UwagiPD = BLL.Tools.Get_Text(item, "colUwagiPD");
+                this.UwagiVAT = BLL.Tools.Get_Text(item, "colUwagiVAT");
+                this.UwagiKadrowe = BLL.Tools.Get_Text(item,"colUwagiKadrowe");
+                this.Uwagi = BLL.Tools.Get_Text(item,"colUwagi");
+
             }
 
         }
@@ -283,5 +287,9 @@ namespace BLL.Models
         public object GenerowanieDrukuWplaty { get; set; }
 
         public object AudytDanych { get; set; }
+
+        public string UwagiPD { get; set; }
+
+        public string UwagiVAT { get; set; }
     }
 }

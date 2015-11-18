@@ -118,20 +118,16 @@ namespace BLL
 
             var list = web.Lists.TryGetList(targetList);
 
-            //if (targetList != null)
-            //{
             Array li = list.Items.Cast<SPListItem>()
                     .Where(i => i.ID != currentId)
-                    .Where(i => i["ContentType"].ToString() != "Zadanie" && i["ContentType"].ToString() != "Element" && i["ContentType"].ToString() != "Folder")
-                    .Where(i => i["KEY"].ToString() == key)
+                    .Where(i => i.ContentType.Name.StartsWith("Rozliczenie"))
+                    .Where(i => BLL.Tools.Get_Text(i,"KEY").Equals(key))
                     .ToArray();
-
-
+            
             if (li.Length > 0)
             {
                 result = false;
             }
-            //}
 
             return result;
         }
@@ -232,136 +228,6 @@ namespace BLL
 
         }
 
-        public static void Create_ctPD_Form(SPWeb web, string ct, int klientId, int okresId, string key, DateTime terminPlatnosci, DateTime terminPrzekazania, bool isKwartalnie)
-        {
-            Klient iok = new Klient(web, klientId);
-
-            SPList list = web.Lists.TryGetList(targetList);
-
-            SPListItem item = list.AddItem();
-            item["ContentType"] = ct;
-            item["selKlient"] = klientId;
-            item["selOkres"] = okresId;
-            item["KEY"] = key;
-            //procedura
-
-            string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName);
-            item["Title"] = procName;
-
-            //numery kont i nazwa urzędu
-
-            item["colPD_Konto"] = iok.NumerRachunkuPD;
-            item["selUrzadSkarbowy"] = iok.UrzadSkarbowyId;
-
-            //terminy
-            item["colPD_TerminPlatnosciPodatku"] = terminPlatnosci;
-            item["colPD_TerminPrzekazaniaWynikow"] = terminPrzekazania;
-
-            //flagi
-
-            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
-            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
-            item["colAudytDanych"] = iok.AudytDanych;
-
-            //rozliczenie
-            if (isKwartalnie)
-            {
-                item["enumRozliczeniePD"] = "Kwartalnie";
-            }
-            else
-            {
-                item["enumRozliczeniePD"] = "Miesięcznie";
-            }
-
-            //termin realizacji
-
-            item["colTerminRealizacji"] = terminPrzekazania;
-
-            item["colFormaOpodatkowaniaPD"] = iok.FormaOpodatkowaniaPD;
-            item["colOsobaDoKontaktu"] = iok.OsobaDoKontaktu;
-            item["colTelefon"] = iok.Telefon;
-            item["colEmail"] = iok.Email;
-            item["colAdres"] = iok.Adres;
-            item["colKodPocztowy"] = iok.KodPocztowy;
-            item["colMiejscowosc"] = iok.Miejscowosc;
-
-            //uwagi 
-            item["colUwagi"] = iok.Uwagi;
-
-            //przypisz zadanie do domyślnego operatora
-            int operatorId = iok.OperatorId_Podatki;
-            if (operatorId > 0)
-            {
-                item["selOperator"] = operatorId;
-                Set_KontoOperatora(item, operatorId);
-            }
-
-
-            item.SystemUpdate();
-
-        }
-
-        private static void Set_KontoOperatora(SPListItem item, int operatorId)
-        {
-            item["_KontoOperatora"] = BLL.dicOperatorzy.Get_UserIdById(item.Web, operatorId);
-        }
-
-        public static void Create_ctPDS_Form(SPWeb web, string ct, int klientId, int okresId, string key, DateTime terminPlatnosci, DateTime terminPrzekazania, bool isKwartalnie)
-        {
-            Create_ctPD_Form(web, ct, klientId, okresId, key, terminPlatnosci, terminPrzekazania, isKwartalnie);
-        }
-
-
-        public static void Create_Form(SPWeb web, string ct, int klientId, int okresId, string key, int operatorId)
-        {
-            Klient iok = new Klient(web, klientId);
-
-            if (operatorId == 0)
-            {
-                // TODO: nie wiem co robi ten kawałek kodu
-                operatorId = dicOperatorzy.GetID(web, "STAFix24 Robot", true);
-            }
-
-            SPList list = web.Lists.TryGetList(targetList);
-
-            SPListItem item = list.AddItem();
-            item["ContentType"] = ct;
-            item["selKlient"] = klientId;
-            item["selOkres"] = okresId;
-            item["KEY"] = key;
-
-            string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName);
-            item["Title"] = procName;
-
-            item["selOperator"] = operatorId;
-            if (operatorId > 0)
-            {
-                item["selOperator"] = operatorId;
-                Set_KontoOperatora(item, operatorId);
-            }
-
-            item["colOsobaDoKontaktu"] = iok.OsobaDoKontaktu;
-            item["colTelefon"] = iok.Telefon;
-            item["colEmail"] = iok.Email;
-
-            //ustaw terminy realizacji
-            switch (ct)
-            {
-                case "Prośba o dokumenty":
-                    item["colTerminRealizacji"] = BLL.tabOkresy.Get_TerminRealizacji(web, okresId, "DOK_REMINDER_DOM");
-                    break;
-                case "Prośba o przesłanie wyciągu bankowego":
-                    item["colTerminRealizacji"] = BLL.tabOkresy.Get_TerminRealizacji(web, okresId, "WBANK_REMINDER_DOM");
-                    break;
-                default:
-                    break;
-            }
-
-            item.SystemUpdate();
-
-        }
 
         public static void Create_ctZUS_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
         {
@@ -786,6 +652,136 @@ namespace BLL
                 .ToArray();
 
             return result;
+        }
+
+        public static void Create_ctPD_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
+        {
+            string kod = string.Empty;
+
+            if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "PD-M"))
+            {
+                kod = "PD-M";
+            }
+            else if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "PD-KW"))
+            {
+                kod = "PD-KW";
+            }
+            else return; // jeżeli żaden z powyższych to zakończ procedurę.
+
+            SPList list = web.Lists.TryGetList(targetList);
+
+            SPListItem item = list.AddItem();
+            item["ContentType"] = ct;
+            item["selKlient"] = klientId;
+            item["selOkres"] = okresId;
+            item["KEY"] = key;
+            //procedura
+
+            string procName = string.Format(": {0}", ct);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName);
+            item["Title"] = procName;
+
+            //numery kont i nazwa urzędu
+
+            item["colPD_Konto"] = iok.NumerRachunkuPD;
+            item["selUrzadSkarbowy"] = iok.UrzadSkarbowyId;
+
+            //terminy
+
+            BLL.Models.Okres o = new BLL.Models.Okres(web, okresId);
+
+            switch (kod)
+            {
+                case "PD-M":
+                    item["colPD_TerminPlatnosciPodatku"] = o.TerminPlatnosciPodatkuPD;
+                    item["enumRozliczeniePD"] = "Miesięcznie";
+                    break;
+                case "PD-KW":
+                    item["colPD_TerminPlatnosciPodatku"] = o.TerminPlatnosciPodatkuPD_KW;
+                    item["enumRozliczeniePD"] = "Kwartalnie";
+                    break;
+                default:
+                    break;
+            }
+
+            item["colTerminRealizacji"] = o.TerminPlatnosciPodatkuPD.AddDays(-1 * (int)o.TerminPrzekazaniaWynikowPD_Ofset);
+
+            //flagi
+
+            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
+            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
+            item["colAudytDanych"] = iok.AudytDanych;
+            item["colFormaOpodatkowaniaPD"] = iok.FormaOpodatkowaniaPD;
+
+            //uwagi 
+            item["colUwagiPD"] = iok.UwagiPD;
+
+            //przypisz zadanie do domyślnego operatora
+            int operatorId = iok.OperatorId_Podatki;
+            if (operatorId > 0)
+            {
+                item["selOperator"] = operatorId;
+                Set_KontoOperatora(item, operatorId);
+            }
+
+            item.SystemUpdate();
+
+        }
+
+        private static void Set_KontoOperatora(SPListItem item, int operatorId)
+        {
+            item["_KontoOperatora"] = BLL.dicOperatorzy.Get_UserIdById(item.Web, operatorId);
+        }
+
+
+        public static void Create_Form(SPWeb web, string ct, int klientId, int okresId, string key, int operatorId)
+        {
+            Klient iok = new Klient(web, klientId);
+
+            if (operatorId == 0)
+            {
+                // TODO: nie wiem co robi ten kawałek kodu
+                operatorId = dicOperatorzy.GetID(web, "STAFix24 Robot", true);
+            }
+
+            SPList list = web.Lists.TryGetList(targetList);
+
+            SPListItem item = list.AddItem();
+            item["ContentType"] = ct;
+            item["selKlient"] = klientId;
+            item["selOkres"] = okresId;
+            item["KEY"] = key;
+
+            string procName = string.Format(": {0}", ct);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName);
+            item["Title"] = procName;
+
+            item["selOperator"] = operatorId;
+            if (operatorId > 0)
+            {
+                item["selOperator"] = operatorId;
+                Set_KontoOperatora(item, operatorId);
+            }
+
+            item["colOsobaDoKontaktu"] = iok.OsobaDoKontaktu;
+            item["colTelefon"] = iok.Telefon;
+            item["colEmail"] = iok.Email;
+
+            //ustaw terminy realizacji
+            switch (ct)
+            {
+                case "Prośba o dokumenty":
+                    item["colTerminRealizacji"] = BLL.tabOkresy.Get_TerminRealizacji(web, okresId, "DOK_REMINDER_DOM");
+                    break;
+                case "Prośba o przesłanie wyciągu bankowego":
+                    item["colTerminRealizacji"] = BLL.tabOkresy.Get_TerminRealizacji(web, okresId, "WBANK_REMINDER_DOM");
+                    break;
+                default:
+                    break;
+            }
+
+            item.SystemUpdate();
+
         }
     }
 }

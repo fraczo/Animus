@@ -9,140 +9,17 @@ namespace EventReceivers.admProcesy
 {
     internal class PD_Forms
     {
-
         const string ctPD = @"Rozliczenie podatku dochodowego";
 
-        internal static void Create(SPWeb web, Array aKlienci, int okresId, bool createKK )
+        internal static void Create_PD_Form(SPWeb web, int okresId, SPListItem klientItem, BLL.Models.Klient iok)
         {
-            foreach (SPListItem item in aKlienci)
+            if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "PD-*"))
             {
-                SPFieldLookupValueCollection kody;
-
-                switch (item.ContentType.Name)
-                {
-                    case "Osoba fizyczna":
-                    case "Firma":
-                        kody = new SPFieldLookupValueCollection(item["selSerwisyWspolnicy"].ToString());
-                        break;
-                    default:
-                        kody = new SPFieldLookupValueCollection(item["selSewisy"].ToString());
-                        break;
-                }
-
-                foreach (SPFieldLookupValue kod in kody)
-                {
-                    switch (kod.LookupValue)
-                    {
-                        case @"PD-M":
-                            if (createKK) BLL.tabKartyKontrolne.Create_KartaKontrolna(web, item.ID, okresId);
-
-                            Create_PD_M_Form(web, item.ID, okresId);
-                            break;
-                        case @"PD-KW":
-                            if (createKK) BLL.tabKartyKontrolne.Create_KartaKontrolna(web, item.ID, okresId);
-
-                            Create_PD_KW_Form(web, item.ID, okresId);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-        internal static void Create(SPWeb web, int klientId, int okresId)
-        {
-            SPListItem item = BLL.tabKlienci.Get_KlientById(web, klientId);
-
-            if (item != null)
-            {
-                SPFieldLookupValueCollection kody;
-
-                switch (item.ContentType.Name)
-                {
-                    case "Osoba fizyczna":
-                    case "Firma":
-                        kody = new SPFieldLookupValueCollection(item["selSerwisyWspolnicy"].ToString());
-                        break;
-                    default:
-                        kody = new SPFieldLookupValueCollection(item["selSewisy"].ToString());
-                        break;
-                }
-
-                foreach (SPFieldLookupValue kod in kody)
-                {
-                    switch (kod.LookupValue)
-                    {
-                        case @"PD-M":
-                            Create_PD_M_Form(web, item.ID, okresId);
-                            break;
-                        case @"PD-KW":
-                            Create_PD_KW_Form(web, item.ID, okresId);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Formatka rozliczenia kwartalnego VAT
-        /// </summary>
-        /// <param name="web"></param>
-        /// <param name="klientId"></param>
-        /// <param name="okresId"></param>
-        private static void Create_PD_KW_Form(SPWeb web, int klientId, int okresId)
-        {
-            try
-            {
-                string key = BLL.tabZadania.Define_KEY(ctPD, klientId, okresId);
+                string key = BLL.tabZadania.Define_KEY(ctPD, klientItem.ID, okresId);
                 if (BLL.tabZadania.Check_KEY_IsAllowed(key, web, 0))
                 {
-                    DateTime terminPlatnosci;
-                    DateTime terminPrzekazania;
-
-                    tabOkresy.Get_PD_KW(web, okresId, klientId, out terminPlatnosci, out terminPrzekazania);
-
-                    BLL.tabZadania.Create_ctPD_Form(web, ctPD, klientId, okresId, key, terminPlatnosci, terminPrzekazania, true);
+                    BLL.tabZadania.Create_ctPD_Form(web, ctPD, klientItem.ID, okresId, key, klientItem, iok);
                 }
-            }
-            catch (Exception ex)
-            {
-#if DEBUG
-                throw ex;
-#else
-                BLL.Logger.LogEvent(web.Url, ex.ToString() + " KlientId= " + klientId.ToString());
-                var result = ElasticEmail.EmailGenerator.ReportError(ex, web.Url, "KlientId=" + klientId.ToString());
-#endif
-
-            }
-        }
-
-        //formatka rozliczenia miesięcznego VAT
-        private static void Create_PD_M_Form(SPWeb web, int klientId, int okresId)
-        {
-            try
-            {
-                string key = BLL.tabZadania.Define_KEY(ctPD, klientId, okresId);
-                if (BLL.tabZadania.Check_KEY_IsAllowed(key, web, 0))
-                {
-                    DateTime terminPlatnosci;
-                    DateTime terminPrzekazania;
-
-                    tabOkresy.Get_PD_M(web, okresId, klientId, out terminPlatnosci, out terminPrzekazania);
-
-                    BLL.tabZadania.Create_ctPD_Form(web, ctPD, klientId, okresId, key, terminPlatnosci, terminPrzekazania, false);
-                }
-            }
-            catch (Exception ex)
-            {
-#if DEBUG
-                throw ex;
-#else
-                BLL.Logger.LogEvent(web.Url, ex.ToString() + " KlientId= " + klientId.ToString());
-                var result = ElasticEmail.EmailGenerator.ReportError(ex, web.Url, "KlientId=" + klientId.ToString());
-#endif
-
             }
         }
     }
