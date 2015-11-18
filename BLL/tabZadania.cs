@@ -121,9 +121,9 @@ namespace BLL
             Array li = list.Items.Cast<SPListItem>()
                     .Where(i => i.ID != currentId)
                     .Where(i => i.ContentType.Name.StartsWith("Rozliczenie"))
-                    .Where(i => BLL.Tools.Get_Text(i,"KEY").Equals(key))
+                    .Where(i => BLL.Tools.Get_Text(i, "KEY").Equals(key))
                     .ToArray();
-            
+
             if (li.Length > 0)
             {
                 result = false;
@@ -132,101 +132,6 @@ namespace BLL
             return result;
         }
 
-        public static void Create_ctVAT_Form(SPWeb web, string ct, int klientId, int okresId, string key, DateTime terminPlatnosci, DateTime terminPrzekazania, bool isKwartalnie)
-        {
-            Klient iok = new Klient(web, klientId);
-
-            if (iok.FormaOpodatkowaniaVAT == "Nie podlega")
-            {
-                return; //nie generuj formatki
-            }
-
-            SPList list = web.Lists.TryGetList(targetList);
-
-            if (list != null)
-            {
-
-                SPListItem item = list.AddItem();
-                item["ContentType"] = ct;
-                item["selKlient"] = klientId;
-                item["selOkres"] = okresId;
-                item["KEY"] = key;
-
-                //procedura
-
-                string procName = string.Format(": {0}", ct);
-                item["selProcedura"] = tabProcedury.Ensure(web, procName);
-                item["Title"] = procName;
-
-                //numery kont i nazwa urzędu
-
-                //KontaKlienta k = new KontaKlienta(web, klientId);
-
-                item["colVAT_Konto"] = iok.NumerRachunkuVAT;
-                item["selUrzadSkarbowy"] = iok.UrzadSkarbowyVATId;
-
-                //terminy
-                item["colVAT_TerminPlatnosciPodatku"] = terminPlatnosci;
-                item["colVAT_TerminPrzekazaniaWynikow"] = terminPrzekazania;
-
-                //flagi
-
-                item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
-                item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
-                item["colAudytDanych"] = iok.AudytDanych;
-
-                //rozliczenie
-                if (isKwartalnie)
-                {
-                    item["enumRozliczenieVAT"] = "Kwartalnie";
-                }
-                else
-                {
-                    item["enumRozliczenieVAT"] = "Miesięcznie";
-                }
-
-                //uwagi 
-                item["colUwagi"] = iok.Uwagi;
-
-                //termin realizacji
-
-                item["colTerminRealizacji"] = terminPrzekazania;
-
-                item["colFormaOpodatkowaniaVAT"] = iok.FormaOpodatkowaniaVAT;
-                item["colOsobaDoKontaktu"] = iok.OsobaDoKontaktu;
-                item["colTelefon"] = iok.Telefon;
-                item["colEmail"] = iok.Email;
-                item["colAdres"] = iok.Adres;
-                item["colKodPocztowy"] = iok.KodPocztowy;
-                item["colMiejscowosc"] = iok.Miejscowosc;
-
-                int operatorId = iok.OperatorId_Podatki;
-                if (operatorId > 0)
-                {
-                    item["selOperator"] = operatorId;
-                    Set_KontoOperatora(item, operatorId);
-                }
-
-                //przenieś wartość nadwyżki z poprzedniej deklaracji
-                int preOkresId;
-                if (isKwartalnie)
-                {
-                    preOkresId = BLL.tabOkresy.Get_PoprzedniOkresKwartalnyIdById(web, okresId);
-                }
-                else
-                {
-                    preOkresId = BLL.tabOkresy.Get_PoprzedniOkresIdById(web, okresId);
-                }
-
-                if (preOkresId > 0)
-                {
-                    item["colVAT_WartoscNadwyzkiZaPoprzedniMiesiac"] = BLL.tabKartyKontrolne.Get_WartoscNadwyzkiDoPrzeniesienia(web, klientId, preOkresId);
-                }
-
-                item.SystemUpdate();
-            }
-
-        }
 
 
         public static void Create_ctZUS_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
@@ -328,55 +233,12 @@ namespace BLL
                 Set_KontoOperatora(item, operatorId);
             }
 
-            item.SystemUpdate();
-        }
-
-        public static void Create_ctBR_Form(SPWeb web, string ct, int klientId, int okresId, string key)
-        {
-            Klient iok = new Klient(web, klientId);
-
-            SPList list = web.Lists.TryGetList(targetList);
-
-            SPListItem item = list.AddItem();
-            item["ContentType"] = ct;
-            item["selKlient"] = klientId;
-            item["selOkres"] = okresId;
-            item["KEY"] = key;
-
-            //procedura
-
-            string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName);
-            item["Title"] = procName;
-
-            //numer konta biura
-
-            BiuroRachunkowe br = new BiuroRachunkowe(web, okresId);
-            item["colBR_Konto"] = br.Konto;
-            if (br.TerminPrzekazania > new DateTime())
-            {
-                item["colBR_TerminPrzekazania"] = br.TerminPrzekazania;
-                item["colTerminRealizacji"] = br.TerminPrzekazania;
-            }
-
-            //flagi
-
-            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
-            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
-
-            //uwagi 
-            item["colUwagi"] = iok.Uwagi;
-
-            //domyślny operator
-            int operatorId = iok.OperatorId_Audyt;
-            if (operatorId > 0)
-            {
-                item["selOperator"] = operatorId;
-                Set_KontoOperatora(item, operatorId);
-            }
+            item["enumStatusZadania"] = "Nowe";
 
             item.SystemUpdate();
         }
+
+        
 
         public static int Get_NumerZadaniaBR(SPWeb web, int klientId, int okresId)
         {
@@ -724,6 +586,8 @@ namespace BLL
                 Set_KontoOperatora(item, operatorId);
             }
 
+            item["enumStatusZadania"] = "Nowe";
+
             item.SystemUpdate();
 
         }
@@ -733,16 +597,20 @@ namespace BLL
             item["_KontoOperatora"] = BLL.dicOperatorzy.Get_UserIdById(item.Web, operatorId);
         }
 
-
-        public static void Create_Form(SPWeb web, string ct, int klientId, int okresId, string key, int operatorId)
+         public static void Create_ctVAT_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
         {
-            Klient iok = new Klient(web, klientId);
+            string kod = string.Empty;
 
-            if (operatorId == 0)
+            if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "VAT-M"))
             {
-                // TODO: nie wiem co robi ten kawałek kodu
-                operatorId = dicOperatorzy.GetID(web, "STAFix24 Robot", true);
+                kod = "VAT-M";
             }
+            else if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "VAT-KW"))
+            {
+                kod = "VAT-KW";
+            }
+            else return; // jeżeli żaden z powyższych to zakończ procedurę.
+
 
             SPList list = web.Lists.TryGetList(targetList);
 
@@ -752,36 +620,120 @@ namespace BLL
             item["selOkres"] = okresId;
             item["KEY"] = key;
 
+            //procedura
+
             string procName = string.Format(": {0}", ct);
             item["selProcedura"] = tabProcedury.Ensure(web, procName);
             item["Title"] = procName;
 
-            item["selOperator"] = operatorId;
+            //numery kont i nazwa urzędu
+
+            item["selUrzadSkarbowy"] = iok.UrzadSkarbowyVATId;
+            item["colFormaOpodatkowaniaVAT"] = iok.FormaOpodatkowaniaVAT;
+
+            //terminy
+            BLL.Models.Okres o = new BLL.Models.Okres(web, okresId);
+            int preOkresId = 0;
+
+            switch (kod)
+            {
+                case "VAT-M":
+                    item["colVAT_TerminPlatnosciPodatku"] = o.TerminPlatnosciPodatkuVAT;
+                    item["enumRozliczenieVAT"] = "Miesięcznie";
+
+                    preOkresId = BLL.tabOkresy.Get_PoprzedniOkresIdById(web, okresId);
+                    break;
+                case "VAT-KW":
+                    item["colVAT_TerminPlatnosciPodatku"] = o.TerminPlatnosciPodatkuVAT_KW;
+                    item["enumRozliczenieVAT"] = "Kwartalnie";
+
+                    preOkresId = BLL.tabOkresy.Get_PoprzedniOkresKwartalnyIdById(web, okresId);
+                    break;
+                default:
+                    break;
+            }
+
+            //przenieś wartość nadwyżki z poprzedniej deklaracji
+            if (preOkresId > 0)
+            {
+                item["colVAT_WartoscNadwyzkiZaPoprzedniMiesiac"] = BLL.tabKartyKontrolne.Get_WartoscNadwyzkiDoPrzeniesienia(web, klientId, preOkresId);
+            }
+
+            item["colTerminRealizacji"] = o.TerminPlatnosciPodatkuVAT.AddDays(-1 * (int)o.TerminPrzekazaniaWynikowVAT_Ofset);
+
+            //flagi
+
+            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
+            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
+            item["colAudytDanych"] = iok.AudytDanych;
+
+            //uwagi 
+            item["colUwagiVAT"] = iok.UwagiVAT;
+
+            int operatorId = iok.OperatorId_Podatki;
             if (operatorId > 0)
             {
                 item["selOperator"] = operatorId;
                 Set_KontoOperatora(item, operatorId);
             }
 
-            item["colOsobaDoKontaktu"] = iok.OsobaDoKontaktu;
-            item["colTelefon"] = iok.Telefon;
-            item["colEmail"] = iok.Email;
-
-            //ustaw terminy realizacji
-            switch (ct)
-            {
-                case "Prośba o dokumenty":
-                    item["colTerminRealizacji"] = BLL.tabOkresy.Get_TerminRealizacji(web, okresId, "DOK_REMINDER_DOM");
-                    break;
-                case "Prośba o przesłanie wyciągu bankowego":
-                    item["colTerminRealizacji"] = BLL.tabOkresy.Get_TerminRealizacji(web, okresId, "WBANK_REMINDER_DOM");
-                    break;
-                default:
-                    break;
-            }
+            item["enumStatusZadania"] = "Nowe";
 
             item.SystemUpdate();
 
+        }
+
+        public static void Create_ctRBR_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
+        {
+            SPList list = web.Lists.TryGetList(targetList);
+
+            SPListItem item = list.AddItem();
+            item["ContentType"] = ct;
+            item["selKlient"] = klientId;
+            item["selOkres"] = okresId;
+            item["KEY"] = key;
+
+            //procedura
+
+            string procName = string.Format(": {0}", ct);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName);
+            item["Title"] = procName;
+
+            //numer konta biura
+
+            Models.Okres o = new Okres(web, okresId);
+
+            if (o.TerminPrzekazaniaRBR>new DateTime())
+            {
+                item["colTerminRealizacji"] = o.TerminPrzekazaniaRBR;
+            }
+
+            //flagi
+
+            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
+            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
+
+
+            //zainicjowanie wartości domyślnych
+            DateTime dataWystawieniaFaktury = DateTime.Today;
+            item["colBR_DataWystawieniaFaktury"] = dataWystawieniaFaktury;
+            item["colBR_WartoscDoZaplaty"] = iok.OplataMiesieczna;
+            item["colBR_TerminPlatnosci"] = dataWystawieniaFaktury.AddDays(iok.TerminPlatnosci);
+
+            //uwagi 
+            item["colUwagi"] = iok.Uwagi;
+
+            //domyślny operator
+            int operatorId = iok.OperatorId_Audyt;
+            if (operatorId > 0)
+            {
+                item["selOperator"] = operatorId;
+                Set_KontoOperatora(item, operatorId);
+            }
+
+            item["enumStatusZadania"] = "Nowe";
+
+            item.SystemUpdate();
         }
     }
 }

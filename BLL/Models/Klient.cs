@@ -213,6 +213,8 @@ namespace BLL.Models
                 this.UwagiKadrowe = BLL.Tools.Get_Text(item,"colUwagiKadrowe");
                 this.Uwagi = BLL.Tools.Get_Text(item,"colUwagi");
 
+                this.OplataMiesieczna = BLL.Tools.Get_Double(item, "colOplataMiesieczna");
+
             }
 
         }
@@ -291,5 +293,7 @@ namespace BLL.Models
         public string UwagiPD { get; set; }
 
         public string UwagiVAT { get; set; }
+
+        public object OplataMiesieczna { get; set; }
     }
 }

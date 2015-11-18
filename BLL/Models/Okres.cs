@@ -37,11 +37,12 @@ namespace BLL.Models
                 TerminPlatnosciPodatkuPD = BLL.Tools.Get_Date(item, "colPD_TerminPlatnosciPodatku");
                 TerminPlatnosciPodatkuPD_KW = BLL.Tools.Get_Date(item, "colPD_TerminPlatnosciPodatkuKW");
                 TerminPrzekazaniaWynikowPD_Ofset = BLL.Tools.Get_Double(item, "colPD_TerminPrzekazaniaWynikow_Ofset");
-                
+
                 TerminPlatnosciPodatkuVAT = BLL.Tools.Get_Date(item, "colVAT_TerminPlatnosciPodatku");
                 TerminPlatnosciPodatkuVAT_KW = BLL.Tools.Get_Date(item, "colVAT_TerminPlatnosciPodatkuKW");
                 TerminPrzekazaniaWynikowVAT_Ofset = BLL.Tools.Get_Double(item, "colVAT_TerminPrzekazaniaWynikow_Ofset");
 
+                TerminPrzekazaniaRBR = BLL.Tools.Get_Date(item, "colBR_TerminPrzekazania");
             }
         }
 
@@ -72,5 +73,7 @@ namespace BLL.Models
         public DateTime TerminPlatnosciPodatkuVAT_KW { get; set; }
 
         public double TerminPrzekazaniaWynikowVAT_Ofset { get; set; }
+
+        public DateTime TerminPrzekazaniaRBR { get; set; }
     }
 }

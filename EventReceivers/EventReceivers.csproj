@@ -51,6 +51,9 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admProcesy\RBR_Forms.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="admProcesy\PDS_Forms.cs" />
     <Compile Include="admProcesy\PD_Forms.cs" />
     <Compile Include="admProcesy\VAT_Forms.cs" />

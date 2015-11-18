@@ -65,39 +65,39 @@ namespace EventReceivers.admProcesy
         {
             SPList list = BLL.admProcesy.GetList(item.Web);
 
-            foreach (SPListItem k in klienci)
-            {
-                Create_New_GFR_K(item, "ZUS-*", list, k);
-                Create_New_GFR_K(item, "PD-*", list, k);
-                Create_New_GFR_K(item, "PDS-*", list, k);
-                Create_New_GFR_K(item, "VAT-*", list, k);
-            }
-        }
-
-        private static void Create_Bulk_Forms(Microsoft.SharePoint.SPListItem item, string mask)
-        {
-            Array klienci = BLL.tabKlienci.Get_AktywniKlienci_BySerwisMask(item.Web, mask);
-
-            SPList list = BLL.admProcesy.GetList(item.Web);
+            string mask = BLL.Tools.Get_Text(item, "colMaskaSerwisu");
 
             foreach (SPListItem k in klienci)
             {
-                Create_New_GFR_K(item, mask, list, k);
+                if (string.IsNullOrEmpty(mask))
+                {
+                    Create_New_GFR_K(item, "ZUS-*", list, k);
+                    Create_New_GFR_K(item, "PD-*", list, k);
+                    Create_New_GFR_K(item, "PDS-*", list, k);
+                    Create_New_GFR_K(item, "VAT-*", list, k);
+                    //Create_New_GFR_K(item, "RBR", list, k);
+                }
+                else
+                {
+                    Create_New_GFR_K(item, mask, list, k);
+                }
+
             }
         }
 
         private static void Create_New_GFR_K(Microsoft.SharePoint.SPListItem item, string mask, SPList list, SPListItem klientItem)
         {
-            string ct = "Generowanie formatek rozliczeniowych dla klienta";
-            int okresId = BLL.Tools.Get_LookupId(item, "selOkres");
 
-            SPListItem newItem = list.AddItem();
-            newItem["ContentType"] = ct;
-            newItem["selKlient"] = klientItem.ID;
-            newItem["selOkres"] = okresId;
-            newItem["colMaskaSerwisu"] = mask;
+                string ct = "Generowanie formatek rozliczeniowych dla klienta";
+                int okresId = BLL.Tools.Get_LookupId(item, "selOkres");
 
-            newItem.SystemUpdate();
+                SPListItem newItem = list.AddItem();
+                newItem["ContentType"] = ct;
+                newItem["selKlient"] = klientItem.ID;
+                newItem["selOkres"] = okresId;
+                newItem["colMaskaSerwisu"] = mask;
+
+                newItem.SystemUpdate();
         }
     }
 }

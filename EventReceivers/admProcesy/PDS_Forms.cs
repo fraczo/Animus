@@ -9,139 +9,17 @@ namespace EventReceivers.admProcesy
 {
     internal class PDS_Forms
     {
-
         const string ctPDS = @"Rozliczenie podatku dochodowego spółki";
 
-        internal static void Create(SPWeb web, Array aKlienci, int okresId, bool createKK)
+        internal static void Create_PDS_Form(SPWeb web, int okresId, SPListItem klientItem, BLL.Models.Klient iok)
         {
-            foreach (SPListItem item in aKlienci)
+            if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "PDS-*"))
             {
-                SPFieldLookupValueCollection kody;
-
-                switch (item.ContentType.Name)
-                {
-                    case "Osoba fizyczna":
-                    case "Firma":
-                        kody = new SPFieldLookupValueCollection(item["selSerwisyWspolnicy"].ToString());
-                        break;
-                    default:
-                        kody = new SPFieldLookupValueCollection(item["selSewisy"].ToString());
-                        break;
-                }
-
-                foreach (SPFieldLookupValue kod in kody)
-                {
-                    switch (kod.LookupValue)
-                    {
-                        case @"PDS-M":
-                            if (createKK) BLL.tabKartyKontrolne.Create_KartaKontrolna(web, item.ID, okresId);
-
-                            //Create_PDS_M_Form(web, item.ID, okresId);
-                            break;
-                        case @"PDS-KW":
-                            if (createKK) BLL.tabKartyKontrolne.Create_KartaKontrolna(web, item.ID, okresId);
-
-                            //Create_PDS_KW_Form(web, item.ID, okresId);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-        internal static void Create(SPWeb web, int klientId, int okresId)
-        {
-            SPListItem item = BLL.tabKlienci.Get_KlientById(web, klientId);
-
-            if (item != null)
-            {
-                SPFieldLookupValueCollection kody;
-
-                switch (item.ContentType.Name)
-                {
-                    case "Osoba fizyczna":
-                    case "Firma":
-                        kody = new SPFieldLookupValueCollection(item["selSerwisyWspolnicy"].ToString());
-                        break;
-                    default:
-                        kody = new SPFieldLookupValueCollection(item["selSewisy"].ToString());
-                        break;
-                }
-
-                foreach (SPFieldLookupValue kod in kody)
-                {
-                    switch (kod.LookupValue)
-                    {
-                        case @"PDS-M":
-                            //Create_PDS_M_Form(web, item.ID, okresId);
-                            break;
-                        case @"PDS-KW":
-                            //Create_PDS_KW_Form(web, item.ID, okresId);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Formatka rozliczenia kwartalnego PD
-        /// </summary>
-        private static void Create_PDS_KW_Form(SPWeb web, int klientId, int okresId)
-        {
-            try
-            {
-                string key = BLL.tabZadania.Define_KEY(ctPDS, klientId, okresId);
+                string key = BLL.tabZadania.Define_KEY(ctPDS, klientItem.ID, okresId);
                 if (BLL.tabZadania.Check_KEY_IsAllowed(key, web, 0))
                 {
-                    DateTime terminPlatnosci;
-                    DateTime terminPrzekazania;
-
-                    //terminy płatności VAT KSH jak dla KPiR
-                    tabOkresy.Get_PD_KW(web, okresId, klientId, out terminPlatnosci, out terminPrzekazania);
-
-                    //BLL.tabZadania.Create_ctPDS_Form(web, ctPDS, klientId, okresId, key, terminPlatnosci, terminPrzekazania, true);
+                    BLL.tabZadania.Create_ctPD_Form(web, ctPDS, klientItem.ID, okresId, key, klientItem, iok);
                 }
-            }
-            catch (Exception ex)
-            {
-#if DEBUG
-                throw ex;
-#else
-                BLL.Logger.LogEvent(web.Url, ex.ToString() + " KlientId= " + klientId.ToString());
-                var result = ElasticEmail.EmailGenerator.ReportError(ex, web.Url, "KlientId=" + klientId.ToString());
-#endif
-
-            }
-        }
-
-        //formatka rozliczenia miesięcznego PDS
-        private static void Create_PDS_M_Form(SPWeb web, int klientId, int okresId)
-        {
-            try
-            {
-                string key = BLL.tabZadania.Define_KEY(ctPDS, klientId, okresId);
-                if (BLL.tabZadania.Check_KEY_IsAllowed(key, web, 0))
-                {
-                    DateTime terminPlatnosci;
-                    DateTime terminPrzekazania;
-
-                    //terminy płatności VAT KSH jak dla KPiR
-                    tabOkresy.Get_PD_M(web, okresId, klientId, out terminPlatnosci, out terminPrzekazania);
-
-                    //BLL.tabZadania.Create_ctPDS_Form(web, ctPDS, klientId, okresId, key, terminPlatnosci, terminPrzekazania, false);
-                }
-            }
-            catch (Exception ex)
-            {
-#if DEBUG
-                throw ex;
-#else
-                BLL.Logger.LogEvent(web.Url, ex.ToString() + " KlientId= " + klientId.ToString());
-                var result = ElasticEmail.EmailGenerator.ReportError(ex, web.Url, "KlientId=" + klientId.ToString());
-#endif
-
             }
         }
     }

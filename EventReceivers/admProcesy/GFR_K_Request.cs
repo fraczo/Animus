@@ -27,23 +27,32 @@ namespace EventReceivers.admProcesy
                             ZUS_Forms.Manage_ZUS_Form(item.Web, okresId, klientItem, iok);
                         if (mask.StartsWith("PD-") || string.IsNullOrEmpty(mask))
                             PD_Forms.Create_PD_Form(item.Web, okresId, klientItem, iok);
-                        //VAT_Forms.Create(item.Web, klientId, okresId);
+                        if (mask.StartsWith("VAT-") || string.IsNullOrEmpty(mask))
+                            VAT_Forms.Create_VAT_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.Equals("RBR") || string.IsNullOrEmpty(mask))
+                            RBR_Forms.Create_RBR_Form(item.Web, okresId, klientItem, iok);
                         break;
                     case "KSH":
-                        //ZUS_Forms.Create(item.Web, klientId, okresId);
-                        //PDS_Forms.Create(item.Web, klientId, okresId);
-                        //VAT_Forms.Create(item.Web, klientId, okresId);
+                        if (mask.StartsWith("ZUS-") || string.IsNullOrEmpty(mask))
+                            ZUS_Forms.Manage_ZUS_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.StartsWith("PDS-") || string.IsNullOrEmpty(mask))
+                            PDS_Forms.Create_PDS_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.StartsWith("VAT-") || string.IsNullOrEmpty(mask))
+                            VAT_Forms.Create_VAT_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.Equals("RBR") || string.IsNullOrEmpty(mask))
+                            RBR_Forms.Create_RBR_Form(item.Web, okresId, klientItem, iok);
                         break;
                     case "Firma":
-                        //PDS_Forms.Create(item.Web, klientId, okresId);
+                        if (mask.StartsWith("PD-") || string.IsNullOrEmpty(mask))
+                            PD_Forms.Create_PD_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.StartsWith("VAT-") || string.IsNullOrEmpty(mask))
+                            VAT_Forms.Create_VAT_Form(item.Web, okresId, klientItem, iok);
                         break;
                     case "Osoba fizyczna":
                         if (mask.StartsWith("ZUS-") || string.IsNullOrEmpty(mask))
                             ZUS_Forms.Manage_ZUS_Form(item.Web, okresId, klientItem, iok);
                         if (mask.StartsWith("PD-") || string.IsNullOrEmpty(mask))
                             PD_Forms.Create_PD_Form(item.Web, okresId, klientItem, iok);
-                        //PDS_Forms.Create(item.Web, klientId, okresId);
-                        //VAT_Forms.Create(item.Web, klientId, okresId);
                         break;
 
                     default:

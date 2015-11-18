@@ -839,27 +839,31 @@ namespace BLL
             return results;
         }
 
-        private static Array Refine_KlienciBySerwisMask(string mask, Array klienci)
+        public static Array Refine_KlienciBySerwisMask(string mask, Array klienci)
         {
             ArrayList newResults = new ArrayList();
-            foreach (SPListItem k in klienci)
-            {
-                Array serwisy = BLL.Tools.Get_LookupValueCollection(k, "selSewisy");
 
-                if (mask.EndsWith("*"))
+            if (mask.EndsWith("*"))
+            {
+                string newMask = mask.Substring(0, mask.Length - 1);
+                foreach (SPListItem k in klienci)
                 {
-                    mask = mask.Substring(1, mask.Length - 1);
+                    Array serwisy = BLL.Tools.Get_LookupValueCollection(k, "selSewisy");
                     foreach (SPFieldLookupValue v in serwisy)
                     {
-                        if (v.LookupValue.StartsWith(mask))
+                        if (v.LookupValue.StartsWith(newMask))
                         {
                             newResults.Add(k);
                             break;
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                foreach (SPListItem k in klienci)
                 {
+                    Array serwisy = BLL.Tools.Get_LookupValueCollection(k, "selSewisy");
                     foreach (SPFieldLookupValue v in serwisy)
                     {
                         if (v.LookupValue.Equals(mask))
@@ -870,6 +874,7 @@ namespace BLL
                     }
                 }
             }
+
             return newResults.ToArray();
         }
     }

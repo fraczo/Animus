@@ -12,7 +12,7 @@ namespace EventReceivers.admProcesy
        public override void ItemAdded(SPItemEventProperties properties)
        {
            SPListItem item = properties.ListItem;
-           item["_Status"] = "Obsługa";
+           item["enumStatusZlecenia"] = "Obsługa";
            item.SystemUpdate();
 
            try
@@ -30,11 +30,11 @@ namespace EventReceivers.admProcesy
                }
 
                item.Delete();
-               item.SystemUpdate();
+               //item.SystemUpdate();
            }
            catch (Exception ex)
            {
-               item["_Status"] = "Anulowany";
+               item["enumStatusZlecenia"] = "Anulowany";
                item["_Memo"] = ex.ToString();
                item.SystemUpdate();
            }
