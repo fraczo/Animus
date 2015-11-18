@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <Receivers  ListUrl="Lists/admProcesy">
+      <Receiver>
+        <Name>admProcesyItemAdded</Name>
+        <Type>ItemAdded</Type>
+        <Assembly>STAFix24.Animus.EventReceivers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d98099de718d7615</Assembly>
+        <Class>EventReceivers.admProcesy.admProcesy</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+
+  </Receivers>
+</Elements>

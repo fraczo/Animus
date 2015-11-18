@@ -1,1 +1,1 @@
-bin\Debug\STAFix24_BR5.wsp
+bin\Debug\STAFix24_Animus.wsp

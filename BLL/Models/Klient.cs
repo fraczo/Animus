@@ -109,6 +109,12 @@ namespace BLL.Models
                 //Daty
                 this.DataRozpoczeciaDzialalnosci = BLL.Tools.Get_Date(item,"colDataRozpoczeciaDzialalnosci");
 
+                //Serwisy
+
+                this.Serwisy = BLL.Tools.Get_LookupValueCollection(item, "selSewisy");
+                this.PrzypomnienieOTerminiePlatnosci = BLL.Tools.Get_Flag(item, "colPrzypomnienieOTerminiePlatnos");
+                this.GenerowanieDrukuWplaty = BLL.Tools.Get_Flag(item, "colDrukWplaty");
+                this.AudytDanych = BLL.Tools.Get_Flag(item, "colAudytDanych");
 
                 // PIT
                 try
@@ -117,6 +123,9 @@ namespace BLL.Models
                     urzadId = BLL.dicUrzedySkarbowe.Ensure(web, urzadId);
                     if (urzadId > 0)
                     {
+                        this.NumerRachunkuVAT = tabUrzedySkarbowe.Get_NumerRachunkuVATById(web, urzadId);
+                        this.NumerRachunkuZUSPD = tabUrzedySkarbowe.Get_NumerRachunkuPITById(web, urzadId);
+
                         if (this.FormaOpodatkowaniaPD=="CIT")
                             NumerRachunkuPD = tabUrzedySkarbowe.Get_NumerRachunkuCITById(web, urzadId);
                         else
@@ -157,7 +166,7 @@ namespace BLL.Models
                     else
                     {
                         //Przyjmij parametry jak dla US od podatku PIT
-                        NumerRachunkuVAT = this.NumerRachunkuPD;
+                        NumerRachunkuVAT = this.NumerRachunkuVAT;
                         NazwaUrzeduSkarbowegoVAT = this.NazwaUrzeduSkarbowego;
                         UrzadSkarbowyVATId = this.UrzadSkarbowyId;
                     }
@@ -264,5 +273,15 @@ namespace BLL.Models
         public int UrzadSkarbowyVATId { get; set; }
 
         public string NazwaUrzeduSkarbowegoVAT { get; set; }
+
+        public string NumerRachunkuZUSPD { get; set; }
+
+        public Array Serwisy { get; set; }
+
+        public object PrzypomnienieOTerminiePlatnosci { get; set; }
+
+        public object GenerowanieDrukuWplaty { get; set; }
+
+        public object AudytDanych { get; set; }
     }
 }

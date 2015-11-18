@@ -175,11 +175,9 @@ namespace BLL
 
                 //flagi
 
-                Flagi fl = new Flagi(web, klientId);
-
-                item["colPrzypomnienieOTerminiePlatnos"] = fl.PrzypomnienieOTerminiePlatnosci;
-                item["colDrukWplaty"] = fl.GenerowanieDrukuWplaty;
-                item["colAudytDanych"] = fl.AudytDanych;
+                item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
+                item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
+                item["colAudytDanych"] = iok.AudytDanych;
 
                 //rozliczenie
                 if (isKwartalnie)
@@ -262,11 +260,9 @@ namespace BLL
 
             //flagi
 
-            Flagi fl = new Flagi(web, klientId);
-
-            item["colPrzypomnienieOTerminiePlatnos"] = fl.PrzypomnienieOTerminiePlatnosci;
-            item["colDrukWplaty"] = fl.GenerowanieDrukuWplaty;
-            item["colAudytDanych"] = fl.AudytDanych;
+            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
+            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
+            item["colAudytDanych"] = iok.AudytDanych;
 
             //rozliczenie
             if (isKwartalnie)
@@ -367,11 +363,9 @@ namespace BLL
 
         }
 
-        public static void Create_ctZUS_Form(SPWeb web, string ct, int klientId, int okresId, string key, bool isTylkoZdrowotna, bool isChorobowa, bool isPracownicy, double skladkaSP, double skladkaZD, double skladkaFP, DateTime terminPlatnosci, DateTime terminPrzekazania, string zus_sp_konto, string zus_zd_konto, string zus_fp_konto, Klient iok)
+        public static void Create_ctZUS_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
         {
             SPList list = web.Lists.TryGetList(targetList);
-
-            Flagi fl = new Flagi(web, klientId);
 
             SPListItem item = list.AddItem();
             item["ContentType"] = ct;
@@ -385,34 +379,70 @@ namespace BLL
             item["selProcedura"] = tabProcedury.Ensure(web, procName);
             item["Title"] = procName;
 
+            BLL.Models.Okres o = new BLL.Models.Okres(web, okresId);
+
             //jeżeli ZUS-PRAC to nie wypełniaj wysokości składek
-            if (!hasKlientMaAktywnySerwis(item, "ZUS-PRAC"))
+            if (!BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-PRAC"))
             {
-                item["colZUS_SP_Skladka"] = skladkaSP;
-                item["colZUS_ZD_Skladka"] = skladkaZD;
-                item["colZUS_FP_Skladka"] = skladkaFP;
+
+                if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-M"))
+                {
+                    item["colZUS_SP_Skladka"] = o.Skladka_ZUS_M_SP;
+                    item["colZUS_ZD_Skladka"] = o.Skladka_ZUS_M_ZD;
+                    item["colZUS_FP_Skladka"] = o.Skladka_ZUS_M_FP;
+
+                }
+                else if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-M+C"))
+                {
+                    item["colZUS_SP_Skladka"] = o.Skladka_ZUS_D_SPC;
+                    item["colZUS_ZD_Skladka"] = o.Skladka_ZUS_M_ZD;
+                    item["colZUS_FP_Skladka"] = o.Skladka_ZUS_M_FP;
+                }
+                else if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-D"))
+                {
+                    item["colZUS_SP_Skladka"] = o.Skladka_ZUS_D_SP;
+                    item["colZUS_ZD_Skladka"] = o.Skladka_ZUS_D_ZD;
+                    item["colZUS_FP_Skladka"] = o.Skladka_ZUS_D_FP;
+                }
+                else if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-D+C"))
+                {
+                    item["colZUS_SP_Skladka"] = o.Skladka_ZUS_D_SPC;
+                    item["colZUS_ZD_Skladka"] = o.Skladka_ZUS_D_ZD;
+                    item["colZUS_FP_Skladka"] = o.Skladka_ZUS_D_FP;
+                }
+                else if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-ZD"))
+                {
+                    item["colZUS_ZD_Skladka"] = o.Skladka_ZUS_D_ZD;
+                }
             }
 
-            item["colZUS_TerminPlatnosciSkladek"] = terminPlatnosci;
+            DateTime termin;
 
-            KontaZUS konta = admSetup.GetKontaZUS(web);
+            if (iok.ZatrudniaPracownikow)
+            {
+                termin = o.TerminPlatnosciSkladek_ZUS_BezPracownikow;
+            }
+            else
+            {
+                termin = o.TerminPlatnosciSkladek_ZUS_ZPracownikami;
+            }
+            int offset = (int)o.TerminPrzekazaniaWynikow_ZUS_Ofset;
 
-            item["colZUS_SP_Konto"] = konta.KontoSP;
-            item["colZUS_ZD_Konto"] = konta.KontoZD;
-            item["colZUS_FP_Konto"] = konta.KontoFP;
-            item["colZUS_TerminPrzekazaniaWynikow"] = terminPrzekazania;
+            item["colZUS_TerminPlatnosciSkladek"] = termin;
+            item["colTerminRealizacji"] = termin.AddDays(-1 * offset);
+
+            //urząd skarbowy do podatku za pracowników
+            item["selUrzadSkarbowy"] = iok.UrzadSkarbowyId;
+            item["colPD_TerminPlatnosciPodatku"] = o.TerminPlatnosciPodatkuPD;
+
 
             //flagi
-            item["colPrzypomnienieOTerminiePlatnos"] = fl.PrzypomnienieOTerminiePlatnosci;
-            item["colDrukWplaty"] = fl.GenerowanieDrukuWplaty;
-            item["colAudytDanych"] = fl.AudytDanych;
+            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
+            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
+            item["colAudytDanych"] = iok.AudytDanych;
 
             //uwagi 
             item["colUwagiKadrowe"] = iok.UwagiKadrowe;
-            item["colUwagi"] = iok.Uwagi;
-
-            //termin realizacji
-            item["colTerminRealizacji"] = item["colZUS_TerminPrzekazaniaWynikow"];
 
             if (iok.FormaOpodatkowaniaZUS != "Nie dotyczy")
             {
@@ -420,12 +450,6 @@ namespace BLL
             }
             item["colFormaOpodakowania_ZUS"] = iok.FormaOpodatkowaniaZUS;
             item["selOddzialZUS"] = iok.OddzialZUSId;
-            item["colOsobaDoKontaktu"] = iok.OsobaDoKontaktu;
-            item["colTelefon"] = iok.Telefon;
-            item["colEmail"] = iok.Email;
-            item["colAdres"] = iok.Adres;
-            item["colKodPocztowy"] = iok.KodPocztowy;
-            item["colMiejscowosc"] = iok.Miejscowosc;
 
             //forma opodatkowania ZUS
 
@@ -471,10 +495,8 @@ namespace BLL
 
             //flagi
 
-            Flagi fl = new Flagi(web, klientId);
-
-            item["colPrzypomnienieOTerminiePlatnos"] = fl.PrzypomnienieOTerminiePlatnosci;
-            item["colDrukWplaty"] = fl.GenerowanieDrukuWplaty;
+            item["colPrzypomnienieOTerminiePlatnos"] = iok.PrzypomnienieOTerminiePlatnosci;
+            item["colDrukWplaty"] = iok.GenerowanieDrukuWplaty;
 
             //uwagi 
             item["colUwagi"] = iok.Uwagi;
@@ -602,21 +624,6 @@ namespace BLL
                 }
             }
 
-        }
-
-        private static bool hasKlientMaAktywnySerwis(SPListItem item, string serviceName)
-        {
-            int klientId;
-
-            if (item["selKlient"] != null) klientId = new SPFieldLookupValue(item["selKlient"].ToString()).LookupId;
-            else klientId = 0;
-
-            if (klientId > 0)
-            {
-                if (BLL.tabKlienci.HasServiceAssigned(item.Web, klientId, serviceName)) return true;
-            }
-
-            return false;
         }
 
 

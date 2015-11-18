@@ -61,33 +61,48 @@ namespace SPEmail
             SendMailWithAttachment(item, message);
         }
 
-        public static void SendMailWithAttachment(SPListItem item, MailMessage message)
+        public static bool SendMailWithAttachment(SPListItem item, MailMessage message)
         {
-            SmtpClient client = new SmtpClient();
-            client.Host = item.Web.Site.WebApplication.OutboundMailServiceInstance.Server.Address;
+            bool result = false;
 
-            //nazwa witryny
-            if (string.IsNullOrEmpty(message.From.Address))
+            try
             {
-                message.From = new MailAddress(BLL.admSetup.GetValue(item.Web, "EMAIL_BIURA"),
-                  item.Web.Title != null ? item.Web.Title : BLL.admSetup.GetValue(item.Web, "EMAIL_NAZWA_FIRMY"));
+                SmtpClient client = new SmtpClient();
+                client.Host = item.Web.Site.WebApplication.OutboundMailServiceInstance.Server.Address;
+
+                //nazwa witryny
+                if (string.IsNullOrEmpty(message.From.Address))
+                {
+                    message.From = new MailAddress(BLL.admSetup.GetValue(item.Web, "EMAIL_BIURA"),
+                      item.Web.Title != null ? item.Web.Title : BLL.admSetup.GetValue(item.Web, "EMAIL_NAZWA_FIRMY"));
+                }
+                else
+                {
+                    message.From = new MailAddress(message.From.Address, Format_SenderDisplayName(item.Web, message.From.Address));
+                }
+
+                //ustaw adres zwrotny
+                //message.ReplyTo = message.From;
+                message.ReplyTo = new MailAddress(message.From.Address, Format_SenderDisplayName(item.Web, message.From.Address));
+
+                for (int attachmentIndex = 0; attachmentIndex < item.Attachments.Count; attachmentIndex++)
+                {
+                    string url = item.Attachments.UrlPrefix + item.Attachments[attachmentIndex];
+                    SPFile file = item.ParentList.ParentWeb.GetFile(url);
+                    message.Attachments.Add(new Attachment(file.OpenBinaryStream(), file.Name));
+                }
+
+                client.Send(message);
+
+                result = true;
             }
-            else
+            catch (Exception ex)
             {
-                message.From = new MailAddress(message.From.Address, Format_SenderDisplayName(item.Web,message.From.Address));
+                var r = ElasticEmail.EmailGenerator.ReportError(ex, item.ParentList.ParentWeb.Url);
+                return false;
             }
 
-            //ustaw adres zwrotny
-            message.ReplyTo = message.From;
-
-            for (int attachmentIndex = 0; attachmentIndex < item.Attachments.Count; attachmentIndex++)
-            {
-                string url = item.Attachments.UrlPrefix + item.Attachments[attachmentIndex];
-                SPFile file = item.ParentList.ParentWeb.GetFile(url);
-                message.Attachments.Add(new Attachment(file.OpenBinaryStream(), file.Name));
-            }
-
-            client.Send(message);
+            return result;
         }
 
         /// <summary>
@@ -115,11 +130,8 @@ namespace SPEmail
         /// <param name="item"></param>
         /// <param name="mail"></param>
         /// <param name="isTestMode"></param>
-        public static void SendMailFromMessageQueue(SPListItem item, MailMessage mail, bool isTestMode)
+        public static bool SendMailFromMessageQueue(SPListItem item, MailMessage mail, bool isTestMode)
         {
-            //wymusza zaślepienie wysyłek
-            isTestMode = true;
-
             if (isTestMode)
             {
                 StringBuilder sb = new StringBuilder();
@@ -148,10 +160,21 @@ namespace SPEmail
 
                 mail.Subject = String.Format(":TEST {0}", mail.Subject);
             }
+            else
+            {
+                //dodaje sygnarurę wiadomości
+                string msgIndex = string.Format(@"<blockquote style='font-size: x-small; color: #808080'>#{0}.{1}</blockquote>",
+                    item.ID.ToString(),
+                    BLL.Tools.Get_Value(item, "_ZadanieId").ToString());
 
-            SendMailWithAttachment(item, mail);
+                StringBuilder sb = new StringBuilder(mail.Body);
+                sb.Replace(@"</body></html>", msgIndex + @"</body></html>");
+                mail.Body = sb.ToString();
+            }
 
+            bool result = SendMailWithAttachment(item, mail);
 
+            return result;
         }
 
         public static void SendProcessEndConfirmationMail(string subject, string bodyHtml, SPWeb web, SPListItem item)
@@ -164,11 +187,11 @@ namespace SPEmail
             DateTime sDate = DateTime.Parse(item["Created"].ToString());
             DateTime eDate = DateTime.Now;
             TimeSpan ts = eDate - sDate;
-                bodyHtml = string.Format(@"<div>od: {0}<br>do: {1} ({2})</div>{3}",
-                    sDate.ToString(),
-                    eDate.ToString(),
-                    string.Format("{0:HH\\:mm\\:ss}", new DateTime(ts.Ticks)),
-                    bodyHtml.ToString());
+            bodyHtml = string.Format(@"<div>od: {0}<br>do: {1} ({2})</div>{3}",
+                sDate.ToString(),
+                eDate.ToString(),
+                string.Format("{0:HH\\:mm\\:ss}", new DateTime(ts.Ticks)),
+                bodyHtml.ToString());
 
             SendMail(web, from, to, subject, bodyHtml, true, string.Empty, string.Empty);
 

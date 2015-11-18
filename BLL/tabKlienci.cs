@@ -63,14 +63,10 @@ namespace BLL
             return result;
         }
 
-        internal static bool HasServiceAssigned(SPWeb web, int klientId, string serwisKod)
+        internal static bool HasServiceAssigned(SPListItem item, string serwisKod)
         {
             bool result = false;
-            SPList targetList = web.Lists.TryGetList(listName);
 
-            //if (targetList != null)
-            //{
-            SPListItem item = targetList.GetItemById(klientId);
             if (item != null)
             {
                 SPFieldLookupValueCollection kody = new SPFieldLookupValueCollection(item["selSewisy"].ToString());
@@ -83,17 +79,7 @@ namespace BLL
                     }
                 }
 
-                kody = new SPFieldLookupValueCollection(item["selSerwisyWspolnicy"].ToString());
-                foreach (SPFieldLookupValue kod in kody)
-                {
-                    if (kod.LookupValue == serwisKod)
-                    {
-                        result = true;
-                        break;
-                    }
-                }
             }
-            //}
 
             return result;
 
@@ -762,7 +748,7 @@ namespace BLL
                 //dodaj klienta do listy wyników
                 if (!found)
                 {
-                    results.Add(BLL.tabKlienci.Get_KlientById(item.Web,klientId));
+                    results.Add(BLL.tabKlienci.Get_KlientById(item.Web, klientId));
                 }
             }
         }
@@ -810,6 +796,55 @@ namespace BLL
 
                 return;
             }
+        }
+
+        public static Array Get_AktywniKlienci_BySerwisMask(SPWeb web, string mask)
+        {
+
+
+            SPList targetList = web.Lists.TryGetList(listName);
+            ArrayList result = new ArrayList();
+
+            Array tempResult = targetList.Items.Cast<SPListItem>()
+                                .Where(i => i["enumStatus"].ToString() == "Aktywny")
+                                .Where(i => new SPFieldLookupValueCollection(i["selSewisy"].ToString()).Count > 0)
+                                .ToArray();
+            if (tempResult.Length > 0)
+            {
+                if (mask.EndsWith("*"))
+                {
+                    mask = mask.Substring(0, mask.Length - 1);
+                    foreach (SPListItem item in tempResult)
+                    {
+                        Array lvc = BLL.Tools.Get_LookupValueCollection(item, "selSewisy");
+                        foreach (SPFieldLookupValue lv in lvc)
+                        {
+                            if (lv.LookupValue.StartsWith(mask))
+                            {
+                                result.Add(item);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (SPListItem item in tempResult)
+                    {
+                        Array lvc = BLL.Tools.Get_LookupValueCollection(item, "selSewisy");
+                        foreach (SPFieldLookupValue lv in lvc)
+                        {
+                            if (lv.LookupValue.Equals(mask))
+                            {
+                                result.Add(item);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+            return result.ToArray();
         }
     }
 }

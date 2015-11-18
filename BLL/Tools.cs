@@ -317,7 +317,7 @@ namespace BLL
 
         public static bool IsSelectorAssigned(SPListItem item, string col, string exceptValue)
         {
-            if (item[col]==null) return false;
+            if (item[col] == null) return false;
 
             string v = item[col].ToString();
             if (string.IsNullOrEmpty(v)) return false;
@@ -362,6 +362,49 @@ namespace BLL
                 options.Add(option);
                 item[col] = options;
             }
+        }
+
+        internal static double Get_Double(SPListItem item, string col)
+        {
+            return item[col] != null ? double.Parse(item[col].ToString()) : 0;
+        }
+
+        public static bool Has_SerwisAssigned(SPListItem item, string col, string mask)
+        {
+            Array aSerwisy = BLL.Tools.Get_LookupValueCollection(item, col);
+            if (aSerwisy.Length > 0)
+                if (mask.EndsWith("*"))
+                {
+                    mask = mask.Substring(0, mask.Length - 1);
+                    foreach (SPFieldLookupValue s in aSerwisy)
+                    {
+                        if (s.LookupValue.StartsWith(mask))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (SPFieldLookupValue s in aSerwisy)
+                    {
+                        if (s.LookupValue.Equals(mask))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            else
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        internal static int Get_Integer(SPListItem item, string col)
+        {
+            return item[col] != null ? Convert.ToInt32(item.ToString()) : 0;
         }
     }
 }

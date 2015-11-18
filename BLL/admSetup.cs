@@ -102,5 +102,55 @@ namespace BLL
 
             return result;
         }
+
+        public static bool IsProductionEnabled(SPWeb web)
+        {
+
+            string proKEY = "PRODUCTION_MODE";
+            string proEnabled = "Enabled";
+            string proDisabled = "Disabled";
+
+            string v = GetValue(web, proKEY);
+            if (v == proEnabled)
+            {
+                return true;
+            }
+            else
+            {
+                //dodaj nieaktywny klucz
+                SPSecurity.RunWithElevatedPrivileges(delegate()
+                {
+                    BLL.admSetup.Ensure(web, proKEY, proDisabled, "VALUE", "Przełącznik odblokowujący produkcyjną pracę systemu");
+                });
+
+                return false;
+            }
+
+        }
+
+        private static void Ensure(SPWeb web, string key, string defaultValue, string columnName, string description)
+        {
+            SPList list = web.Lists.TryGetList(targetList);
+            SPListItem item = list.Items.Cast<SPListItem>()
+                .Where(i => i["KEY"].ToString() == key)
+                .FirstOrDefault();
+
+            if (item == null)
+            {
+                try
+                {
+                    item = list.AddItem();
+                    item["KEY"] = key;
+                    item[columnName] = defaultValue;
+                    item["colOpis"] = description;
+                    item.SystemUpdate();
+                }
+                catch (Exception ex)
+                {
+                    var result = ElasticEmail.EmailGenerator.ReportError(ex, web.Url);
+                }
+
+            }
+        }
     }
 }

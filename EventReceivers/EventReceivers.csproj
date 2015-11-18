@@ -51,6 +51,13 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admProcesy\PDS_Forms.cs" />
+    <Compile Include="admProcesy\PD_Forms.cs" />
+    <Compile Include="admProcesy\VAT_Forms.cs" />
+    <Compile Include="admProcesy\ZUS_Forms.cs" />
+    <Compile Include="admProcesy\admProcesy.cs" />
+    <Compile Include="admProcesy\GFR_Request.cs" />
+    <Compile Include="admProcesy\GFR_K_Request.cs" />
     <Compile Include="dicUrzedySkarbowe\dicUrzedySkarbowe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tabKlienci\tabKlienci.cs">
@@ -59,6 +66,9 @@
     <Compile Include="tabZadania\tabZadania.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="admProcesy\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{e4309b56-f5d0-4af8-96ac-60d35eb4f0be}</SharePointProjectItemId>
+    </None>
     <None Include="dicUrzedySkarbowe\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{95c6a07b-c9ed-4adb-bd85-f16c5275766b}</SharePointProjectItemId>
       <SubType>Designer</SubType>
@@ -99,6 +109,7 @@
     <None Include="dicUrzedySkarbowe\Elements.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="admProcesy\Elements.xml" />
     <Content Include="Features\Feature1\Feature1.Template.xml">
       <DependentUpon>Feature1.feature</DependentUpon>
     </Content>

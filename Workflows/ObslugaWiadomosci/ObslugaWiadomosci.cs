@@ -89,7 +89,7 @@ namespace Workflows.ObslugaWiadomosci
                     {
                         string body = item["colTresc"].ToString();
 
-                        StringBuilder sb = new StringBuilder(BLL.dicSzablonyKomunikacji.Get_TemplateByKod(item,"EMAIL_DEFAULT_BODY",true));
+                        StringBuilder sb = new StringBuilder(BLL.dicSzablonyKomunikacji.Get_TemplateByKod(item, "EMAIL_DEFAULT_BODY", true));
                         sb.Replace(@"___BODY___", body);
                         sb.Replace(@"___FOOTER___", string.Empty);
                         mail.Body = sb.ToString();
@@ -106,17 +106,39 @@ namespace Workflows.ObslugaWiadomosci
             if (isMailReadyToSend)
             {
                 bool testMode = true;
-                SPEmail.EmailGenerator.SendMailFromMessageQueue(item, mail, testMode);
 
-                //ustaw flagę wysyłki
-                item["colCzyWyslana"] = true;
-                item["colDataNadania"] = DateTime.Now.ToString();
-                item.SystemUpdate();
-
-                int zadanieId = item["_ZadanieId"] != null ? int.Parse(item["_ZadanieId"].ToString()) : 0;
-                if (zadanieId > 0)
+                try
                 {
-                    BLL.tabZadania.Update_StatusWysylki(item.Web, item, zadanieId, BLL.Models.StatusZadania.Zakończone);
+                    if (BLL.admSetup.IsProductionEnabled(item.Web))
+                    {
+                        //TRYB PRODUKCYNJY AKTYWNY
+                        testMode = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var r = ElasticEmail.EmailGenerator.ReportError(ex, item.ParentList.ParentWeb.Url);
+                }
+
+
+                bool result = SPEmail.EmailGenerator.SendMailFromMessageQueue(item, mail, testMode);
+
+                if (result)
+                {
+                    //ustaw flagę wysyłki
+                    item["colCzyWyslana"] = true;
+                    item["colDataNadania"] = DateTime.Now.ToString();
+                    item.SystemUpdate();
+
+                    int zadanieId = item["_ZadanieId"] != null ? int.Parse(item["_ZadanieId"].ToString()) : 0;
+                    if (zadanieId > 0)
+                    {
+                        BLL.tabZadania.Update_StatusWysylki(item.Web, item, zadanieId, BLL.Models.StatusZadania.Zakończone);
+                    }
+                }
+                else
+                {
+                    var r = ElasticEmail.EmailGenerator.SendMail(string.Format(@"!!! Message#{0} not sent", item.ID.ToString()), string.Empty);
                 }
             }
         }

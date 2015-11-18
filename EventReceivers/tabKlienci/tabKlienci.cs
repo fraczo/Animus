@@ -355,10 +355,10 @@ namespace EventReceivers.tabKlienci
                                 BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-M");
                                 break;
                             case "Mały ZUS + Chorobowa":
-                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-D");
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-M+C");
                                 break;
                             case "Duży ZUS":
-                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-M+C");
+                                BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-D");
                                 break;
                             case "Duży ZUS + Chorobowa":
                                 BLL.Tools.Assign_Service(ref item, "selSewisy", "ZUS-D+C");

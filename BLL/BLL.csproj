@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="admProcessRequests.cs" />
+    <Compile Include="admProcesy.cs" />
     <Compile Include="admSetup.cs" />
     <Compile Include="dicBiura.cs" />
     <Compile Include="dicOddzialyZUS.cs" />
@@ -63,13 +64,13 @@
     <Compile Include="ElasticEmail.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Models\Markery.cs" />
+    <Compile Include="Models\Okres.cs" />
     <Compile Include="Models\Operator.cs" />
     <Compile Include="Models\StatusZadania.cs" />
     <Compile Include="SPEmail.cs" />
     <Compile Include="intBuforWiadomosci.cs" />
     <Compile Include="libDokumenty.cs" />
     <Compile Include="Models\BiuroRachunkowe.cs" />
-    <Compile Include="Models\Flagi.cs" />
     <Compile Include="Models\Klient.cs" />
     <Compile Include="Models\KontaKlienta.cs" />
     <Compile Include="Models\KontaZUS.cs" />
