@@ -10,6 +10,8 @@ namespace EventReceivers.admProcesy
     {
         internal static void Create(Microsoft.SharePoint.SPListItem item)
         {
+            BLL.Logger.LogEvent("Generowanie formatek rozliczeniowych dla klienta", item.ID.ToString());
+
             int okresId = BLL.Tools.Get_LookupId(item, "selOkres");
             int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
             string mask = BLL.Tools.Get_Text(item, "colMaskaSerwisu");
@@ -19,6 +21,8 @@ namespace EventReceivers.admProcesy
                 BLL.Models.Klient iok = new BLL.Models.Klient(item.Web, klientId);
 
                 SPListItem klientItem = BLL.tabKlienci.Get_KlientById(item.Web, klientId);
+
+                BLL.tabKartyKontrolne.Ensure_KartaKontrolna(item.Web, klientId, okresId, iok);
 
                 switch (iok.TypKlienta)
                 {

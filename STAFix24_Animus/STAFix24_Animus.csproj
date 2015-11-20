@@ -50,6 +50,9 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\ObslugaWiadomosciTJ\ObslugaWiadomosciTJ.EventReceiver.cs">
+      <DependentUpon>ObslugaWiadomosciTJ.feature</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +67,12 @@
     </None>
     <None Include="Features\EventReceivers\EventReceivers.feature">
       <FeatureId>{238ee3f0-273f-4479-8f86-e8795048cec7}</FeatureId>
+    </None>
+    <None Include="Features\CustomActions\CustomActions.feature">
+      <FeatureId>{1979d449-45cd-417e-aee1-62d8c93f1c19}</FeatureId>
+    </None>
+    <None Include="Features\ObslugaWiadomosciTJ\ObslugaWiadomosciTJ.feature">
+      <FeatureId>{a72269f1-06a4-4040-8c0e-a43b848c6746}</FeatureId>
     </None>
     <None Include="Features\Workflows\Workflows.feature">
       <FeatureId>{4d389d2d-9dab-46c5-9d22-66072383dd1b}</FeatureId>
@@ -90,6 +99,13 @@
     <Content Include="Features\EventReceivers\EventReceivers.Template.xml">
       <DependentUpon>EventReceivers.feature</DependentUpon>
     </Content>
+    <Content Include="Features\CustomActions\CustomActions.Template.xml">
+      <DependentUpon>CustomActions.feature</DependentUpon>
+    </Content>
+    <Content Include="Features\ObslugaWiadomosciTJ\ObslugaWiadomosciTJ.Template.xml">
+      <DependentUpon>ObslugaWiadomosciTJ.feature</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Features\Workflows\Workflows.Template.xml">
       <DependentUpon>Workflows.feature</DependentUpon>
     </Content>
@@ -102,7 +118,9 @@
     <Folder Include="Layouts\STAFix24_Animus\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CustomActions\ObslugaKolejkiWiadomosci\Elements.xml" />
+    <Content Include="CustomActions\ObslugaKolejkiWiadomosci\Elements.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="CustomActions\GenerujFormatkiRozliczeniowe\Elements.xml" />
     <Content Include="Images\STAFix24_Animus\SETTINGS.GIF" />
     <Content Include="Images\STAFix24_Animus\SETTINGS16.GIF" />

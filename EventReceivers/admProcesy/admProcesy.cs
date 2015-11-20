@@ -4,6 +4,7 @@ using Microsoft.SharePoint;
 using Microsoft.SharePoint.Security;
 using Microsoft.SharePoint.Utilities;
 using Microsoft.SharePoint.Workflow;
+using BLL;
 
 namespace EventReceivers.admProcesy
 {
@@ -11,7 +12,12 @@ namespace EventReceivers.admProcesy
     {
        public override void ItemAdded(SPItemEventProperties properties)
        {
+           //this.EventFiringEnabled = false;
+
            SPListItem item = properties.ListItem;
+
+           BLL.Logger.LogEvent("admProcsy.ItemAdded",item.ID.ToString());
+
            item["enumStatusZlecenia"] = "Obsługa";
            item.SystemUpdate();
 
@@ -25,20 +31,24 @@ namespace EventReceivers.admProcesy
                    case "Generowanie formatek rozliczeniowych":
                        GFR_Request.Create(item);
                        break;
+                   case "Obsługa wiadomości":
+                       ObslugaWiadomosci.Execute(item);
+                       break;
                    default:
                        break;
                }
 
+               BLL.Logger.LogEvent("admProcsy.ItemAdded.end", item.ID.ToString());
+               //this.EventFiringEnabled = true;  
                item.Delete();
-               //item.SystemUpdate();
            }
            catch (Exception ex)
            {
-               item["enumStatusZlecenia"] = "Anulowany";
-               item["_Memo"] = ex.ToString();
-               item.SystemUpdate();
-           }
+               BLL.Logger.LogEvent("admProcsy.ItemAdded.error", ex.ToString());
 
+               BLL.Tools.Set_Text(item, "_Memo", ex.ToString(), false);
+               BLL.Tools.Set_Text(item, "enumStatusZlecenia", "Anulowane", true);
+           }
        }
     }
 }

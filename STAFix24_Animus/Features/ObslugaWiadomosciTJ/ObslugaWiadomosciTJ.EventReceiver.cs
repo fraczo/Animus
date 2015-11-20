@@ -6,7 +6,7 @@ using Microsoft.SharePoint.Security;
 
 namespace Animus.Features.ObslugaWiadomosciTJ
 {
-    [Guid("f4aed74c-2d23-4a22-9488-8669c0570675")]
+    [Guid("5E856AF0-C1D2-4F44-AE5E-289AD42EDF83")]
     public class ObslugaWiadomosciTJEventReceiver : SPFeatureReceiver
     {
         public override void FeatureActivated(SPFeatureReceiverProperties properties)

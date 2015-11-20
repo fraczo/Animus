@@ -8,3 +8,7 @@ C:\_GitHub\Animus\GeneratorDrukow\bin\Release\STAFix24.Animus.GeneratorDrukow.pd
 C:\_GitHub\Animus\GeneratorDrukow\obj\Release\GeneratorDrukow.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\GeneratorDrukow\obj\Release\STAFix24.Animus.GeneratorDrukow.dll
 C:\_GitHub\Animus\GeneratorDrukow\obj\Release\STAFix24.Animus.GeneratorDrukow.pdb
+C:\_GitHub\Animus\GeneratorDrukow\bin\Release\STAFix24.Animus.PdfSharp.dll
+C:\_GitHub\Animus\GeneratorDrukow\bin\Release\STAFix24.Animus.PdfSharp.pdb
+C:\_GitHub\Animus\GeneratorDrukow\bin\Release\STAFix24.Animus.PdfSharp.xml
+C:\_GitHub\Animus\GeneratorDrukow\bin\Release\de\STAFix24.Animus.PdfSharp.resources.dll

@@ -2,9 +2,7 @@
 <Solution xmlns="http://schemas.microsoft.com/sharepoint/" SolutionId="1e96213e-4c6f-48a5-afd2-106a06e268a8" SharePointProductVersion="14.0">
   <Assemblies>
     <Assembly Location="STAFix24.Animus.BLL.dll" DeploymentTarget="GlobalAssemblyCache" />
-    <Assembly Location="STAFix24.Animus.DAL.dll" DeploymentTarget="GlobalAssemblyCache" />
-    <Assembly Location="STAFix24.Animus.PdfSharp.dll" DeploymentTarget="GlobalAssemblyCache" />
-    <Assembly Location="STAFix24.Animus.GeneratorDrukow.dll" DeploymentTarget="GlobalAssemblyCache" />
+    <Assembly Location="STAFix24.Animus.TimerJobs.dll" DeploymentTarget="GlobalAssemblyCache" />
     <Assembly Location="STAFix24.Animus.dll" DeploymentTarget="GlobalAssemblyCache" />
     <Assembly Location="STAFix24.Animus.EventReceivers.dll" DeploymentTarget="GlobalAssemblyCache" />
     <Assembly Location="STAFix24.Animus.Workflows.dll" DeploymentTarget="GlobalAssemblyCache" />
@@ -17,5 +15,6 @@
   <FeatureManifests>
     <FeatureManifest Location="STAFix24_Animus_EventReceivers\Feature.xml" />
     <FeatureManifest Location="STAFix24_Animus_Workflows\Feature.xml" />
+    <FeatureManifest Location="STAFix24_Animus_CustomActions\Feature.xml" />
   </FeatureManifests>
 </Solution>

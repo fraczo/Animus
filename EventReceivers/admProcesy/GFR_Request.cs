@@ -10,6 +10,8 @@ namespace EventReceivers.admProcesy
     {
         internal static void Create(Microsoft.SharePoint.SPListItem item)
         {
+            BLL.Logger.LogEvent("Generowanie formatek rozliczeniowych", item.ID.ToString());
+
             string mask = BLL.Tools.Get_Text(item, "colMaskaSerwisu");
             string kmask = BLL.Tools.Get_Text(item, "colMaskaTypuKlienta");
 
@@ -71,15 +73,20 @@ namespace EventReceivers.admProcesy
             {
                 if (string.IsNullOrEmpty(mask))
                 {
-                    Create_New_GFR_K(item, "ZUS-*", list, k);
-                    Create_New_GFR_K(item, "PD-*", list, k);
-                    Create_New_GFR_K(item, "PDS-*", list, k);
-                    Create_New_GFR_K(item, "VAT-*", list, k);
+                    if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", "ZUS-*"))
+                        Create_New_GFR_K(item, "ZUS-*", list, k);
+                    if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", "PD-*"))
+                        Create_New_GFR_K(item, "PD-*", list, k);
+                    if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", "PDS-*"))
+                        Create_New_GFR_K(item, "PDS-*", list, k);
+                    if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", "VAT-*"))
+                        Create_New_GFR_K(item, "VAT-*", list, k);
                     //Create_New_GFR_K(item, "RBR", list, k);
                 }
                 else
                 {
-                    Create_New_GFR_K(item, mask, list, k);
+                    if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", mask))
+                        Create_New_GFR_K(item, mask, list, k);
                 }
 
             }
@@ -87,17 +94,16 @@ namespace EventReceivers.admProcesy
 
         private static void Create_New_GFR_K(Microsoft.SharePoint.SPListItem item, string mask, SPList list, SPListItem klientItem)
         {
+            string ct = "Generowanie formatek rozliczeniowych dla klienta";
+            int okresId = BLL.Tools.Get_LookupId(item, "selOkres");
 
-                string ct = "Generowanie formatek rozliczeniowych dla klienta";
-                int okresId = BLL.Tools.Get_LookupId(item, "selOkres");
+            SPListItem newItem = list.AddItem();
+            newItem["ContentType"] = ct;
+            newItem["selKlient"] = klientItem.ID;
+            newItem["selOkres"] = okresId;
+            newItem["colMaskaSerwisu"] = mask;
 
-                SPListItem newItem = list.AddItem();
-                newItem["ContentType"] = ct;
-                newItem["selKlient"] = klientItem.ID;
-                newItem["selOkres"] = okresId;
-                newItem["colMaskaSerwisu"] = mask;
-
-                newItem.SystemUpdate();
+            newItem.SystemUpdate();
         }
     }
 }

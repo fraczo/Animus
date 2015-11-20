@@ -3,3 +3,7 @@ C:\_GitHub\Biuromagda\STAFix24_Biuromagda\TimerJobs\bin\Release\BRMagda.TimerJob
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\TimerJobs\obj\Release\BRMagda.TimerJobs.dll
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\TimerJobs\obj\Release\BRMagda.TimerJobs.pdb
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\TimerJobs\obj\Release\TimerJobs.csprojResolveAssemblyReference.cache
+C:\_GitHub\Animus\TimerJobs\bin\Release\STAFix24.Animus.TimerJobs.dll
+C:\_GitHub\Animus\TimerJobs\bin\Release\STAFix24.Animus.TimerJobs.pdb
+C:\_GitHub\Animus\TimerJobs\obj\Release\STAFix24.Animus.TimerJobs.dll
+C:\_GitHub\Animus\TimerJobs\obj\Release\STAFix24.Animus.TimerJobs.pdb

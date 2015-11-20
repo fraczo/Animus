@@ -293,13 +293,10 @@ namespace BLL
             return sb.ToString();
         }
 
-
-
         internal static Array Get_LookupValueCollection(SPListItem item, string col)
         {
             return item[col] != null ? new SPFieldLookupValueCollection(item[col].ToString()).ToArray() : null;
         }
-
 
         public static void Set_Text(SPListItem item, string col, string val, bool updateRequest)
         {
@@ -405,6 +402,30 @@ namespace BLL
         internal static int Get_Integer(SPListItem item, string col)
         {
             return item[col] != null ? Convert.ToInt32(item.ToString()) : 0;
+        }
+
+        internal static void Copy_Attachement(SPListItem item, SPFile file)
+        {
+            int bufferSize = 20480;
+            byte[] byteBuffer = new byte[bufferSize];
+            byteBuffer = file.OpenBinary();
+            item.Attachments.Add(file.Name, byteBuffer);
+        }
+
+        public static void Set_Flag(ref SPListItem item, string col, bool value)
+        {
+            if (item[col]!=null)
+            {
+                item[col] = value;
+            }
+        }
+
+        public static void Set_Value(ref SPListItem item, string col, double value)
+        {
+            if (item[col] != null)
+            {
+                item[col] = value;
+            }
         }
     }
 }

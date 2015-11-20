@@ -57,7 +57,7 @@ namespace TimerJobs
         {
             using (var site = new SPSite(SiteUrl))
             {
-                SPList list = site.RootWeb.Lists.TryGetList("admProcessRequests");
+                SPList list = site.RootWeb.Lists.TryGetList("admProcesy");
 
                 SPListItem item = list.AddItem();
                 item["ContentType"] = "Obsługa wiadomości";

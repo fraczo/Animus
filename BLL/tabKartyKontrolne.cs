@@ -11,10 +11,10 @@ namespace BLL
         const string targetList = "Karty kontrolne";
         const string colPOTWIERDZENIE_ODBIORU_DOKUMENTOW = "colPotwierdzenieOdbioruDokumento";
 
-        public static void Create_KartaKontrolna(SPWeb web, int klientId, int okresId)
+        public static void Ensure_KartaKontrolna(SPWeb web, int klientId, int okresId, BLL.Models.Klient iok)
         {
             string KEY = Create_KEY(klientId, okresId);
-            int formId = Get_KartaKontrolnaId(web,klientId, okresId, KEY);
+            int formId = Get_KartaKontrolnaId(web, klientId, okresId, KEY, iok);
         }
 
         public static void Update_PD_Data(Microsoft.SharePoint.SPListItem item)
@@ -107,7 +107,7 @@ namespace BLL
             Copy_Field(item, "colNieWysylajDoKlienta", form, "_NieWysylajDoKlienta_VAT");
 
             Copy_Id(item, form, "_ZadanieID_VAT");
-            
+
             form.SystemUpdate();
         }
 
@@ -245,11 +245,16 @@ namespace BLL
 
         }
 
-        private static int Get_KartaKontrolnaId(SPWeb web, int klientId, int okresId, string KEY)
+        private static int Get_KartaKontrolnaId(SPWeb web, int klientId, int okresId, string KEY, Models.Klient iok)
         {
+            if (iok==null)
+            {
+                iok = new Models.Klient(web, klientId);
+            }
+
             SPList list = web.Lists.TryGetList(targetList);
             SPListItem item = list.Items.Cast<SPListItem>()
-                .Where(i => i["KEY"].ToString() == KEY)
+                .Where(i => i["KEY"].ToString().Equals(KEY))
                 .FirstOrDefault();
             if (item != null)
             {
@@ -262,16 +267,14 @@ namespace BLL
                 newItem["selKlient"] = klientId;
                 newItem["selOkres"] = okresId;
 
-                BLL.Models.Klient k = new Models.Klient(web, klientId);
-
-                newItem["enumRozliczeniePD"] = k.RozliczeniePD;
-                newItem["enumRozliczenieVAT"] = k.RozliczenieVAT;
-                newItem["colFormaOpodatkowaniaPD"] = k.FormaOpodatkowaniaPD;
-                newItem["colFormaOpodatkowaniaVAT"] = k.FormaOpodatkowaniaVAT;
-                newItem["colFormaOpodakowania_ZUS"] = k.FormaOpodatkowaniaZUS;
+                newItem["enumRozliczeniePD"] = iok.RozliczeniePD;
+                newItem["enumRozliczenieVAT"] = iok.RozliczenieVAT;
+                newItem["colFormaOpodatkowaniaPD"] = iok.FormaOpodatkowaniaPD;
+                newItem["colFormaOpodatkowaniaVAT"] = iok.FormaOpodatkowaniaVAT;
+                newItem["colFormaOpodakowania_ZUS"] = iok.FormaOpodatkowaniaZUS;
 
                 //ustaw CT
-                if (k.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
+                if (iok.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
                 else newItem["ContentType"] = "Karta kontrolna KPiR";
 
                 newItem.SystemUpdate();
@@ -329,7 +332,7 @@ namespace BLL
         public static void Set_PotwierdzenieOdbioruDokumentow(SPWeb web, int klientId, int okresId)
         {
             string KEY = Create_KEY(klientId, okresId);
-            int kkId = Get_KartaKontrolnaId(web, klientId, okresId, KEY);
+            int kkId = Get_KartaKontrolnaId(web, klientId, okresId, KEY, null);
             SPListItem item = Get_KartaKontrolnaById(web, kkId);
             item[colPOTWIERDZENIE_ODBIORU_DOKUMENTOW] = true;
             item.SystemUpdate();
@@ -341,12 +344,12 @@ namespace BLL
             SPList list = web.Lists.TryGetList(targetList);
 
             string KEY = BLL.tabKartyKontrolne.Create_KEY(klientId, okresId);
-            int kkId = Get_KartaKontrolnaId(web, klientId, okresId, KEY);
+            int kkId = Get_KartaKontrolnaId(web, klientId, okresId, KEY, null);
 
-            if (kkId>0)
+            if (kkId > 0)
             {
                 SPListItem item = Get_KartaKontrolnaById(web, kkId);
-                if (item!=null)
+                if (item != null)
                 {
                     return BLL.Tools.Get_Value(item, "colVAT_WartoscDoPrzeniesienia");
                 }

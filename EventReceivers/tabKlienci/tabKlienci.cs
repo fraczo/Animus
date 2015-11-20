@@ -30,12 +30,10 @@ namespace EventReceivers.tabKlienci
                 Cleanup(item);
                 Set_NazwaPrezentowana(item);
                 Update_Serwisy(item);
-
-                item.SystemUpdate();
-
-                //SPWeb web = properties.Web;
-                //Update_LookupRefFields(item);
+                Update_Extras(item);
                 //Update_FolderInLibrary(item, web);
+
+                item.SystemUpdate();                
             }
             catch (Exception ex)
             {
@@ -380,55 +378,26 @@ namespace EventReceivers.tabKlienci
             }
         }
 
-        //private static void Update_LookupRefFields(SPListItem item)
-        //{
-        //    // aktualizacja odwołań do lookupów
-        //    item["_TypZawartosci"] = item["ContentType"].ToString();
-        //    item["_Biuro"] = item["selBiuro"] != null ? new SPFieldLookupValue(item["selBiuro"].ToString()).LookupValue : string.Empty;
-        //    item["_ZatrudniaPracownikow"] = item["colZatrudniaPracownikow"] != null && (bool)item["colZatrudniaPracownikow"] ? "TAK" : string.Empty;
+        private static void Update_Extras(SPListItem item)
+        {
+            // aktualizacja odwołań do lookupów
+            item["_TypZawartosci"] = item.ContentType.Name;
+            item["_Biuro"] = BLL.Tools.Get_LookupValue(item, "selBiuro");
+            item["_ZatrudniaPracownikow"] = BLL.Tools.Get_Flag(item, "colZatrudniaPracownikow").ToString();
 
-        //    if (item["selDedykowanyOperator_Podatki"] != null)
-        //    {
-        //        item["_DedykowanyOperator_Podatki"] = new SPFieldLookupValue(item["selDedykowanyOperator_Podatki"].ToString()).LookupValue;
-        //    }
-        //    if (item["selDedykowanyOperator_Kadry"] != null)
-        //    {
-        //        item["_DedykowanyOperator_Kadry"] = new SPFieldLookupValue(item["selDedykowanyOperator_Kadry"].ToString()).LookupValue;
-        //    }
-        //    if (item["selDedykowanyOperator_Audyt"] != null)
-        //    {
-        //        item["_DedykowanyOperator_Audyt"] = new SPFieldLookupValue(item["selDedykowanyOperator_Audyt"].ToString()).LookupValue;
-        //    }
-
-        //    string np = string.Empty;
-        //    switch (item.ContentType.Name)
-        //    {
-        //        case "KPiR":
-        //        case "KSH":
-        //            np = string.Format("{0} NIP:{1}",
-        //                item["colNazwaSkrocona"] != null ? item["colNazwaSkrocona"].ToString() : item.Title,
-        //                item["colNIP"] != null ? item["colNIP"].ToString() : string.Empty);
-        //            break;
-        //        case "Firma":
-        //            string nazwa = item["colNazwa"] != null ? item["colNazwa"].ToString() : string.Empty;
-        //            string nip = item["colNIP"] != null ? item["colNIP"].ToString() : string.Empty;
-        //            np = string.Format(@"{2}/{0} NIP:{1}", nazwa, nip, Get_LookupValue(item, "selKlient_NazwaSkrocona"));
-        //            break;
-        //        case "Osoba fizyczna":
-        //            string npNazwsko = item["colNazwisko"] != null ? item["colNazwisko"].ToString().Trim() : string.Empty;
-        //            string npImie = item["colImie"] != null ? item["colImie"].ToString().Trim() : string.Empty;
-        //            string npPESEL = item["colPESEL"] != null ? item["colPESEL"].ToString().Trim() : string.Empty;
-        //            np = string.Format(@"{3}/{0} {1} PESEL:{2}", npNazwsko, npImie, npPESEL, Get_LookupValue(item, "selKlient_NazwaSkrocona"));
-        //            break;
-        //        case "Klient":
-        //            np = item["colNazwaSkrocona"].ToString();
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //    item["_NazwaPrezentowana"] = np;
-        //    item.SystemUpdate();
-        //}
+            if (item["selDedykowanyOperator_Podatki"] != null)
+            {
+                item["_DedykowanyOperator_Podatki"] = BLL.Tools.Get_LookupValue(item,"selDedykowanyOperator_Podatki");
+            }
+            if (item["selDedykowanyOperator_Kadry"] != null)
+            {
+                item["_DedykowanyOperator_Kadry"] = BLL.Tools.Get_LookupValue(item,"selDedykowanyOperator_Kadry");
+            }
+            if (item["selDedykowanyOperator_Audyt"] != null)
+            {
+                item["_DedykowanyOperator_Audyt"] = BLL.Tools.Get_LookupValue(item,"selDedykowanyOperator_Audyt");
+            }
+        }
         //private static void Update_FolderInLibrary(SPListItem item, SPWeb web)
         //{
         //    string typKlienta = item["ContentType"].ToString();
@@ -457,12 +426,6 @@ namespace EventReceivers.tabKlienci
         //    }
         //}
 
-        #region Helpers
-        private static string Get_LookupValue(SPListItem item, string col)
-        {
-            return item[col] != null ? new SPFieldLookupValue(item[col].ToString()).LookupValue : string.Empty;
-        }
-        #endregion
 
 
     }

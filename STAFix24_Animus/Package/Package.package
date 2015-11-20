@@ -2,13 +2,12 @@
 <package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="1e96213e-4c6f-48a5-afd2-106a06e268a8" solutionId="1e96213e-4c6f-48a5-afd2-106a06e268a8" resetWebServer="false" name="STAFix24_Animus" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
   <assemblies>
     <projectOutputAssembly location="STAFix24.Animus.BLL.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\BLL\BLL.csproj" />
-    <projectOutputAssembly location="STAFix24.Animus.DAL.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\DAL\DAL.csproj" />
-    <projectOutputAssembly location="STAFix24.Animus.PdfSharp.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\PdfSharp\PdfSharp.csproj" />
-    <projectOutputAssembly location="STAFix24.Animus.GeneratorDrukow.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\GeneratorDrukow\GeneratorDrukow.csproj" />
+    <projectOutputAssembly location="STAFix24.Animus.TimerJobs.dll" deploymentTarget="GlobalAssemblyCache" projectPath="..\TimerJobs\TimerJobs.csproj" />
   </assemblies>
   <features>
     <featureReference itemId="238ee3f0-273f-4479-8f86-e8795048cec7" />
     <featureReference itemId="4d389d2d-9dab-46c5-9d22-66072383dd1b" />
+    <featureReference itemId="1979d449-45cd-417e-aee1-62d8c93f1c19" />
   </features>
   <projectItems>
     <projectItemReference itemId="348bef8e-f411-4079-adeb-8646bc1f082e" />
