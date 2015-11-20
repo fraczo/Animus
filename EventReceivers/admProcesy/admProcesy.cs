@@ -46,8 +46,9 @@ namespace EventReceivers.admProcesy
            {
                BLL.Logger.LogEvent("admProcsy.ItemAdded.error", ex.ToString());
 
-               BLL.Tools.Set_Text(item, "_Memo", ex.ToString(), false);
-               BLL.Tools.Set_Text(item, "enumStatusZlecenia", "Anulowane", true);
+               BLL.Tools.Set_Text(ref item, "_Memo", ex.ToString());
+               BLL.Tools.Set_Text(ref item, "enumStatusZlecenia", "Anulowane");
+               item.SystemUpdate();
            }
        }
     }

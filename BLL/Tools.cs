@@ -298,16 +298,11 @@ namespace BLL
             return item[col] != null ? new SPFieldLookupValueCollection(item[col].ToString()).ToArray() : null;
         }
 
-        public static void Set_Text(SPListItem item, string col, string val, bool updateRequest)
+        public static void Set_Text(ref SPListItem item, string col, string val)
         {
             if (item[col] != null && item[col].ToString() != val.ToString())
             {
                 item[col] = val.ToString();
-
-                if (updateRequest)
-                {
-                    item.SystemUpdate();
-                }
             }
 
         }

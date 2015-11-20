@@ -71,13 +71,20 @@ namespace EventReceivers.tabZadania
                         break;
                 }
 
+                Update_Resources(item);
                 Update_Extras(item);
 
-                item.SystemUpdate();
+
+                if (!item.Properties.IsSynchronized)
+                {
+                    item.SystemUpdate();
+                }
+
             }
             catch (Exception ex)
             {
-                BLL.Tools.Set_Text(item, "enumStatusZadania", "Anulowane", true);
+                BLL.Tools.Set_Text(ref item, "enumStatusZadania", "Anulowane");
+                item.SystemUpdate();
                 BLL.Logger.LogEvent(properties.WebUrl, ex.ToString());
                 var result = ElasticEmail.EmailGenerator.ReportError(ex, properties.WebUrl.ToString());
             }
@@ -86,6 +93,80 @@ namespace EventReceivers.tabZadania
                 BLL.Logger.LogEvent_EventReceiverCompleted(item);
                 this.EventFiringEnabled = true;
             }
+        }
+
+        private void Update_Resources(SPListItem item)
+        {
+            //przypisz procedurę na podstawie tematu
+            int procId = Get_Procedura(item);
+            BLL.Tools.Set_Value(ref item, "selProcedura", (int)procId);
+
+            //update termin realizacji
+            item = Set_TerminRealizacji(item, procId);
+
+            //update operatora
+            item = Set_Operator(item, procId);
+        }
+
+        private void Update_Extras(SPListItem item)
+        {
+            //operator
+            item = Set_OperatorUser(item);
+        }
+
+        private SPListItem Set_Operator(SPListItem item, int procId)
+        {
+            if (procId > 0 && item["selOperator"] == null)
+            {
+                int operatorId = BLL.tabProcedury.Get_OperatorById(web, procId);
+                if (operatorId > 0)
+                {
+                    item["selOperator"] = operatorId;
+                }
+            }
+
+            return item;
+        }
+
+        private SPListItem Set_TerminRealizacji(SPListItem item, int procId)
+        {
+            if (procId > 0 && (item["colTerminRealizacji"] == null || (DateTime)item["colTerminRealizacji"] != new DateTime()))
+            {
+
+                int termin = BLL.tabProcedury.Get_TerminRealizacjiOfsetById(item.Web, procId);
+                if (termin > 0)
+                {
+                    item["colTerminRealizacji"] = DateTime.Today.AddDays(termin);
+                }
+            }
+
+            return item;
+        }
+
+        private int Get_Procedura(SPListItem item)
+        {
+            int procId = item["selProcedura"] != null ? new SPFieldLookupValue(item["selProcedura"].ToString()).LookupId : 0;
+            if (procId == 0)
+            {
+                procId = BLL.tabProcedury.Ensure(item.Web, item.Title);
+            }
+
+            return procId;
+        }
+
+        private SPListItem Set_OperatorUser(SPListItem item)
+        {
+            int operatorId = BLL.Tools.Get_LookupId(item, "selOperator");
+            if (operatorId > 0)
+            {
+                int userId = BLL.dicOperatorzy.Get_UserIdById(item.Web, operatorId);
+                BLL.Tools.Set_Value(ref item, "_KontoOperatora", userId);
+            }
+            else
+            {
+                BLL.Tools.Set_Value(ref item, "_KontoOperatora", 0);
+            }
+            return item;
         }
 
         #region ZUS
@@ -145,7 +226,7 @@ namespace EventReceivers.tabZadania
                         && HasValue(item, "colZUS_ZD_Skladka")
                         && HasValue(item, "colZUS_FP_Skladka");
                     if (!result) errLog.AppendLine("Nieprawidłowa warotść składki");
-                   
+
                     break;
 
                 default:
@@ -188,7 +269,7 @@ namespace EventReceivers.tabZadania
                 BLL.Tools.Set_Value(ref item, "colZUS_PIT-8AR", 0);
             }
 
-            
+
             //Załączniki
             bool lpz = BLL.Tools.Get_Flag(item, "colZUS_ListaPlac_Zalaczona");
             bool rz = BLL.Tools.Get_Flag(item, "colZUS_Rachunki_Zalaczone");
@@ -359,7 +440,8 @@ namespace EventReceivers.tabZadania
             if (BLL.Tools.Get_Text(item, "enumStatusZadania").Equals("Nowe")
                 && BLL.Tools.Get_Date(item, "Created").CompareTo(BLL.Tools.Get_Date(item, "Modified")) != 0)
             {
-                BLL.Tools.Set_Text(item, "enumStatusZadania", "Obsługa", true);
+                BLL.Tools.Set_Text(ref item, "enumStatusZadania", "Obsługa");
+                item.SystemUpdate();
             }
         }
 
@@ -369,7 +451,6 @@ namespace EventReceivers.tabZadania
             if (v >= 0) return true;
             else return false;
         }
-
     }
 
     public enum StatusZadania
@@ -380,4 +461,6 @@ namespace EventReceivers.tabZadania
         Zakończone,
         Anulowane
     }
+
+
 }
