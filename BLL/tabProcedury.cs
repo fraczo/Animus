@@ -105,10 +105,12 @@ namespace BLL
             }
             else
             {
-                return item.ID;
+                if (BLL.Tools.Get_Text(item, "enumStatusProcedury").Equals("Zatwierdzona"))
+                {
+                    return item.ID;
+                }
+                else return 0;
             }
-
-
         }
 
         public static int Get_TerminRealizacjiOfsetById(SPWeb web, int procId)

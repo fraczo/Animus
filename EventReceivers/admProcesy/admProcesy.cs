@@ -19,7 +19,9 @@ namespace EventReceivers.admProcesy
            BLL.Logger.LogEvent("admProcsy.ItemAdded",item.ID.ToString());
 
            item["enumStatusZlecenia"] = "Obsługa";
+           this.EventFiringEnabled = false;
            item.SystemUpdate();
+           this.EventFiringEnabled = true;
 
            try
            {
@@ -46,8 +48,8 @@ namespace EventReceivers.admProcesy
            {
                BLL.Logger.LogEvent("admProcsy.ItemAdded.error", ex.ToString());
 
-               BLL.Tools.Set_Text(ref item, "_Memo", ex.ToString());
-               BLL.Tools.Set_Text(ref item, "enumStatusZlecenia", "Anulowane");
+               BLL.Tools.Set_Text(item, "_Memo", ex.ToString());
+               BLL.Tools.Set_Text(item, "enumStatusZlecenia", "Anulowane");
                item.SystemUpdate();
            }
        }

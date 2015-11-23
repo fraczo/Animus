@@ -35,6 +35,8 @@ namespace EventReceivers.admProcesy
                             VAT_Forms.Create_VAT_Form(item.Web, okresId, klientItem, iok);
                         if (mask.Equals("RBR") || string.IsNullOrEmpty(mask))
                             RBR_Forms.Create_RBR_Form(item.Web, okresId, klientItem, iok);
+                        if (mask.Equals("RB") || string.IsNullOrEmpty(mask))
+                            RB_Forms.Create_RB_Form(item.Web, okresId, klientItem, iok);
                         break;
                     case "KSH":
                         if (mask.StartsWith("ZUS-") || string.IsNullOrEmpty(mask))

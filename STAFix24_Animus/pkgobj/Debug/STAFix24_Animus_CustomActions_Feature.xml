@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Custom Actions" Id="1414b1d3-d0eb-47de-b4b6-4a20e4e5745a" Scope="WebApplication">
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Id="1414b1d3-d0eb-47de-b4b6-4a20e4e5745a" Scope="WebApplication" Title="STAFix24_Animus Custom Actions">
   <ElementManifests>
     <ElementManifest Location="ObslugaKolejkiWiadomosci\Elements.xml" />
   </ElementManifests>

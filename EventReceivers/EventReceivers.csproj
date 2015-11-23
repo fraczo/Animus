@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="admProcesy\PDS_Forms.cs" />
     <Compile Include="admProcesy\PD_Forms.cs" />
+    <Compile Include="admProcesy\RB_Forms.cs" />
     <Compile Include="admProcesy\VAT_Forms.cs" />
     <Compile Include="admProcesy\ZUS_Forms.cs" />
     <Compile Include="admProcesy\admProcesy.cs" />

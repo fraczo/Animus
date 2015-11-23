@@ -30,7 +30,7 @@ namespace EventReceivers.tabKlienci
                 Cleanup(item);
                 Set_NazwaPrezentowana(item);
                 Update_Serwisy(item);
-                Update_Extras(item);
+                Update_Extensions(item);
                 //Update_FolderInLibrary(item, web);
 
                 item.SystemUpdate();                
@@ -139,10 +139,10 @@ namespace EventReceivers.tabKlienci
             Update_Serwisy_PD(item);
             Update_Serwisy_VAT(item);
             Update_Serwisy_ZUS(item);
-            Update_Serwisy_ZP(item); //zatrudnia pracowników
+            Update_Serwisy_ZP_NZP(item); //zatrudnia pracowników
             Update_Serwisy_AD(item); //audyt danych
             Update_Serwisy_GBW(item); //generowanie blankietu wpłaty
-            Update_Serwisy_RBR(item); //rozliczenie z biurem rachunkowym
+            Update_Serwisy_RBR_RB(item); //rozliczenie z biurem rachunkowym
             Update_Serwisy_POT(item); //przypomnienia o terminie płatności
             Update_Serwisy_WKB(item); //wymagany kontakt bezpośredni
 
@@ -190,18 +190,27 @@ namespace EventReceivers.tabKlienci
             }
         }
 
-        private void Update_Serwisy_RBR(SPListItem item)
+        private void Update_Serwisy_RBR_RB(SPListItem item)
         {
             BLL.Tools.Remove_Services(ref item, "selSewisy", "RBR");
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "RB");
 
             switch (item.ContentType.Name)
             {
                 case "KPiR":
-                case "Osoba fizyczna":
-
-                    if (BLL.Tools.Get_Value(item, "colOplataMiesieczna")>0)
+                    if (BLL.Tools.Get_LookupValue(item, "selTerminPlatnosci").Equals("Gotówka"))
                     {
-                        BLL.Tools.Assign_Service(ref item, "selSewisy", "RBR");
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "RB");
+                        
+                        // dodaj klienta w tablicy stawek
+                        BLL.tabStawki.Ensure_KlientExist(item.Web, item.ID);
+                    }
+                    else
+                    {
+                        if (BLL.Tools.Get_Value(item, "colOplataMiesieczna") > 0)
+                        {
+                            BLL.Tools.Assign_Service(ref item, "selSewisy", "RBR");
+                        }
                     }
 
                     break;
@@ -250,18 +259,21 @@ namespace EventReceivers.tabKlienci
             }
         }
 
-        private void Update_Serwisy_ZP(SPListItem item)
+        private void Update_Serwisy_ZP_NZP(SPListItem item)
         {
             BLL.Tools.Remove_Services(ref item, "selSewisy", "ZP");
+            BLL.Tools.Remove_Services(ref item, "selSewisy", "NZP");
 
             switch (item.ContentType.Name)
             {
                 case "KPiR":
-                case "Osoba fizyczna":
-
                     if (BLL.Tools.Get_Flag(item, "colZatrudniaPracownikow"))
                     {
                         BLL.Tools.Assign_Service(ref item, "selSewisy", "ZP");
+                    }
+                    else
+                    {
+                        BLL.Tools.Assign_Service(ref item, "selSewisy", "NZP");
                     }
 
                     break;
@@ -378,7 +390,7 @@ namespace EventReceivers.tabKlienci
             }
         }
 
-        private static void Update_Extras(SPListItem item)
+        private static void Update_Extensions(SPListItem item)
         {
             // aktualizacja odwołań do lookupów
             item["_TypZawartosci"] = item.ContentType.Name;

@@ -136,6 +136,8 @@ namespace BLL
 
         public static void Create_ctZUS_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
         {
+            Logger.LogEvent("Create_ctZUS_Form", klientId.ToString());
+
             SPList list = web.Lists.TryGetList(targetList);
 
             SPListItem item = list.AddItem();
@@ -518,6 +520,8 @@ namespace BLL
 
         public static void Create_ctPD_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
         {
+            Logger.LogEvent("Create_ctPD_Form", klientId.ToString());
+
             string kod = string.Empty;
 
             if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "PD-M"))
@@ -599,6 +603,8 @@ namespace BLL
 
          public static void Create_ctVAT_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
         {
+            Logger.LogEvent("Create_ctVAT_Form", klientId.ToString());
+
             string kod = string.Empty;
 
             if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "VAT-M"))
@@ -685,6 +691,8 @@ namespace BLL
 
         public static void Create_ctRBR_Form(SPWeb web, string ct, int klientId, int okresId, string key, SPListItem klientItem, Klient iok)
         {
+            Logger.LogEvent("Create_ctRBR_Form", klientId.ToString());
+
             SPList list = web.Lists.TryGetList(targetList);
 
             SPListItem item = list.AddItem();

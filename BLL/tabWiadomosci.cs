@@ -118,7 +118,7 @@ namespace BLL
                         break;
                 }
 
-                BLL.Tools.Set_Text(ref item, "cmdFormatka_Wiadomosc", string.Empty);
+                BLL.Tools.Set_Text(item, "cmdFormatka_Wiadomosc", string.Empty);
                 item.SystemUpdate();
             }
         }
@@ -160,7 +160,7 @@ namespace BLL
                         if (BLL.Tools.Is_ValidEmail(odbiorca))
                         {
                             BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, BLL.Tools.Get_Date(item, "colPlanowanaDataNadania"), item.ID, klientId);
-                            BLL.Tools.Set_Text(ref item, "enumStatusZadania", "Wysyłka");
+                            BLL.Tools.Set_Text(item, "enumStatusZadania", "Wysyłka");
                             item.SystemUpdate();
                         }
                         break;

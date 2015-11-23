@@ -298,13 +298,9 @@ namespace BLL
             return item[col] != null ? new SPFieldLookupValueCollection(item[col].ToString()).ToArray() : null;
         }
 
-        public static void Set_Text(ref SPListItem item, string col, string val)
+        public static void Set_Text(SPListItem item, string col, string val)
         {
-            if (item[col] != null && item[col].ToString() != val.ToString())
-            {
-                item[col] = val.ToString();
-            }
-
+            item[col] = val.ToString();
         }
 
         public static bool IsSelectorAssigned(SPListItem item, string col, string exceptValue)
@@ -407,20 +403,18 @@ namespace BLL
             item.Attachments.Add(file.Name, byteBuffer);
         }
 
-        public static void Set_Flag(ref SPListItem item, string col, bool value)
-        {
-            if (item[col]!=null)
-            {
-                item[col] = value;
-            }
-        }
-
-        public static void Set_Value(ref SPListItem item, string col, double value)
+        public static void Set_Flag(SPListItem item, string col, bool value)
         {
             if (item[col] != null)
             {
                 item[col] = value;
             }
         }
+
+        public static void Set_Value(SPListItem item, string col, double value)
+        {
+            item[col] = value;
+        }
+
     }
 }

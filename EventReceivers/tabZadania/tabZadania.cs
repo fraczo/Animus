@@ -71,19 +71,15 @@ namespace EventReceivers.tabZadania
                         break;
                 }
 
-                Update_Resources(item);
-                Update_Extras(item);
+                Update_Resources(ref item);
+                Update_Extras(ref item);
 
-
-                if (!item.Properties.IsSynchronized)
-                {
-                    item.SystemUpdate();
-                }
+                item.SystemUpdate();
 
             }
             catch (Exception ex)
             {
-                BLL.Tools.Set_Text(ref item, "enumStatusZadania", "Anulowane");
+                BLL.Tools.Set_Text(item, "enumStatusZadania", "Anulowane");
                 item.SystemUpdate();
                 BLL.Logger.LogEvent(properties.WebUrl, ex.ToString());
                 var result = ElasticEmail.EmailGenerator.ReportError(ex, properties.WebUrl.ToString());
@@ -95,40 +91,47 @@ namespace EventReceivers.tabZadania
             }
         }
 
-        private void Update_Resources(SPListItem item)
+        private void Update_Resources(ref SPListItem item)
         {
-            //przypisz procedurę na podstawie tematu
-            int procId = Get_Procedura(item);
-            BLL.Tools.Set_Value(ref item, "selProcedura", (int)procId);
+            int procId = BLL.Tools.Get_LookupId(item, "selProcedura");
+            if (procId == 0) //aktualizuj procedurę
+            {
+                //przypisz procedurę na podstawie tematu
+                procId = Get_Procedura(item);
 
-            //update termin realizacji
-            item = Set_TerminRealizacji(item, procId);
+                //update procedura
+                BLL.Tools.Set_Value(item, "selProcedura", (int)procId);
+            }
 
-            //update operatora
-            item = Set_Operator(item, procId);
+            if (procId > 0)
+            {
+                //update termin realizacji
+                Set_TerminRealizacji(ref item, procId);
+
+                //update operatora
+                Set_Operator(ref item, procId);
+            }
         }
 
-        private void Update_Extras(SPListItem item)
+        private void Update_Extras(ref SPListItem item)
         {
             //operator
             item = Set_OperatorUser(item);
         }
 
-        private SPListItem Set_Operator(SPListItem item, int procId)
+        private void Set_Operator(ref SPListItem item, int procId)
         {
             if (procId > 0 && item["selOperator"] == null)
             {
-                int operatorId = BLL.tabProcedury.Get_OperatorById(web, procId);
+                int operatorId = BLL.tabProcedury.Get_OperatorById(item.Web, procId);
                 if (operatorId > 0)
                 {
                     item["selOperator"] = operatorId;
                 }
             }
-
-            return item;
         }
 
-        private SPListItem Set_TerminRealizacji(SPListItem item, int procId)
+        private void Set_TerminRealizacji(ref SPListItem item, int procId)
         {
             if (procId > 0 && (item["colTerminRealizacji"] == null || (DateTime)item["colTerminRealizacji"] != new DateTime()))
             {
@@ -139,13 +142,11 @@ namespace EventReceivers.tabZadania
                     item["colTerminRealizacji"] = DateTime.Today.AddDays(termin);
                 }
             }
-
-            return item;
         }
 
         private int Get_Procedura(SPListItem item)
         {
-            int procId = item["selProcedura"] != null ? new SPFieldLookupValue(item["selProcedura"].ToString()).LookupId : 0;
+            int procId = BLL.Tools.Get_LookupId(item, "selProcedura");
             if (procId == 0)
             {
                 procId = BLL.tabProcedury.Ensure(item.Web, item.Title);
@@ -160,11 +161,11 @@ namespace EventReceivers.tabZadania
             if (operatorId > 0)
             {
                 int userId = BLL.dicOperatorzy.Get_UserIdById(item.Web, operatorId);
-                BLL.Tools.Set_Value(ref item, "_KontoOperatora", userId);
+                BLL.Tools.Set_Value(item, "_KontoOperatora", userId);
             }
             else
             {
-                BLL.Tools.Set_Value(ref item, "_KontoOperatora", 0);
+                BLL.Tools.Set_Value(item, "_KontoOperatora", 0);
             }
             return item;
         }
@@ -209,8 +210,8 @@ namespace EventReceivers.tabZadania
                         {
                             result = HasValue(item, "colZUS_ZD_Skladka");
                             if (!result) errLog.AppendLine("Nieprawidłowa warotść składki zdrowotnej");
-                            BLL.Tools.Set_Value(ref item, "colZUS_SP_Skladka", 0);
-                            BLL.Tools.Set_Value(ref item, "colZUS_FP_Skladka", 0);
+                            BLL.Tools.Set_Value(item, "colZUS_SP_Skladka", 0);
+                            BLL.Tools.Set_Value(item, "colZUS_FP_Skladka", 0);
                         }
                     }
                     break;
@@ -219,7 +220,7 @@ namespace EventReceivers.tabZadania
                     if (!zp)
                     {
                         zp = true;
-                        BLL.Tools.Set_Flag(ref item, "colZatrudniaPracownikow", zp);
+                        BLL.Tools.Set_Flag(item, "colZatrudniaPracownikow", zp);
                     }
 
                     result = HasValue(item, "colZUS_SP_Skladka")
@@ -246,7 +247,7 @@ namespace EventReceivers.tabZadania
                     result = HasValue(item, "colZUS_PIT-4R");
                     if (!result) errLog.AppendLine("Nieprawidłowa warotść PIT-4R");
                 }
-                else BLL.Tools.Set_Value(ref item, "colZUS_PIT-4R", 0);
+                else BLL.Tools.Set_Value(item, "colZUS_PIT-4R", 0);
             }
 
             //PIT-8AR
@@ -258,15 +259,15 @@ namespace EventReceivers.tabZadania
                     result = HasValue(item, "colZUS_PIT-8AR");
                     if (!result) errLog.AppendLine("Nieprawidłowa warotść PIT-8AR");
                 }
-                else BLL.Tools.Set_Value(ref item, "colZUS_PIT-8AR", 0);
+                else BLL.Tools.Set_Value(item, "colZUS_PIT-8AR", 0);
             }
 
             if (!zp)
             {
-                BLL.Tools.Set_Flag(ref item, "colZUS_PIT-4R_Zalaczony", false);
-                BLL.Tools.Set_Value(ref item, "colZUS_PIT-4R", 0);
-                BLL.Tools.Set_Flag(ref item, "colZUS_PIT-8AR_Zalaczony", false);
-                BLL.Tools.Set_Value(ref item, "colZUS_PIT-8AR", 0);
+                BLL.Tools.Set_Flag(item, "colZUS_PIT-4R_Zalaczony", false);
+                BLL.Tools.Set_Value(item, "colZUS_PIT-4R", 0);
+                BLL.Tools.Set_Flag(item, "colZUS_PIT-8AR_Zalaczony", false);
+                BLL.Tools.Set_Value(item, "colZUS_PIT-8AR", 0);
             }
 
 
@@ -289,7 +290,7 @@ namespace EventReceivers.tabZadania
             {
                 //ustaw flagę walidacji
                 BLL.Tools.AppendNote_Top(item, "colNotatka", errLog.ToString(), true);
-                BLL.Tools.Set_Flag(ref item, "_Validation", true);
+                BLL.Tools.Set_Flag(item, "_Validation", true);
                 item.SystemUpdate();
             }
             else
@@ -297,7 +298,7 @@ namespace EventReceivers.tabZadania
                 //wyczyść flagę walidacji jeżeli ustawiona
                 if (BLL.Tools.Get_Flag(item, "_Validation"))
                 {
-                    BLL.Tools.Set_Flag(ref item, "_Validation", false);
+                    BLL.Tools.Set_Flag(item, "_Validation", false);
                     item.SystemUpdate();
                 }
             }
@@ -440,7 +441,7 @@ namespace EventReceivers.tabZadania
             if (BLL.Tools.Get_Text(item, "enumStatusZadania").Equals("Nowe")
                 && BLL.Tools.Get_Date(item, "Created").CompareTo(BLL.Tools.Get_Date(item, "Modified")) != 0)
             {
-                BLL.Tools.Set_Text(ref item, "enumStatusZadania", "Obsługa");
+                BLL.Tools.Set_Text(item, "enumStatusZadania", "Obsługa");
                 item.SystemUpdate();
             }
         }
