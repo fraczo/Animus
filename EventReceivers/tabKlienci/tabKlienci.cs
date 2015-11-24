@@ -207,10 +207,10 @@ namespace EventReceivers.tabKlienci
                     }
                     else
                     {
-                        if (BLL.Tools.Get_Value(item, "colOplataMiesieczna") > 0)
-                        {
+                        //if (BLL.Tools.Get_Value(item, "colOplataMiesieczna") > 0)
+                        //{
                             BLL.Tools.Assign_Service(ref item, "selSewisy", "RBR");
-                        }
+                        //}
                     }
 
                     break;
@@ -326,6 +326,7 @@ namespace EventReceivers.tabKlienci
                 case "KPiR":
                     if ((BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowyVAT", string.Empty)
                         || BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowy", string.Empty))
+                        && BLL.Tools.IsSelectorAssigned(item, "colFormaOpodatkowaniaVAT", "Nie dotyczy")
                         && BLL.Tools.IsSelectorAssigned(item, "enumRozliczenieVAT", "Nie dotyczy"))
                     {
                         switch (BLL.Tools.Get_Text(item, "enumRozliczenieVAT"))

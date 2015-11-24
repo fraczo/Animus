@@ -87,7 +87,7 @@ namespace BLL
         /// <param name="web"></param>
         /// <param name="procName"></param>
         /// <returns></returns>
-        public static int Ensure(SPWeb web, string procName)
+        public static int Ensure(SPWeb web, string procName, bool ignorujStatusProcedury)
         {
             SPList list = web.Lists.TryGetList(targetList);
 
@@ -105,7 +105,8 @@ namespace BLL
             }
             else
             {
-                if (BLL.Tools.Get_Text(item, "enumStatusProcedury").Equals("Zatwierdzona"))
+                if (BLL.Tools.Get_Text(item, "enumStatusProcedury").Equals("Zatwierdzona")
+                    || ignorujStatusProcedury)
                 {
                     return item.ID;
                 }

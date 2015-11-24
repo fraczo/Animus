@@ -81,7 +81,10 @@ namespace EventReceivers.admProcesy
                         Create_New_GFR_K(item, "PDS-*", list, k);
                     if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", "VAT-*"))
                         Create_New_GFR_K(item, "VAT-*", list, k);
-                    //Create_New_GFR_K(item, "RBR", list, k);
+                    if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", "RBR"))
+                        Create_New_GFR_K(item, "RBR", list, k);
+                    if (BLL.Tools.Has_SerwisAssigned(k, "selSewisy", "RB"))
+                        Create_New_GFR_K(item, "RB", list, k);
                 }
                 else
                 {

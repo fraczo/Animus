@@ -46,7 +46,10 @@ namespace BLL
             BLL.Tools.Set_Value(newItem, "selKlient", klientId);
             BLL.Tools.Set_Value(newItem, "selOkres", okresId);
             BLL.Tools.Set_Text(newItem, "KEY", key);
-            BLL.Tools.Set_Text(newItem, "Title", "Opłata za obsługę");
+
+            Models.Okres o = new Models.Okres(web, okresId);
+
+            BLL.Tools.Set_Text(newItem, "Title", string.Format("Opłata za obsługę {0}",o.Nazwa));
             
             double om = BLL.tabStawki.Get_OplataMiesieczna(web, klientId);
             if (om > 0)

@@ -15,7 +15,7 @@ namespace BLL
             SPDiagnosticsService diagSvc = SPDiagnosticsService.Local;
 
             diagSvc.WriteTrace(0,
-                new SPDiagnosticsCategory("STAFix category", TraceSeverity.Monitorable, EventSeverity.Error),
+                new SPDiagnosticsCategory("STAFix category", TraceSeverity.Monitorable, EventSeverity.Information),
                 TraceSeverity.Monitorable,
                 subject.ToString() + ":  {0}",
                 new object[] { body.ToString() });
@@ -38,6 +38,17 @@ namespace BLL
                                                item.ParentList.Title,
                                                item.Title,
                                                item.ID.ToString()));
+        }
+
+        public static void LogError(string subject, string body)
+        {
+            SPDiagnosticsService diagSvc = SPDiagnosticsService.Local;
+
+            diagSvc.WriteTrace(0,
+                new SPDiagnosticsCategory("STAFix category", TraceSeverity.Unexpected, EventSeverity.Error),
+                TraceSeverity.Monitorable,
+                subject.ToString() + ":  {0}",
+                new object[] { body.ToString() });
         }
     }
 }

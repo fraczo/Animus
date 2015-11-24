@@ -278,19 +278,20 @@ namespace BLL
             }
         }
 
-        public static string AppendNote_Top(SPListItem item, string col, string memo, bool forceTimeStamp)
+        public static void AppendNote_Top(SPListItem item, string col, string memo, bool forceTimeStamp)
         {
             StringBuilder sb = new StringBuilder(@"#" + memo);
 
             if (forceTimeStamp)
             {
-                sb = new StringBuilder(@"#" + DateTime.Now.ToString());
+                sb = new StringBuilder();
+                sb.AppendLine(@"#" + DateTime.Now.ToString());
                 sb.AppendLine(memo);
             }
 
             sb.AppendLine(item[col] != null ? item[col].ToString() : string.Empty);
 
-            return sb.ToString();
+            item[col] = sb.ToString();
         }
 
         internal static Array Get_LookupValueCollection(SPListItem item, string col)
@@ -405,10 +406,7 @@ namespace BLL
 
         public static void Set_Flag(SPListItem item, string col, bool value)
         {
-            if (item[col] != null)
-            {
                 item[col] = value;
-            }
         }
 
         public static void Set_Value(SPListItem item, string col, double value)

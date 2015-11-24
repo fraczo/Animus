@@ -149,7 +149,7 @@ namespace BLL
 
             //procedura
             string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName, true);
             item["Title"] = procName;
 
             BLL.Models.Okres o = new BLL.Models.Okres(web, okresId);
@@ -544,7 +544,7 @@ namespace BLL
             //procedura
 
             string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName, true);
             item["Title"] = procName;
 
             //numery kont i nazwa urzędu
@@ -629,7 +629,7 @@ namespace BLL
             //procedura
 
             string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName, true);
             item["Title"] = procName;
 
             //numery kont i nazwa urzędu
@@ -704,7 +704,7 @@ namespace BLL
             //procedura
 
             string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName, false);
             item["Title"] = procName;
 
             //numer konta biura
@@ -723,7 +723,13 @@ namespace BLL
 
 
             //zainicjowanie wartości domyślnych
-            DateTime dataWystawieniaFaktury = DateTime.Today;
+            
+            //data wystawienia faktury do 20 każdego miesiąca
+            DateTime dataBazowa = o.DataZakonczenia.AddMonths(1);
+            DateTime dataWystawieniaFaktury = new DateTime(dataBazowa.Year, dataBazowa.Month, 20);
+            if (dataWystawieniaFaktury.DayOfWeek == DayOfWeek.Saturday) dataWystawieniaFaktury.AddDays(-1);
+            if (dataWystawieniaFaktury.DayOfWeek == DayOfWeek.Sunday) dataWystawieniaFaktury.AddDays(-2);
+
             item["colBR_DataWystawieniaFaktury"] = dataWystawieniaFaktury;
             item["colBR_WartoscDoZaplaty"] = iok.OplataMiesieczna;
             item["colBR_TerminPlatnosci"] = dataWystawieniaFaktury.AddDays(iok.TerminPlatnosci);

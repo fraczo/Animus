@@ -21,6 +21,10 @@ namespace BLL.Models
             SPListItem item = list.GetItemById(okresId);
             if (item != null)
             {
+                this.Nazwa = BLL.Tools.Get_Text(item, "Title");
+                this.DataRozpoczecia = BLL.Tools.Get_Date(item, "colDataRozpoczecia");
+                this.DataZakonczenia = BLL.Tools.Get_Date(item, "colDataZakonczenia");
+
                 Skladka_ZUS_M_SP = BLL.Tools.Get_Double(item, "colZUS_M_SP_Skladka");
                 Skladka_ZUS_M_SPC = BLL.Tools.Get_Double(item, "colZUS_M_SPC_Skladka");
                 Skladka_ZUS_D_SP = BLL.Tools.Get_Double(item, "colZUS_D_SP_Skladka");
@@ -75,5 +79,10 @@ namespace BLL.Models
         public double TerminPrzekazaniaWynikowVAT_Ofset { get; set; }
 
         public DateTime TerminPrzekazaniaRBR { get; set; }
+
+        public DateTime DataRozpoczecia { get; set; }
+        public DateTime DataZakonczenia { get; set; }
+
+        public string Nazwa { get; set; }
     }
 }
