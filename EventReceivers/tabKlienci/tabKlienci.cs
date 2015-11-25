@@ -28,12 +28,14 @@ namespace EventReceivers.tabKlienci
             try
             {
                 Cleanup(item);
-                Set_NazwaPrezentowana(item);
+                SetUp(item);
                 Update_Serwisy(item);
                 Update_Extensions(item);
                 //Update_FolderInLibrary(item, web);
 
-                item.SystemUpdate();                
+                item.SystemUpdate();
+
+                Update_tabStawki(item);
             }
             catch (Exception ex)
             {
@@ -44,6 +46,17 @@ namespace EventReceivers.tabKlienci
             {
                 BLL.Logger.LogEvent_EventReceiverCompleted(item);
                 this.EventFiringEnabled = true;
+            }
+        }
+
+        private void Update_tabStawki(SPListItem item)
+        {
+            if (BLL.Tools.Has_SerwisAssigned(item, "selSewisy", "RB")) // dodaj klienta w tablicy stawek
+            {
+                SPSecurity.RunWithElevatedPrivileges(delegate()
+                {
+                    BLL.tabStawki.Ensure_KlientExist(item.Web, item.ID);
+                });
             }
         }
 
@@ -87,8 +100,10 @@ namespace EventReceivers.tabKlienci
                 }
             }
         }
-        private void Set_NazwaPrezentowana(SPListItem item)
+        private void SetUp(SPListItem item)
         {
+
+            //nazwa prezentowana
             switch (item.ContentType.Name)
             {
                 case "KPiR":
@@ -100,6 +115,14 @@ namespace EventReceivers.tabKlienci
                 default:
                     break;
             }
+
+            //przypisanie US VAT - sprawdź czy przypisany urząd istnieje fizycznie, jak nie to wyzeruj.
+            int usVATId = BLL.Tools.Get_LookupId(item, "selUrzadSkarbowyVAT");
+            if (!BLL.dicUrzedySkarbowe.Check_IfExist(item.Web, usVATId))
+            {
+                BLL.Tools.Set_Index(item, "selUrzadSkarbowyVAT", 0);
+            }
+
         }
 
         private static void Set_NazwaPrezentowana_Firma(SPListItem item)
@@ -201,12 +224,6 @@ namespace EventReceivers.tabKlienci
                     if (BLL.Tools.Get_LookupValue(item, "selTerminPlatnosci").Equals("Gotówka"))
                     {
                         BLL.Tools.Assign_Service(ref item, "selSewisy", "RB");
-                        
-                        // dodaj klienta w tablicy stawek
-                        SPSecurity.RunWithElevatedPrivileges(delegate()
-                        {
-                            BLL.tabStawki.Ensure_KlientExist(item.Web, item.ID);
-                        });
                     }
                     else
                     {
@@ -328,9 +345,9 @@ namespace EventReceivers.tabKlienci
             {
                 case "KPiR":
                     if ((BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowyVAT", string.Empty)
-                        || BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowy", string.Empty))
-                        && BLL.Tools.IsSelectorAssigned(item, "colFormaOpodatkowaniaVAT", "Nie dotyczy")
-                        && BLL.Tools.IsSelectorAssigned(item, "enumRozliczenieVAT", "Nie dotyczy"))
+                        | BLL.Tools.IsSelectorAssigned(item, "selUrzadSkarbowy", string.Empty))
+                        & BLL.Tools.IsSelectorAssigned(item, "colFormaOpodatkowaniaVAT", "Nie dotyczy")
+                        & BLL.Tools.IsSelectorAssigned(item, "enumRozliczenieVAT", "Nie dotyczy"))
                     {
                         switch (BLL.Tools.Get_Text(item, "enumRozliczenieVAT"))
                         {

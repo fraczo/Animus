@@ -191,18 +191,27 @@ namespace BLL
 
             DateTime termin;
 
+            // zatrudnia pracowników
             if (iok.ZatrudniaPracownikow)
             {
-                termin = o.TerminPlatnosciSkladek_ZUS_BezPracownikow;
+                termin = o.TerminPlatnosciSkladek_ZUS_ZPracownikami;
+                //zeruj składki
+                item["colZUS_SP_Skladka"] = 0;
+                item["colZUS_ZD_Skladka"] = 0;
+                item["colZUS_FP_Skladka"] = 0;
             }
             else
             {
-                termin = o.TerminPlatnosciSkladek_ZUS_ZPracownikami;
+                termin = o.TerminPlatnosciSkladek_ZUS_BezPracownikow; 
             }
+
+            // zablokuj fundusz pracy
+            if (iok.ZablokujFunduszPracy) item["colZUS_FP_Skladka"] = 0;
+
             int offset = (int)o.TerminPrzekazaniaWynikow_ZUS_Ofset;
 
             item["colZUS_TerminPlatnosciSkladek"] = termin;
-            item["colTerminRealizacji"] = termin.AddDays(-1 * offset);
+            item["colTerminRealizacji"] = termin.AddDays(offset);
 
             //urząd skarbowy do podatku za pracowników
             item["selUrzadSkarbowy"] = iok.UrzadSkarbowyId;
@@ -570,7 +579,7 @@ namespace BLL
                     break;
             }
 
-            item["colTerminRealizacji"] = o.TerminPlatnosciPodatkuPD.AddDays(-1 * (int)o.TerminPrzekazaniaWynikowPD_Ofset);
+            item["colTerminRealizacji"] = o.TerminPlatnosciPodatkuPD.AddDays((int)o.TerminPrzekazaniaWynikowPD_Ofset);
 
             //flagi
 
@@ -665,7 +674,7 @@ namespace BLL
                 item["colVAT_WartoscNadwyzkiZaPoprzedniMiesiac"] = BLL.tabKartyKontrolne.Get_WartoscNadwyzkiDoPrzeniesienia(web, klientId, preOkresId);
             }
 
-            item["colTerminRealizacji"] = o.TerminPlatnosciPodatkuVAT.AddDays(-1 * (int)o.TerminPrzekazaniaWynikowVAT_Ofset);
+            item["colTerminRealizacji"] = o.TerminPlatnosciPodatkuVAT.AddDays((int)o.TerminPrzekazaniaWynikowVAT_Ofset);
 
             //flagi
 
@@ -704,8 +713,10 @@ namespace BLL
             //procedura
 
             string procName = string.Format(": {0}", ct);
-            item["selProcedura"] = tabProcedury.Ensure(web, procName, false);
+            item["selProcedura"] = tabProcedury.Ensure(web, procName, true);
             item["Title"] = procName;
+
+            //BLL.tabProcedury.Get_OperatorById(
 
             //numer konta biura
 
@@ -737,8 +748,8 @@ namespace BLL
             //uwagi 
             item["colUwagi"] = iok.Uwagi;
 
-            //domyślny operator
-            int operatorId = iok.OperatorId_Audyt;
+            //domyślny operator obsługujący podatki
+            int operatorId = iok.OperatorId_Podatki;
             if (operatorId > 0)
             {
                 item["selOperator"] = operatorId;

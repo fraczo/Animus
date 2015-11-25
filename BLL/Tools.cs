@@ -414,5 +414,10 @@ namespace BLL
             item[col] = value;
         }
 
+
+        public static void Set_Index(SPListItem item, string col, int id)
+        {
+            item[col] = id;
+        }
     }
 }

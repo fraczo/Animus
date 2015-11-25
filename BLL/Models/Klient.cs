@@ -86,7 +86,7 @@ namespace BLL.Models
                 Regon = item["colRegon"] != null ? item["colRegon"].ToString() : string.Empty;
 
                 this.ZatrudniaPracownikow = item["colZatrudniaPracownikow"] != null ? bool.Parse(item["colZatrudniaPracownikow"].ToString()) : false ;
-
+                this.ZablokujFunduszPracy = BLL.Tools.Get_Flag(item, "colZablokujFunduszPracy");
 
                 if (item["selTerminPlatnosci"] != null)
                 {
@@ -295,5 +295,7 @@ namespace BLL.Models
         public string UwagiVAT { get; set; }
 
         public object OplataMiesieczna { get; set; }
+
+        public bool ZablokujFunduszPracy { get; set; }
     }
 }

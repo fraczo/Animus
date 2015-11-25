@@ -77,5 +77,18 @@ namespace BLL
 
             return 0;
         }
+
+        public static bool Check_IfExist(SPWeb web, int usVATId)
+        {
+            SPList list = GetList(web);
+            SPListItem item = list.GetItemById(usVATId);
+            if (item != null) return true;
+            else return false;
+        }
+
+        private static SPList GetList(SPWeb web)
+        {
+            return web.Lists.TryGetList(targetList);
+        }
     }
 }

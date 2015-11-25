@@ -36,7 +36,6 @@ namespace BLL
             return result;
         }
 
-
         public static SPListItem Get_KlientById(SPWeb web, int klientId)
         {
             SPList targetList = web.Lists.TryGetList(listName);
@@ -168,7 +167,6 @@ namespace BLL
 
             return 0;
         }
-
 
         public static int AddNew_KPiR_Klient(SPWeb web, string nazwaSkrocona, SPListItem item)
         {
