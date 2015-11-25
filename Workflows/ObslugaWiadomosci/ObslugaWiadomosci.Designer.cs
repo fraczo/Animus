@@ -30,6 +30,8 @@ namespace Workflows.ObslugaWiadomosci
             System.Workflow.ComponentModel.ActivityBind activitybind2 = new System.Workflow.ComponentModel.ActivityBind();
             System.Workflow.Runtime.CorrelationToken correlationtoken1 = new System.Workflow.Runtime.CorrelationToken();
             System.Workflow.ComponentModel.ActivityBind activitybind1 = new System.Workflow.ComponentModel.ActivityBind();
+            this.ReportError = new System.Workflow.Activities.CodeActivity();
+            this.logError = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.logToHistoryListActivity6 = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Update_tabKartyKontrolne = new System.Workflow.Activities.CodeActivity();
             this.logToHistoryListActivity5 = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
@@ -38,12 +40,29 @@ namespace Workflows.ObslugaWiadomosci
             this.Mail_Setup = new System.Workflow.Activities.CodeActivity();
             this.logToHistoryListActivity3 = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.logToHistoryListActivity1 = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
+            this.faultObslugaWiadomosci = new System.Workflow.ComponentModel.FaultHandlerActivity();
             this.Else = new System.Workflow.Activities.IfElseBranchActivity();
             this.isMailSent = new System.Workflow.Activities.IfElseBranchActivity();
+            this.faultHandlersActivity1 = new System.Workflow.ComponentModel.FaultHandlersActivity();
             this.cancellationHandlerActivity1 = new System.Workflow.ComponentModel.CancellationHandlerActivity();
             this.CzyWiadomośćWysłana = new System.Workflow.Activities.IfElseActivity();
             this.logToHistoryListActivity2 = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.onWorkflowActivated1 = new Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated();
+            // 
+            // ReportError
+            // 
+            this.ReportError.Name = "ReportError";
+            this.ReportError.ExecuteCode += new System.EventHandler(this.ReportError_ExecuteCode);
+            // 
+            // logError
+            // 
+            this.logError.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logError.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            this.logError.HistoryDescription = "";
+            this.logError.HistoryOutcome = "FaultHandlerActivated";
+            this.logError.Name = "logError";
+            this.logError.OtherData = "";
+            this.logError.UserId = -1;
             // 
             // logToHistoryListActivity6
             // 
@@ -110,6 +129,13 @@ namespace Workflows.ObslugaWiadomosci
             this.logToHistoryListActivity1.OtherData = "";
             this.logToHistoryListActivity1.UserId = -1;
             // 
+            // faultObslugaWiadomosci
+            // 
+            this.faultObslugaWiadomosci.Activities.Add(this.logError);
+            this.faultObslugaWiadomosci.Activities.Add(this.ReportError);
+            this.faultObslugaWiadomosci.FaultType = typeof(System.Exception);
+            this.faultObslugaWiadomosci.Name = "faultObslugaWiadomosci";
+            // 
             // Else
             // 
             this.Else.Activities.Add(this.logToHistoryListActivity3);
@@ -127,6 +153,11 @@ namespace Workflows.ObslugaWiadomosci
             codecondition1.Condition += new System.EventHandler<System.Workflow.Activities.ConditionalEventArgs>(this.isFlagaWysłanoUstawiona);
             this.isMailSent.Condition = codecondition1;
             this.isMailSent.Name = "isMailSent";
+            // 
+            // faultHandlersActivity1
+            // 
+            this.faultHandlersActivity1.Activities.Add(this.faultObslugaWiadomosci);
+            this.faultHandlersActivity1.Name = "faultHandlersActivity1";
             // 
             // cancellationHandlerActivity1
             // 
@@ -169,12 +200,21 @@ namespace Workflows.ObslugaWiadomosci
             this.Activities.Add(this.logToHistoryListActivity2);
             this.Activities.Add(this.CzyWiadomośćWysłana);
             this.Activities.Add(this.cancellationHandlerActivity1);
+            this.Activities.Add(this.faultHandlersActivity1);
             this.Name = "ObslugaWiadomosci";
             this.CanModifyActivities = false;
 
         }
 
         #endregion
+
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logError;
+
+        private CodeActivity ReportError;
+
+        private FaultHandlerActivity faultObslugaWiadomosci;
+
+        private FaultHandlersActivity faultHandlersActivity1;
 
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logToHistoryListActivity6;
 
@@ -203,6 +243,11 @@ namespace Workflows.ObslugaWiadomosci
         private IfElseActivity CzyWiadomośćWysłana;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
+
+
+
+
 
 
 

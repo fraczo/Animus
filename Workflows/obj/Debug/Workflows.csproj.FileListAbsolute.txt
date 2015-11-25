@@ -23,3 +23,7 @@ C:\_GitHub\Animus\Workflows\bin\Debug\STAFix24.Animus.Workflows.pdb
 C:\_GitHub\Animus\Workflows\obj\Debug\Workflows.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\Workflows\obj\Debug\STAFix24.Animus.Workflows.dll
 C:\_GitHub\Animus\Workflows\obj\Debug\STAFix24.Animus.Workflows.pdb
+C:\_GitHub\Animus\Workflows\bin\Debug\STAFix24.Animus.BLL.dll
+C:\_GitHub\Animus\Workflows\bin\Debug\STAFix24.Animus.EventReceivers.dll
+C:\_GitHub\Animus\Workflows\bin\Debug\STAFix24.Animus.BLL.pdb
+C:\_GitHub\Animus\Workflows\bin\Debug\STAFix24.Animus.EventReceivers.pdb

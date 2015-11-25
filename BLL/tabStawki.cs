@@ -33,7 +33,7 @@ namespace BLL
             SPListItem item = list.Items.Cast<SPListItem>()
                 .Where(i => BLL.Tools.Get_LookupId(i, "selKlient").Equals(klientId))
                 .FirstOrDefault();
-            if (item==null)
+            if (item == null)
             {
                 SPListItem newItem = list.AddItem();
                 newItem["selKlient"] = klientId;

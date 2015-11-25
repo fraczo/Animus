@@ -212,6 +212,10 @@ namespace Workflows.ObslugaWiadomosci
             item.SystemUpdate();
         }
 
+        private void ReportError_ExecuteCode(object sender, EventArgs e)
+        {
+        }
+
 
 
 

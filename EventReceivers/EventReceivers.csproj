@@ -78,9 +78,6 @@
       <SharePointProjectItemId>{95c6a07b-c9ed-4adb-bd85-f16c5275766b}</SharePointProjectItemId>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Features\Feature1\Feature1.feature">
-      <FeatureId>{9d786fcd-738d-49d6-8d9f-1ee549b1bd45}</FeatureId>
-    </None>
     <None Include="key.snk" />
     <None Include="Package\Package.package">
       <PackageId>{3994201a-04b5-4281-8ce8-582b6b7a7bd3}</PackageId>
@@ -109,15 +106,14 @@
       <Name>PdfSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Features\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="dicUrzedySkarbowe\Elements.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="admProcesy\Elements.xml" />
-    <Content Include="Features\Feature1\Feature1.Template.xml">
-      <DependentUpon>Feature1.feature</DependentUpon>
-    </Content>
     <Content Include="tabKlienci\Elements.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -6,6 +6,9 @@ using Microsoft.SharePoint;
 
 namespace BLL
 {
+    /// <summary>
+    /// Run with elevated privilages
+    /// </summary>
     public class tabRozliczeniaGotowkowe
     {
         public const string targetList = @"Rejestr płatności";
@@ -49,8 +52,8 @@ namespace BLL
 
             Models.Okres o = new Models.Okres(web, okresId);
 
-            BLL.Tools.Set_Text(newItem, "Title", string.Format("Opłata za obsługę {0}",o.Nazwa));
-            
+            BLL.Tools.Set_Text(newItem, "Title", string.Format("Opłata za obsługę {0}", o.Nazwa));
+
             double om = BLL.tabStawki.Get_OplataMiesieczna(web, klientId);
             if (om > 0)
             {

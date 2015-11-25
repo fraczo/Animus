@@ -203,7 +203,10 @@ namespace EventReceivers.tabKlienci
                         BLL.Tools.Assign_Service(ref item, "selSewisy", "RB");
                         
                         // dodaj klienta w tablicy stawek
-                        BLL.tabStawki.Ensure_KlientExist(item.Web, item.ID);
+                        SPSecurity.RunWithElevatedPrivileges(delegate()
+                        {
+                            BLL.tabStawki.Ensure_KlientExist(item.Web, item.ID);
+                        });
                     }
                     else
                     {

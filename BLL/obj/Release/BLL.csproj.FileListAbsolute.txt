@@ -7,3 +7,4 @@ C:\_GitHub\Animus\BLL\bin\Release\STAFix24.Animus.BLL.dll
 C:\_GitHub\Animus\BLL\bin\Release\STAFix24.Animus.BLL.pdb
 C:\_GitHub\Animus\BLL\obj\Release\STAFix24.Animus.BLL.dll
 C:\_GitHub\Animus\BLL\obj\Release\STAFix24.Animus.BLL.pdb
+C:\_GitHub\Animus\BLL\obj\Release\BLL.csprojResolveAssemblyReference.cache

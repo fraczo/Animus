@@ -6,36 +6,50 @@ using Microsoft.SharePoint;
 
 namespace EventReceivers.admProcesy
 {
-    class GFR_Request
+    public class GFR_Request
     {
-        internal static void Create(Microsoft.SharePoint.SPListItem item)
+        public static void Create(Microsoft.SharePoint.SPListItem item)
         {
-            BLL.Logger.LogEvent("Generowanie formatek rozliczeniowych", item.ID.ToString());
-
-            string mask = BLL.Tools.Get_Text(item, "colMaskaSerwisu");
-            string kmask = BLL.Tools.Get_Text(item, "colMaskaTypuKlienta");
-
-            if (!string.IsNullOrEmpty(kmask))
+            try
             {
-                if (!string.IsNullOrEmpty(mask))
+                BLL.Logger.LogEvent("Generowanie formatek rozliczeniowych", item.ID.ToString());
+
+                string mask = BLL.Tools.Get_Text(item, "colMaskaSerwisu");
+                string kmask = BLL.Tools.Get_Text(item, "colMaskaTypuKlienta");
+
+                if (!string.IsNullOrEmpty(kmask))
                 {
-                    Create_Bulk_FormsBy_KMask_Mask(item, kmask, mask);
+                    if (!string.IsNullOrEmpty(mask))
+                    {
+                        Create_Bulk_FormsBy_KMask_Mask(item, kmask, mask);
+                    }
+                    else
+                    {
+                        Crate_Bulk_FormsBy_KMask(item, kmask);
+                    }
                 }
                 else
                 {
-                    Crate_Bulk_FormsBy_KMask(item, kmask);
+                    if (!string.IsNullOrEmpty(mask))
+                    {
+                        Create_Bulk_FormsBy_Mask(item, mask);
+                    }
+                    else
+                    {
+                        Crate_Bulk_Forms(item);
+                    }
                 }
+
+#if DEBUG
+                BLL.Tools.Set_Text(item, "enumStatusZlecenia", "Zakończony");
+                item.SystemUpdate(); 
+#else
+                item.Delete();
+#endif
             }
-            else
+            catch (Exception ex)
             {
-                if (!string.IsNullOrEmpty(mask))
-                {
-                    Create_Bulk_FormsBy_Mask(item, mask);
-                }
-                else
-                {
-                    Crate_Bulk_Forms(item);
-                }
+                BLL.Logger.LogError(item.Web.Name, item.ID.ToString(), ex);
             }
         }
 

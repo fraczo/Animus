@@ -56,6 +56,12 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GFR_K\GFR_K.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GFR_K\GFR_K.Designer.cs">
+      <DependentUpon>GFR_K.cs</DependentUpon>
+    </Compile>
     <Compile Include="ObslugaWiadomosci\enumStatusWysylki.cs" />
     <Compile Include="ObslugaWiadomosci\ObslugaWiadomosci.cs">
       <SubType>Component</SubType>
@@ -66,6 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="GFR_K\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{b2fdea66-cd38-43b2-98c3-f78aabf4eb3b}</SharePointProjectItemId>
+    </None>
     <None Include="key.snk" />
     <None Include="ObslugaWiadomosci\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{d03c6008-5ea7-445d-b8ce-45b9fe070301}</SharePointProjectItemId>
@@ -81,6 +90,7 @@
     <Folder Include="Features\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GFR_K\Elements.xml" />
     <Content Include="ObslugaWiadomosci\Elements.xml">
       <SubType>Designer</SubType>
     </Content>

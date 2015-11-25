@@ -3,7 +3,4 @@
   <Assemblies>
     <Assembly Location="STAFix24.Animus.EventReceivers.dll" DeploymentTarget="GlobalAssemblyCache" />
   </Assemblies>
-  <FeatureManifests>
-    <FeatureManifest Location="EventReceivers_Feature1\Feature.xml" />
-  </FeatureManifests>
 </Solution>

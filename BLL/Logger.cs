@@ -17,7 +17,7 @@ namespace BLL
             diagSvc.WriteTrace(0,
                 new SPDiagnosticsCategory("STAFix category", TraceSeverity.Monitorable, EventSeverity.Information),
                 TraceSeverity.Monitorable,
-                subject.ToString() + ":  {0}",
+                subject.ToString() + "{0}",
                 new object[] { body.ToString() });
         }
 
@@ -25,30 +25,44 @@ namespace BLL
         public static void LogEvent_EventReceiverInitiated(SPListItem item)
         {
             BLL.Logger.LogEvent(item.Web.Name,
-                                string.Format("{0}:{1}:{2} event handler initiated",
-                                               item.ParentList.Title,
-                                               item.Title,
-                                               item.ID.ToString()));
+                                string.Format("{0}.{1}.{2}.start",
+                                item.ParentList.Title,
+                                item.ContentType.Name,
+                                item.ID.ToString()));
         }
 
         public static void LogEvent_EventReceiverCompleted(SPListItem item)
         {
             BLL.Logger.LogEvent(item.Web.Name,
-                                string.Format("{0}:{1}:{2} event handler completed",
-                                               item.ParentList.Title,
-                                               item.Title,
-                                               item.ID.ToString()));
+                                string.Format("{0}.{1}.{2}.end",
+                                item.ParentList.Title,
+                                item.ContentType.Name,
+                                item.ID.ToString()));
         }
 
-        public static void LogError(string subject, string body)
+        public static void LogError(string subject, string body, Exception ex = null)
         {
             SPDiagnosticsService diagSvc = SPDiagnosticsService.Local;
 
             diagSvc.WriteTrace(0,
                 new SPDiagnosticsCategory("STAFix category", TraceSeverity.Unexpected, EventSeverity.Error),
                 TraceSeverity.Monitorable,
-                subject.ToString() + ":  {0}",
+                subject.ToString() + "{0}",
                 new object[] { body.ToString() });
+
+            if (ex!=null)
+            {
+                ElasticEmail.EmailGenerator.ReportError(ex, ex.TargetSite.ToString());
+            }
+        }
+
+        public static void LogEvent_Procedure(string procName, SPListItem item, string remarks)
+        {
+            BLL.Logger.LogEvent(item.Web.Name,
+                                string.Format("{0}.{1}.{2}",
+                                procName,
+                                item.ID.ToString(),
+                                remarks));
         }
     }
 }

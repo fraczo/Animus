@@ -17,7 +17,9 @@ namespace EventReceivers.admProcesy
                     string key = BLL.tabRozliczeniaGotowkowe.Define_KEY(klientItem.ID, okresId);
                     if (BLL.tabRozliczeniaGotowkowe.Check_KEY_IsAllowed(key, web, 0))
                     {
+
                         BLL.tabRozliczeniaGotowkowe.Create_ctRB_Form(web, klientItem.ID, okresId, key, klientItem, iok);
+
                     }
                 });
             }

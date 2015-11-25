@@ -6,11 +6,11 @@ using Microsoft.SharePoint;
 
 namespace EventReceivers.admProcesy
 {
-    class GFR_K_Request
+    public class GFR_K_Request
     {
-        internal static void Create(Microsoft.SharePoint.SPListItem item)
+        public static void Create(Microsoft.SharePoint.SPListItem item)
         {
-            BLL.Logger.LogEvent("Generowanie formatek rozliczeniowych dla klienta", item.ID.ToString());
+            BLL.Logger.LogEvent_Procedure("GFR_K_Request.Create", item, "start");
 
             int okresId = BLL.Tools.Get_LookupId(item, "selOkres");
             int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
@@ -65,6 +65,8 @@ namespace EventReceivers.admProcesy
                         break;
                 }
             }
+
+            BLL.Logger.LogEvent_Procedure("GFR_K_Request.Create", item, "end");
         }
     }
 }
