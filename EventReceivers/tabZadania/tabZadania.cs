@@ -10,13 +10,17 @@ namespace EventReceivers.tabZadania
 {
     public class tabZadania : SPItemEventReceiver
     {
-        // cmd
-        const string _ZAPISZ_WYNIKI = "Zapisz wyniki";
-        const string _ZATWIERDZ_I_WYSLIJ = "Zatwierdź i wyślij";
+        // cmdFormatka
+        private const string _CMD_ZAPISZ_WYNIKI = "Zapisz wyniki na karcie kontrolnej";
+        private const string _CMD_ZATWIERDZ_I_WYSLIJ = "Zatwierdź wyniki i wyślij do klienta";
+        private const string _CMD_ZATWIERDZ_I_ZAKONCZ = "Zatwierdź wyniki i zakończ zadanie";
+        private const string _CMD_WYCOFAJ = "Wycofaj z karty kontrolnej";
 
-        // status zadania
-        const string _GOTOWE = "Gotowe";
-        const string _ZWOLNIONE = "Zwolnione do wysyłki";
+        // enumStatusZadania
+        private const string _ZADANIE_GOTOWE = "Gotowe";
+        private const string _ZADANIE_ZWOLNIONE = "Zwolnione do wysyłki";
+        private const string _ZADANIE_OBSLUGA = "Obsługa";
+        private static string _ZADANIE_ZAKONCZONE = "Zakończone";
 
         public override void ItemAdded(SPItemEventProperties properties)
         {
@@ -38,7 +42,7 @@ namespace EventReceivers.tabZadania
 
             try
             {
-                Set_Status(item);
+                Set_Up(item);
                 Update_Resources(item);
                 Update_Extras(item);
 
@@ -268,6 +272,8 @@ namespace EventReceivers.tabZadania
                     if (HasValue(item, "colZUS_SP_Skladka")
                         & HasValue(item, "colZUS_ZD_Skladka")
                         & HasValue(item, "colZUS_FP_Skladka"))
+                    { }
+                    else
                     {
                         errLog.AppendLine("Nieprawidłowa warotść składki");
                         result = false;
@@ -425,11 +431,17 @@ namespace EventReceivers.tabZadania
         {
             switch (cmd)
             {
-                case _ZAPISZ_WYNIKI:
-                    BLL.Tools.Set_Text(item, "enumStatusZadania", _GOTOWE);
+                case _CMD_ZAPISZ_WYNIKI:
+                    BLL.Tools.Set_Text(item, "enumStatusZadania", _ZADANIE_GOTOWE);
                     break;
-                case _ZATWIERDZ_I_WYSLIJ:
-                    BLL.Tools.Set_Text(item, "enumStatusZadania", _ZWOLNIONE);
+                case _CMD_ZATWIERDZ_I_WYSLIJ:
+
+                    break;
+                case _CMD_ZATWIERDZ_I_ZAKONCZ:
+                    BLL.Tools.Set_Text(item, "enumStatusZadania", _ZADANIE_ZAKONCZONE);
+                    break;
+                case _CMD_WYCOFAJ:
+                    BLL.Tools.Set_Text(item, "enumStatusZadania", _ZADANIE_OBSLUGA);
                     break;
             }
         }
@@ -747,14 +759,17 @@ namespace EventReceivers.tabZadania
             //todo: throw new NotImplementedException();
         }
 
-        private static void Set_Status(SPListItem item)
+        private static void Set_Up(SPListItem item)
         {
+            //status
             if (BLL.Tools.Get_Text(item, "enumStatusZadania").Equals("Nowe")
                 && BLL.Tools.Get_Date(item, "Created").CompareTo(BLL.Tools.Get_Date(item, "Modified")) != 0)
             {
                 BLL.Tools.Set_Text(item, "enumStatusZadania", "Obsługa");
                 item.SystemUpdate();
             }
+
+            BLL.Tools.Set_Text(item, "_Validation", string.Empty);
         }
 
         private bool HasValue(SPListItem item, string col)
@@ -787,14 +802,7 @@ namespace EventReceivers.tabZadania
 
     }
 
-    public enum StatusZadania
-    {
-        Obsługa,
-        Gotowe,
-        Wysyłka,
-        Zakończone,
-        Anulowane
-    }
+
 
 
 }
