@@ -78,6 +78,7 @@
     <Compile Include="Models\UrzadSkarbowy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SPFieldUseritem.cs" />
+    <Compile Include="SPLisItem.cs" />
     <Compile Include="tabKartyKontrolne.cs" />
     <Compile Include="tabKlienci.cs" />
     <Compile Include="tabOkresy.cs" />

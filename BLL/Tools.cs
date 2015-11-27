@@ -419,5 +419,10 @@ namespace BLL
         {
             item[col] = id;
         }
+
+        public static string Format_Date(DateTime date)
+        {
+            return date.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture);
+        }
     }
 }

@@ -127,5 +127,45 @@ namespace BLL
 
             return trescHTML;
         }
+
+        public static string Get_HTMLByKod(SPWeb web, string kod)
+        {
+            SPList list = GetList(web);
+            SPListItem item = list.Items.Cast<SPListItem>()
+                .Where(i => i.Title.Equals(kod))
+                .FirstOrDefault();
+
+            if (item != null) return BLL.Tools.Get_Text(item, "colHTML");
+            else return string.Empty;
+        }
+
+        private static SPList GetList(SPWeb web)
+        {
+            return web.Lists.TryGetList(targetList);
+        }
+
+        public static string Ensure_HTMLByKod(SPWeb web, string kod)
+        {
+            SPList list =  web.Lists.TryGetList(targetList);
+            SPListItem item = list.Items.Cast<SPListItem>()
+                .Where(i => i.Title.Equals(kod))
+                .FirstOrDefault();
+            
+            if (item!=null)
+            {
+                return BLL.Tools.Get_Text(item, "colHTML");
+            }
+            else
+            {
+                //dodaj rekord do listy
+                SPListItem newItem = list.AddItem();
+                BLL.Tools.Set_Text(newItem, "Title", kod);
+                BLL.Tools.Set_Text(newItem, "colOpis", "To be completed...");
+
+                newItem.SystemUpdate();
+
+                return string.Empty;
+            }
+        }
     }
 }
