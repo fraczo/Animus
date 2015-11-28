@@ -133,6 +133,7 @@ namespace Workflows.ObslugaWiadomosci
             // 
             this.faultObslugaWiadomosci.Activities.Add(this.logError);
             this.faultObslugaWiadomosci.Activities.Add(this.ReportError);
+            this.faultObslugaWiadomosci.Enabled = false;
             this.faultObslugaWiadomosci.FaultType = typeof(System.Exception);
             this.faultObslugaWiadomosci.Name = "faultObslugaWiadomosci";
             // 
@@ -243,6 +244,7 @@ namespace Workflows.ObslugaWiadomosci
         private IfElseActivity CzyWiadomośćWysłana;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 

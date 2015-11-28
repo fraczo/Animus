@@ -11,6 +11,8 @@ namespace BLL
     public class tabZadania
     {
         const string targetList = "Zadania"; // "tabZadania";
+        private static object _STATUS_ZADANIA_ZAKONCZONE = "Zakończone";
+        private static string _STATUS_ZADANIA_WYSYLKA = "Wysyłka";
 
         //public static string Define_KEY(SPItemEventDataCollection item)
         //{
@@ -410,32 +412,40 @@ namespace BLL
         }
 
 
-        public static void Update_PD_DataWysylki(SPListItem task, DateTime date)
+        public static void Update_PD_DataWysylki(SPListItem item, DateTime date)
         {
-            SPListItem item = Get_ZadanieById(task.Web, task.ID);
             item["colPD_DataWylaniaInformacji"] = date;
+            Update_StatusZadania_Zakonczone(item);
             item.SystemUpdate();
         }
 
-        public static void Update_VAT_DataWysylki(SPListItem task, DateTime date)
+        public static void Update_VAT_DataWysylki(SPListItem item, DateTime date)
         {
-            SPListItem item = Get_ZadanieById(task.Web, task.ID);
             item["colVAT_DataWyslaniaInformacji"] = date;
+            Update_StatusZadania_Zakonczone(item);
             item.SystemUpdate();
         }
 
-        public static void Update_ZUS_DataWysylki(SPListItem task, DateTime date)
+        public static void Update_ZUS_DataWysylki(SPListItem item, DateTime date)
         {
-            SPListItem item = Get_ZadanieById(task.Web, task.ID);
             item["colZUS_DataWyslaniaInformacji"] = date;
+            Update_StatusZadania_Zakonczone(item);
             item.SystemUpdate();
         }
 
-        public static void Update_RBR_DataWysylki(SPListItem task, DateTime date)
+        public static void Update_RBR_DataWysylki(SPListItem item, DateTime date)
         {
-            SPListItem item = Get_ZadanieById(task.Web, task.ID);
             item["colBR_DataPrzekazania"] = date;
+            Update_StatusZadania_Zakonczone(item);
             item.SystemUpdate();
+        }
+
+        private static void Update_StatusZadania_Zakonczone(SPListItem item)
+        {
+            if (BLL.Tools.Get_Text(item, "enumStatusZadania").Equals(_STATUS_ZADANIA_WYSYLKA))
+            {
+                item["enumStatusZadania"] = _STATUS_ZADANIA_ZAKONCZONE;
+            }
         }
 
         public static List<SPListItem> Get_ActiveTasksByContentType(SPWeb web, string ctName)
@@ -783,5 +793,13 @@ namespace BLL
             SPList list = web.Lists.TryGetList(targetList);
             return list.GetItemById(zadanieId);
         }
+
+        public static void Update_StatusZadania(SPWeb web, int zadanieId, string value)
+        {
+            SPListItem item = web.Lists.TryGetList(targetList).GetItemById(zadanieId);
+            BLL.Tools.Set_Text(item, "enumStatusZadania", value);
+            item.SystemUpdate();
+        }
+
     }
 }

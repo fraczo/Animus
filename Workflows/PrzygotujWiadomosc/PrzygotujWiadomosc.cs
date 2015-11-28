@@ -40,6 +40,12 @@ namespace Workflows.PrzygotujWiadomosc
         private StringBuilder sbBody;
         private StringBuilder sbFooter;
 
+        public String logErrorMessage_HistoryDescription = default(System.String);
+        private string mailSubject;
+        private string mailTo;
+        private string mailFrom;
+        private string mailCC;
+
         private const string _ZADANIE_ZWOLNIONE = "Zwolnione do wysyłki";
 
         private const string _ZUS_HTML_TEMPLATE_NAME = "ZUS_TEMPLATE";
@@ -61,6 +67,8 @@ namespace Workflows.PrzygotujWiadomosc
         private string _VAT_TYTUL_ZWROT = "Urząd Skarbowy - Podatek VAT do zwrotu";
         private string _VAT_TYTUL_PRZENIESIENIE_ZWROT = "Urząd Skarbowy - Podatek VAT do przeniesienia i do zwrotu";
         private string _RBR_TYTUL = "Rozliczenie z biurem rachunkowym";
+        private string mailBCC;
+        private int selectedOperatorId;
 
 
         #region Helpers
@@ -135,6 +143,16 @@ namespace Workflows.PrzygotujWiadomosc
         private void Ensure(ref BLL.Models.Klient iok)
         {
             if (iok == null) iok = new BLL.Models.Klient(item.Web, BLL.Tools.Get_LookupId(item, "selKlient"));
+        }
+
+        private void WriteToHistoryLog(string description, string outcome)
+        {
+            SPWeb web = workflowProperties.Web;
+            Guid workflow = workflowProperties.WorkflowId;
+
+            TimeSpan ts = new TimeSpan();
+            SPWorkflow.CreateHistoryEvent(web, workflow, 0, web.CurrentUser, ts,
+                outcome, description, string.Empty);
         }
         #endregion
 
@@ -510,7 +528,7 @@ namespace Workflows.PrzygotujWiadomosc
             //określ osobę w stopce wiadomości
             int operatorId = Get_OperatorDoPodpisuWiadomosci();
 
-            if (operatorId>0)
+            if (operatorId > 0)
             {
                 string imieNazwisko, email, telefon;
 
@@ -527,6 +545,8 @@ namespace Workflows.PrzygotujWiadomosc
                 ReplaceString(sbFooter, "colEmail", BLL.admSetup.GetValue(item.Web, "EMAIL_BIURA"));
                 ReplaceString(sbFooter, "colTelefon", BLL.admSetup.GetValue(item.Web, "TELEFON_BIURA"));
             }
+
+            selectedOperatorId = operatorId;
 
         }
 
@@ -616,16 +636,35 @@ namespace Workflows.PrzygotujWiadomosc
         private void Create_Message_ExecuteCode(object sender, EventArgs e)
         {
 
-            string nadawca = "noreply@stafix24.pl";
-            string odbiorca = "jacek.rawiak@hotmail.com";
+            string nadawca = mailFrom;
+            string odbiorca = mailTo;
             string kopiaDla = string.Empty;
-            string temat = "Wyniki okresowe";
+            string temat = mailSubject;
             string trescHTML = sbBody.ToString();
             int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
 
-            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, false, false, temat, string.Empty, trescHTML, new DateTime(), 0, klientId);
+            BLL.tabWiadomosci.Ensure_ColumnExist(item.Web, "_KartaKontrolnaId");
+            int messageId = BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, false, false, temat, string.Empty, trescHTML, new DateTime(), 0, klientId, item.ID, BLL.Models.Marker.Ignore);
 
-            messageCreated = true;
+            ArrayList komponenty = Get_Komponenty();
+            BLL.tabWiadomosci.Update_Komponenty(item.Web, messageId, komponenty);
+
+            if (messageId > 0) messageCreated = true;
+            else messageCreated = false;
+
+        }
+
+        private ArrayList Get_Komponenty()
+        {
+            ArrayList a = new ArrayList();
+            if (sbZUS != null) a.Add("ZUS");
+            if (sbZUSPD != null) a.Add("ZUSPD");
+            if (sbPD != null) a.Add("PD");
+            if (sbVAT != null) a.Add("VAT");
+            if (sbRBR != null) a.Add("RBR");
+
+            return a;
+
         }
 
         private void isMessage_Created(object sender, ConditionalEventArgs e)
@@ -636,15 +675,99 @@ namespace Workflows.PrzygotujWiadomosc
 
         private void Update_StatusyKK_ExecuteCode(object sender, EventArgs e)
         {
+            if (sbZUS != null)
+            {
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_ZUS"), "colZUS_StatusZadania", "Wysyłka");
+                Update_StatusWysylki(item, "colZUS_StatusWysylki", "Oczekuje");
+            }
+            if (sbZUSPD != null)
+            {
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_ZUS"), "colZUS_StatusZadania", "Wysyłka");
+                Update_StatusWysylki(item, "colZUSPD_StatusWysylki", "Oczekuje");
+            }
+            if (sbPD != null)
+            {
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_PD"), "colPD_StatusZadania", "Wysyłka");
+                Update_StatusWysylki(item, "colPD_StatusWysylki", "Oczekuje");
+            }
+            if (sbVAT != null)
+            {
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_VAT"), "colVAT_StatusZadania", "Wysyłka");
+                Update_StatusWysylki(item, "colVAT_StatusWysylki", "Oczekuje");
+            }
+            if (sbRBR != null)
+            {
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_RBR"), "colRBR_StatusZadania", "Wysyłka");
+                Update_StatusWysylki(item, "colRBR_StatusWysylki", "Oczekuje");
+            }
 
+            item.SystemUpdate();
         }
 
-        private void Update_StatusyZadan_ExecuteCode(object sender, EventArgs e)
+        private void Update_StatusZadania(SPListItem item, int zadanieId, string col, string value)
         {
+            BLL.Tools.Set_Text(item, col, value);
+            //aktulizuj status skojarzonego zadania
+            if (zadanieId > 0)
+            {
+                BLL.tabZadania.Update_StatusZadania(item.Web, zadanieId, value);
+                WriteToHistoryLog(
+                    string.Format("Zadanie #{0} zaktualizowane", zadanieId.ToString()),
+                    "Status=" + value);
+            }
 
         }
 
-        public String logErrorMessage_HistoryDescription = default(System.String);
+        private void Update_StatusWysylki(SPListItem item, string col, string s)
+        {
+            BLL.Tools.Set_Text(item, col, s);
+        }
+
+
+        private void Create_Subject_ExecuteCode(object sender, EventArgs e)
+        {
+            Ensure(ref iok);
+            mailSubject = string.Format(":: Wyniki finansowe na koniec {0} [{1}] dla {2}",
+                BLL.Tools.Get_LookupValue(item, "selOkres"),
+                Get_UwzglednioneSkladniki(),
+                iok.NazwaPrezentowana);
+        }
+
+        private string Get_UwzglednioneSkladniki()
+        {
+            string result = string.Empty;
+            if (sbZUS != null) result = result + "ZUS";
+            if (sbZUSPD != null) result = result + ",PD.Prac";
+            if (sbPD != null) result = result + ",PD";
+            if (sbVAT != null) result = result + ",VAT";
+            if (sbRBR != null) result = result + ",Rozliczenie";
+
+            if (result.StartsWith(",")) result = result.Substring(1, result.Length - 1);
+            return result;
+
+        }
+
+        private void Create_Odbiorcy_ExecuteCode(object sender, EventArgs e)
+        {
+            Ensure(ref iok);
+            mailTo = iok.Email;
+            mailFrom = BLL.admSetup.GetValue(item.Web, "EMAIL_DEFAULT_SENDER");
+            if (selectedOperatorId > 0)
+            {
+                mailCC = BLL.dicOperatorzy.Get_EmailById(item.Web, selectedOperatorId);
+            }
+        }
+
+        private void isZgodaNaWysylkeMaila(object sender, ConditionalEventArgs e)
+        {
+            Ensure(ref iok);
+            if (iok.PreferowanaFormaKontaktu.Equals("Email"))
+            {
+                if (string.IsNullOrEmpty(iok.Email)) e.Result = false;
+                else e.Result = true;
+            }
+            else e.Result = false;
+        }
 
 
 

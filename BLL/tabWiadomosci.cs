@@ -10,12 +10,7 @@ namespace BLL
     {
         const string targetList = "Wiadomości";
 
-        public static void AddNew(SPWeb web, SPListItem item, string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId)
-        {
-            AddNew(web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, planowanaDataNadania, item.ID, klientId, BLL.Models.Marker.Ignore);
-        }
-
-        public static void AddNew(SPWeb web, SPListItem item, string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId, BLL.Models.Marker marker)
+        public static int AddNew(SPWeb web, SPListItem item, string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId, int kartaKontrolnaId, BLL.Models.Marker marker)
         {
             SPList list = web.Lists.TryGetList(targetList);
             SPListItem newItem = list.AddItem();
@@ -36,6 +31,8 @@ namespace BLL
             if (zadanieId > 0) newItem["_ZadanieId"] = zadanieId;
 
             if (klientId > 0) newItem["selKlient_NazwaSkrocona"] = klientId;
+
+            if (kartaKontrolnaId > 0) newItem["_KartaKontrolnaId"] = kartaKontrolnaId;
 
 
             //newItem.SystemUpdate();
@@ -73,14 +70,8 @@ namespace BLL
             }
 
             newItem.SystemUpdate();
-        }
 
-        /// <summary>
-        /// tworzy zlecenie wysyłki wiadomości bez załączników (nie przekazuje item)
-        /// </summary>
-        public static void AddNew(SPWeb web, string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId)
-        {
-            AddNew(web, null, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, planowanaDataNadania, zadanieId, klientId);
+            return newItem.ID;
         }
 
         private static void AddNew(SPListItem item, DateTime reminderDate, string subject, string bodyHtml)
@@ -88,7 +79,7 @@ namespace BLL
             int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
             string nadawca = string.Empty;
             string odbiorca = BLL.Tools.Get_Text(item, "colEmail");
-            AddNew(item.Web, nadawca, odbiorca, string.Empty, false, false, subject, string.Empty, bodyHtml, reminderDate, item.ID, klientId);
+            AddNew(item.Web, item, nadawca, odbiorca, string.Empty, false, false, subject, string.Empty, bodyHtml, reminderDate, item.ID, klientId, 0, BLL.Models.Marker.Ignore);
         }
 
         public static void CreateMailMessage(SPListItem item)
@@ -159,7 +150,7 @@ namespace BLL
                         string odbiorca = BLL.tabKlienci.Get_EmailById(item.Web, klientId);
                         if (BLL.Tools.Is_ValidEmail(odbiorca))
                         {
-                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, BLL.Tools.Get_Date(item, "colPlanowanaDataNadania"), item.ID, klientId);
+                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, BLL.Tools.Get_Date(item, "colPlanowanaDataNadania"), item.ID, klientId,0,BLL.Models.Marker.WithAttachements);
                             BLL.Tools.Set_Text(item, "enumStatusZadania", "Wysyłka");
                             item.SystemUpdate();
                         }
@@ -174,7 +165,7 @@ namespace BLL
                         odbiorca = BLL.Tools.Get_CurrentUser(item);
                         if (BLL.Tools.Is_ValidEmail(odbiorca))
                         {
-                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, new DateTime(), 0, 0);
+                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, new DateTime(), 0, 0, 0,Models.Marker.WithAttachements);
                         }
                         break;
                     default:
@@ -251,5 +242,17 @@ namespace BLL
             }
         }
 
+        public static void Ensure_ColumnExist(SPWeb web, string col)
+        {
+            SPListItem item = web.Lists.TryGetList(targetList).Items.Add();
+            BLL.Tools.Ensure_Column(item, col);
+        }
+
+        public static void Update_Komponenty(SPWeb web, int itemId, System.Collections.ArrayList komponenty)
+        {
+            SPListItem item = web.Lists.TryGetList(targetList).GetItemById(itemId);
+            BLL.Tools.Set_SPFieldMultiChoiceValue(item, "_KomponentyKK", komponenty);
+            item.SystemUpdate();
+        }
     }
 }

@@ -182,7 +182,15 @@ namespace Workflows.ObslugaWiadomosci
                     }
                 }
             }
+            else
+            {
+                int kartaKontrolnaId = (int)BLL.Tools.Get_Value(item, "_KartaKontrolnaId");
+                if (kartaKontrolnaId>0)
+                {
+                    //ToDo: obsługa komunikacji powrtotnej na podstawie ustawionych parametrów _KomponentyKK
 
+                }
+            }
         }
 
         private void isFlagaWysłanoUstawiona(object sender, ConditionalEventArgs e)

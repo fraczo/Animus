@@ -98,7 +98,16 @@ namespace BLL
             Copy_Field(item, form, "colVAT_WartoscDoZaplaty");
             Copy_Field(item, form, "colVAT_WartoscDoPrzeniesienia");
             Copy_Field(item, form, "colVAT_WartoscDoZwrotu");
-            Copy_Field(item, form, "colVAT_TerminZwrotuPodatku");
+
+            if (BLL.Tools.Get_Value(item, "colVAT_WartoscDoZwrotu") > 0)
+            {
+                Copy_Field(item, form, "colVAT_TerminZwrotuPodatku");
+            }
+            else
+            {
+                BLL.Tools.Set_Text(form, "colVAT_TerminZwrotuPodatku",string.Empty);
+            }
+
             Copy_Field(item, form, "colVAT_eDeklaracja");
             Copy_Field(item, form, "colVAT_VAT-UE_Zalaczony");
             Copy_Field(item, form, "colVAT_VAT-27_Zalaczony");

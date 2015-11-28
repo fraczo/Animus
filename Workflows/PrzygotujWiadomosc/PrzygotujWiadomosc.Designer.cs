@@ -30,17 +30,18 @@ namespace Workflows.PrzygotujWiadomosc
             System.Workflow.Activities.CodeCondition codecondition2 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.ComponentModel.ActivityBind activitybind1 = new System.Workflow.ComponentModel.ActivityBind();
             System.Workflow.Activities.CodeCondition codecondition3 = new System.Workflow.Activities.CodeCondition();
+            System.Workflow.Activities.CodeCondition codecondition4 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.ComponentModel.ActivityBind activitybind3 = new System.Workflow.ComponentModel.ActivityBind();
             System.Workflow.Runtime.CorrelationToken correlationtoken1 = new System.Workflow.Runtime.CorrelationToken();
             System.Workflow.ComponentModel.ActivityBind activitybind2 = new System.Workflow.ComponentModel.ActivityBind();
-            this.logStatusyZadania = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
-            this.Update_StatusyZadan = new System.Workflow.Activities.CodeActivity();
             this.logStatusyKK = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Update_StatusyKK = new System.Workflow.Activities.CodeActivity();
             this.ifMessage_Created = new System.Workflow.Activities.IfElseBranchActivity();
             this.Jeżeli_wiadomość_utworzna = new System.Workflow.Activities.IfElseActivity();
             this.logWiadomoscPrzygotowana = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Create_Message = new System.Workflow.Activities.CodeActivity();
+            this.Create_Odbiorcy = new System.Workflow.Activities.CodeActivity();
+            this.Create_Subject = new System.Workflow.Activities.CodeActivity();
             this.Create_Body = new System.Workflow.Activities.CodeActivity();
             this.Create_Footer = new System.Workflow.Activities.CodeActivity();
             this.logIstniejaInformacjeDoWyslania = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
@@ -61,6 +62,9 @@ namespace Workflows.PrzygotujWiadomosc
             this.Manage_PD = new System.Workflow.Activities.CodeActivity();
             this.Manage_ZUSPD = new System.Workflow.Activities.CodeActivity();
             this.Manage_ZUS = new System.Workflow.Activities.CodeActivity();
+            this.terminateActivity1 = new System.Workflow.ComponentModel.TerminateActivity();
+            this.logPreferowanyKontaktBezposredni = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
+            this.logMailOK = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.faultHandlerActivity1 = new System.Workflow.ComponentModel.FaultHandlerActivity();
             this.Else = new System.Workflow.Activities.IfElseBranchActivity();
             this.ifDaneDoWysylki = new System.Workflow.Activities.IfElseBranchActivity();
@@ -69,26 +73,14 @@ namespace Workflows.PrzygotujWiadomosc
             this.PD = new System.Workflow.Activities.SequenceActivity();
             this.ZUSPD = new System.Workflow.Activities.SequenceActivity();
             this.ZUS = new System.Workflow.Activities.SequenceActivity();
+            this.Else2 = new System.Workflow.Activities.IfElseBranchActivity();
+            this.ifZgodaNaWysylkeMaili = new System.Workflow.Activities.IfElseBranchActivity();
             this.cancellationHandlerActivity1 = new System.Workflow.ComponentModel.CancellationHandlerActivity();
             this.faultHandlersActivity1 = new System.Workflow.ComponentModel.FaultHandlersActivity();
             this.Czy_są_zwolnione_do_wysyłki = new System.Workflow.Activities.IfElseActivity();
             this.Przygotowanie_komponentów_wiadomości = new System.Workflow.Activities.ParallelActivity();
+            this.Czy_można_wysyłać_maile = new System.Workflow.Activities.IfElseActivity();
             this.onWorkflowActivated1 = new Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated();
-            // 
-            // logStatusyZadania
-            // 
-            this.logStatusyZadania.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
-            this.logStatusyZadania.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
-            this.logStatusyZadania.HistoryDescription = "Statusy w zadaniach zaktualizowane";
-            this.logStatusyZadania.HistoryOutcome = "";
-            this.logStatusyZadania.Name = "logStatusyZadania";
-            this.logStatusyZadania.OtherData = "";
-            this.logStatusyZadania.UserId = -1;
-            // 
-            // Update_StatusyZadan
-            // 
-            this.Update_StatusyZadan.Name = "Update_StatusyZadan";
-            this.Update_StatusyZadan.ExecuteCode += new System.EventHandler(this.Update_StatusyZadan_ExecuteCode);
             // 
             // logStatusyKK
             // 
@@ -102,6 +94,7 @@ namespace Workflows.PrzygotujWiadomosc
             // 
             // Update_StatusyKK
             // 
+            this.Update_StatusyKK.Enabled = false;
             this.Update_StatusyKK.Name = "Update_StatusyKK";
             this.Update_StatusyKK.ExecuteCode += new System.EventHandler(this.Update_StatusyKK_ExecuteCode);
             // 
@@ -109,8 +102,6 @@ namespace Workflows.PrzygotujWiadomosc
             // 
             this.ifMessage_Created.Activities.Add(this.Update_StatusyKK);
             this.ifMessage_Created.Activities.Add(this.logStatusyKK);
-            this.ifMessage_Created.Activities.Add(this.Update_StatusyZadan);
-            this.ifMessage_Created.Activities.Add(this.logStatusyZadania);
             codecondition1.Condition += new System.EventHandler<System.Workflow.Activities.ConditionalEventArgs>(this.isMessage_Created);
             this.ifMessage_Created.Condition = codecondition1;
             this.ifMessage_Created.Name = "ifMessage_Created";
@@ -134,6 +125,16 @@ namespace Workflows.PrzygotujWiadomosc
             // 
             this.Create_Message.Name = "Create_Message";
             this.Create_Message.ExecuteCode += new System.EventHandler(this.Create_Message_ExecuteCode);
+            // 
+            // Create_Odbiorcy
+            // 
+            this.Create_Odbiorcy.Name = "Create_Odbiorcy";
+            this.Create_Odbiorcy.ExecuteCode += new System.EventHandler(this.Create_Odbiorcy_ExecuteCode);
+            // 
+            // Create_Subject
+            // 
+            this.Create_Subject.Name = "Create_Subject";
+            this.Create_Subject.ExecuteCode += new System.EventHandler(this.Create_Subject_ExecuteCode);
             // 
             // Create_Body
             // 
@@ -160,6 +161,8 @@ namespace Workflows.PrzygotujWiadomosc
             this.ifDaneDoWysylki2.Activities.Add(this.logIstniejaInformacjeDoWyslania);
             this.ifDaneDoWysylki2.Activities.Add(this.Create_Footer);
             this.ifDaneDoWysylki2.Activities.Add(this.Create_Body);
+            this.ifDaneDoWysylki2.Activities.Add(this.Create_Subject);
+            this.ifDaneDoWysylki2.Activities.Add(this.Create_Odbiorcy);
             this.ifDaneDoWysylki2.Activities.Add(this.Create_Message);
             this.ifDaneDoWysylki2.Activities.Add(this.logWiadomoscPrzygotowana);
             this.ifDaneDoWysylki2.Activities.Add(this.Jeżeli_wiadomość_utworzna);
@@ -263,6 +266,30 @@ namespace Workflows.PrzygotujWiadomosc
             this.Manage_ZUS.Name = "Manage_ZUS";
             this.Manage_ZUS.ExecuteCode += new System.EventHandler(this.Manage_ZUS_ExecuteCode);
             // 
+            // terminateActivity1
+            // 
+            this.terminateActivity1.Name = "terminateActivity1";
+            // 
+            // logPreferowanyKontaktBezposredni
+            // 
+            this.logPreferowanyKontaktBezposredni.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logPreferowanyKontaktBezposredni.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            this.logPreferowanyKontaktBezposredni.HistoryDescription = "Preferowany kontakt bezpośredni lub brak adresu mailowgo odbiorcy";
+            this.logPreferowanyKontaktBezposredni.HistoryOutcome = "";
+            this.logPreferowanyKontaktBezposredni.Name = "logPreferowanyKontaktBezposredni";
+            this.logPreferowanyKontaktBezposredni.OtherData = "";
+            this.logPreferowanyKontaktBezposredni.UserId = -1;
+            // 
+            // logMailOK
+            // 
+            this.logMailOK.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logMailOK.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            this.logMailOK.HistoryDescription = "Zgoda na wysyłkę maila";
+            this.logMailOK.HistoryOutcome = "";
+            this.logMailOK.Name = "logMailOK";
+            this.logMailOK.OtherData = "";
+            this.logMailOK.UserId = -1;
+            // 
             // faultHandlerActivity1
             // 
             this.faultHandlerActivity1.Activities.Add(this.FaultHandler);
@@ -308,6 +335,19 @@ namespace Workflows.PrzygotujWiadomosc
             this.ZUS.Activities.Add(this.Manage_ZUS);
             this.ZUS.Name = "ZUS";
             // 
+            // Else2
+            // 
+            this.Else2.Activities.Add(this.logPreferowanyKontaktBezposredni);
+            this.Else2.Activities.Add(this.terminateActivity1);
+            this.Else2.Name = "Else2";
+            // 
+            // ifZgodaNaWysylkeMaili
+            // 
+            this.ifZgodaNaWysylkeMaili.Activities.Add(this.logMailOK);
+            codecondition4.Condition += new System.EventHandler<System.Workflow.Activities.ConditionalEventArgs>(this.isZgodaNaWysylkeMaila);
+            this.ifZgodaNaWysylkeMaili.Condition = codecondition4;
+            this.ifZgodaNaWysylkeMaili.Name = "ifZgodaNaWysylkeMaili";
+            // 
             // cancellationHandlerActivity1
             // 
             this.cancellationHandlerActivity1.Name = "cancellationHandlerActivity1";
@@ -331,6 +371,12 @@ namespace Workflows.PrzygotujWiadomosc
             this.Przygotowanie_komponentów_wiadomości.Activities.Add(this.VAT);
             this.Przygotowanie_komponentów_wiadomości.Activities.Add(this.RBR);
             this.Przygotowanie_komponentów_wiadomości.Name = "Przygotowanie_komponentów_wiadomości";
+            // 
+            // Czy_można_wysyłać_maile
+            // 
+            this.Czy_można_wysyłać_maile.Activities.Add(this.ifZgodaNaWysylkeMaili);
+            this.Czy_można_wysyłać_maile.Activities.Add(this.Else2);
+            this.Czy_można_wysyłać_maile.Name = "Czy_można_wysyłać_maile";
             activitybind3.Name = "PrzygotujWiadomosc";
             activitybind3.Path = "workflowId";
             // 
@@ -350,6 +396,7 @@ namespace Workflows.PrzygotujWiadomosc
             // PrzygotujWiadomosc
             // 
             this.Activities.Add(this.onWorkflowActivated1);
+            this.Activities.Add(this.Czy_można_wysyłać_maile);
             this.Activities.Add(this.Przygotowanie_komponentów_wiadomości);
             this.Activities.Add(this.Czy_są_zwolnione_do_wysyłki);
             this.Activities.Add(this.faultHandlersActivity1);
@@ -361,7 +408,21 @@ namespace Workflows.PrzygotujWiadomosc
 
         #endregion
 
-        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logStatusyZadania;
+        private TerminateActivity terminateActivity1;
+
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logPreferowanyKontaktBezposredni;
+
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logMailOK;
+
+        private IfElseBranchActivity Else2;
+
+        private IfElseBranchActivity ifZgodaNaWysylkeMaili;
+
+        private IfElseActivity Czy_można_wysyłać_maile;
+
+        private CodeActivity Create_Odbiorcy;
+
+        private CodeActivity Create_Subject;
 
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logStatusyKK;
 
@@ -374,8 +435,6 @@ namespace Workflows.PrzygotujWiadomosc
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logErrorMessage;
 
         private CodeActivity Update_StatusyKK;
-
-        private CodeActivity Update_StatusyZadan;
 
         private IfElseBranchActivity ifMessage_Created;
 
@@ -442,6 +501,15 @@ namespace Workflows.PrzygotujWiadomosc
         private IfElseActivity Czy_są_zwolnione_do_wysyłki;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
+
+
+
+
+
+
+
+
 
 
 

@@ -78,11 +78,14 @@ namespace BLL.Models
                 OsobaDoKontaktu = item["colOsobaDoKontaktu"] != null ? item["colOsobaDoKontaktu"].ToString() : string.Empty;
                 Email = item["colEmail"] != null ? item["colEmail"].ToString() : string.Empty;
                 Telefon = item["colTelefon"] != null ? item["colTelefon"].ToString() : string.Empty;
+
+                this.PreferowanaFormaKontaktu = BLL.Tools.Get_Text(item, "enumPreferowanaFormaKomunikacji");
                 Adres = item["colAdres"] != null ? item["colAdres"].ToString() : string.Empty;
                 KodPocztowy = item["colKodPocztowy"] != null ? item["colKodPocztowy"].ToString() : string.Empty;
                 Miejscowosc = item["colMiejscowosc"] != null ? item["colMiejscowosc"].ToString() : string.Empty;
                 NIP = item["colNIP"] != null ? item["colNIP"].ToString() : string.Empty;
-                NazwaFirmy = item.Title;
+                NazwaFirmy = BLL.Tools.Get_Text(item, "colNazwaFirmy");
+                this.NazwaPrezentowana = BLL.Tools.Get_Text(item, "_NazwaPrezentowana");
                 Regon = item["colRegon"] != null ? item["colRegon"].ToString() : string.Empty;
 
                 this.ZatrudniaPracownikow = item["colZatrudniaPracownikow"] != null ? bool.Parse(item["colZatrudniaPracownikow"].ToString()) : false ;
@@ -237,6 +240,7 @@ namespace BLL.Models
         public string NIP { get; set; }
 
         public string NazwaFirmy { get; set; }
+        public string NazwaPrezentowana { get; set; }
 
         public string Regon { get; set; }
 
@@ -297,5 +301,6 @@ namespace BLL.Models
         public object OplataMiesieczna { get; set; }
 
         public bool ZablokujFunduszPracy { get; set; }
+        public string PreferowanaFormaKontaktu { get; set; }
     }
 }

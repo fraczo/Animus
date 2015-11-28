@@ -1,6 +1,6 @@
+C:\_GitHub\Animus\STAFix24_Animus\obj\Debug\STAFix24_Animus.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\STAFix24_Animus\bin\Debug\STAFix24.Animus.dll
 C:\_GitHub\Animus\STAFix24_Animus\bin\Debug\STAFix24.Animus.pdb
-C:\_GitHub\Animus\STAFix24_Animus\obj\Debug\STAFix24_Animus.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\STAFix24_Animus\obj\Debug\STAFix24.Animus.dll
 C:\_GitHub\Animus\STAFix24_Animus\obj\Debug\STAFix24.Animus.pdb
 C:\_GitHub\Animus\STAFix24_Animus\bin\Debug\STAFix24.Animus.EventReceivers.dll

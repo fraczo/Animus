@@ -42,7 +42,7 @@ namespace BLL
         /// <summary>
         /// definiuje kolumnę w razie potrzeby
         /// </summary>
-        private static void Ensure_Column(SPListItem item, string targetColumn)
+        public static void Ensure_Column(SPListItem item, string targetColumn)
         {
             bool found = false;
             SPList list = item.ParentList;
@@ -55,10 +55,10 @@ namespace BLL
                 }
             }
 
-            if (!found) Create_Column(list, targetColumn);
+            if (!found) Create_SPFieldText(list, targetColumn);
         }
 
-        private static void Create_Column(SPList list, string targetColumn)
+        private static void Create_SPFieldText(SPList list, string targetColumn)
         {
             SPFieldText f = (SPFieldText)list.Fields.CreateNewField(SPFieldType.Text.ToString(), targetColumn);
 
@@ -444,6 +444,18 @@ namespace BLL
             }
 
             return "nieprawidłowy numer rachunku";
+        }
+
+        internal static void Set_SPFieldMultiChoiceValue(SPListItem item, string col, System.Collections.ArrayList komponenty)
+        {
+            SPFieldMultiChoiceValue fmcv = new SPFieldMultiChoiceValue();
+
+            foreach (string s in komponenty)
+            {
+                fmcv.Add(s);
+            }
+
+            item[col] = fmcv;
         }
     }
 }
