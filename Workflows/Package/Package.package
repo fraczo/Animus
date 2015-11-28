@@ -1,6 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="36270ecd-bca4-47c9-b205-7870ccdc6991" solutionId="36270ecd-bca4-47c9-b205-7870ccdc6991" resetWebServer="false" name="Workflows" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
-  <features>
-    <featureReference itemId="139576f4-068e-4776-bf0b-06979c2c5cd1" />
-  </features>
-</package>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="36270ecd-bca4-47c9-b205-7870ccdc6991" solutionId="36270ecd-bca4-47c9-b205-7870ccdc6991" resetWebServer="false" name="Workflows" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel" />

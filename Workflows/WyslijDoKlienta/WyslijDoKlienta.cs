@@ -37,11 +37,11 @@ namespace Workflows.WyslijDoKlienta
 
         private const string _ZADANIE_ZWOLNIONE = "Zwolnione do wysyłki";
 
-        private string _ZUS_HTML_TEMPLATE_NAME = "ZUS_TEMPLATE";
-        private string _ZUSPD_HTML_TEMPLATE_NAME = "ZUSPD_TEMPLATE";
-        private string _PD_HTML_TEMPLATE_NAME = "PD_TEMPLATE";
-        private string _VAT_HTML_TEMPLATE_NAME = "VAT_TEMPLATE";
-        private string _RBR_HTML_TEMPLATE_NAME = "RBR_TEMPLATE";
+        private const string _ZUS_HTML_TEMPLATE_NAME = "ZUS_TEMPLATE";
+        private const string _ZUSPD_HTML_TEMPLATE_NAME = "ZUSPD_TEMPLATE";
+        private const string _PD_HTML_TEMPLATE_NAME = "PD_TEMPLATE";
+        private const string _VAT_HTML_TEMPLATE_NAME = "VAT_TEMPLATE";
+        private const string _RBR_HTML_TEMPLATE_NAME = "RBR_TEMPLATE";
 
         private void onWorkflowActivated1_Invoked(object sender, ExternalDataEventArgs e)
         {
@@ -68,7 +68,7 @@ namespace Workflows.WyslijDoKlienta
             sb.Replace(string.Format(@"___{0}___", col), s);
             sb.Replace(string.Format(@"[[{0}]]", col), s);
         }
-        
+
         private void ReplaceString(StringBuilder sb, SPListItem item, string col, string s)
         {
             sb.Replace(string.Format(@"___{0}___", col), s);
@@ -138,7 +138,7 @@ namespace Workflows.WyslijDoKlienta
                 ReplaceCurrency(sbZUS, item, "colZUS_ZD_Skladka");
                 ReplaceCurrency(sbZUS, item, "colZUS_FP_Skladka");
                 ReplaceDate(sbZUS, item, "colZUS_TerminPlatnosciSkladek");
-                
+
                 //z parametrów klienta
                 ReplaceString(sbZUS, item, "colZUS_SP_Konto", "numer konta SP");
             }
@@ -218,6 +218,16 @@ namespace Workflows.WyslijDoKlienta
             {
                 sbRBR = null;
             }
+        }
+
+        private void Create_Body_ExecuteCode(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Create_Footer_ExecuteCode(object sender, EventArgs e)
+        {
+
         }
 
         private void Create_Message_ExecuteCode(object sender, EventArgs e)

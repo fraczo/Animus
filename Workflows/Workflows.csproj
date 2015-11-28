@@ -70,17 +70,14 @@
       <DependentUpon>ObslugaWiadomosci.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WyslijDoKlienta\WyslijDoKlienta.cs">
+    <Compile Include="PrzygotujWiadomosc\PrzygotujWiadomosc.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="WyslijDoKlienta\WyslijDoKlienta.Designer.cs">
-      <DependentUpon>WyslijDoKlienta.cs</DependentUpon>
+    <Compile Include="PrzygotujWiadomosc\PrzygotujWiadomosc.Designer.cs">
+      <DependentUpon>PrzygotujWiadomosc.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Features\Feature1\Feature1.feature">
-      <FeatureId>{139576f4-068e-4776-bf0b-06979c2c5cd1}</FeatureId>
-    </None>
     <None Include="GFR_K\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{b2fdea66-cd38-43b2-98c3-f78aabf4eb3b}</SharePointProjectItemId>
     </None>
@@ -94,20 +91,19 @@
     <None Include="Package\Package.Template.xml">
       <DependentUpon>Package.package</DependentUpon>
     </None>
-    <None Include="WyslijDoKlienta\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{b488e741-be54-4489-a1bb-5101ba64744e}</SharePointProjectItemId>
+    <None Include="PrzygotujWiadomosc\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{ed67c847-7cba-4151-94bb-a4c006d05bce}</SharePointProjectItemId>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Features\Feature1\Feature1.Template.xml">
-      <DependentUpon>Feature1.feature</DependentUpon>
-    </Content>
+    <Folder Include="Features\" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="GFR_K\Elements.xml" />
     <Content Include="ObslugaWiadomosci\Elements.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="WyslijDoKlienta\Elements.xml" />
+    <Content Include="PrzygotujWiadomosc\Elements.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">

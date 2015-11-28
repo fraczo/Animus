@@ -289,7 +289,7 @@ namespace EventReceivers.tabZadania
                 bool pit4R = BLL.Tools.Get_Flag(item, "colZUS_PIT-4R_Zalaczony");
                 if (pit4R)
                 {
-                    if (HasValue(item, "colZUS_PIT-4R"))
+                    if (!HasValue(item, "colZUS_PIT-4R"))
                     {
                         errLog.AppendLine("Nieprawidłowa warotść PIT-4R");
                         result = false;
@@ -304,7 +304,7 @@ namespace EventReceivers.tabZadania
                 bool pit8AR = BLL.Tools.Get_Flag(item, "colZUS_PIT-8AR_Zalaczony");
                 if (pit8AR)
                 {
-                    if (HasValue(item, "colZUS_PIT-8AR"))
+                    if (!HasValue(item, "colZUS_PIT-8AR"))
                     {
                         errLog.AppendLine("Nieprawidłowa warotść PIT-8AR");
                         result = false;
@@ -435,7 +435,7 @@ namespace EventReceivers.tabZadania
                     BLL.Tools.Set_Text(item, "enumStatusZadania", _ZADANIE_GOTOWE);
                     break;
                 case _CMD_ZATWIERDZ_I_WYSLIJ:
-
+                    BLL.Tools.Set_Text(item, "enumStatusZadania", _ZADANIE_ZWOLNIONE);
                     break;
                 case _CMD_ZATWIERDZ_I_ZAKONCZ:
                     BLL.Tools.Set_Text(item, "enumStatusZadania", _ZADANIE_ZAKONCZONE);

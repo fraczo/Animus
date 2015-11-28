@@ -386,5 +386,33 @@ namespace BLL
 
             return oId;
         }
+
+        public static string Get_IdPlat_Miesiecznie(SPWeb web, int okresId)
+        {
+            SPListItem item = Get_ItemById(web, okresId);
+            DateTime startDate = BLL.Tools.Get_Date(item, "colDataRozpoczecia");
+            return string.Format("{0:yy}M{0:MM}", startDate);
+        }
+
+        public static string Get_IdPlat_Kwartalnie(SPWeb web, int okresId)
+        {
+            SPListItem item = Get_ItemById(web, okresId);
+            DateTime startDate = BLL.Tools.Get_Date(item, "colDataRozpoczecia");
+
+            string kw;
+            if (startDate.Month ==1 | startDate.Month ==2 | startDate.Month ==3) kw = "01";
+            else if (startDate.Month == 4 | startDate.Month == 5 | startDate.Month == 6) kw = "02";
+            else if (startDate.Month == 7 | startDate.Month == 8 | startDate.Month == 9) kw = "03";
+            else kw = "04";
+
+            return string.Format("{0:yy}K{1}", startDate, kw);
+        }
+
+        public static string Get_IdPlatZUS(SPWeb web, int okresId)
+        {
+            SPListItem item = Get_ItemById(web, okresId);
+            DateTime startDate = BLL.Tools.Get_Date(item, "colDataRozpoczecia");
+            return string.Format("{0:yyyyMM}", startDate);
+        }
     }
 }

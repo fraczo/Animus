@@ -424,5 +424,26 @@ namespace BLL
         {
             return date.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture);
         }
+
+        internal static void Set_Date(SPListItem item, string col, DateTime dateTime)
+        {
+            item[col] = dateTime;
+        }
+
+        public static string Format_Konto(string s)
+        {
+
+            if (!string.IsNullOrEmpty(s))
+            {
+                Regex rgx = new Regex("[^0-9]");
+                s = rgx.Replace(s, "");
+                if (s.Length == 26)
+                {
+                    return Convert.ToDecimal(s).ToString("## #### #### #### #### #### ####");
+                } 
+            }
+
+            return "nieprawidłowy numer rachunku";
+        }
     }
 }

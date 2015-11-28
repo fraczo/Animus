@@ -35,13 +35,16 @@ namespace BLL
             Copy_Field(item, form, "colPD_OcenaWyniku");
             Copy_Field(item, form, "colPD_WartoscDochodu");
             Copy_Field(item, form, "colPD_WartoscDoZaplaty");
-            //Copy_Field(item, form, "colPD_WartoscStraty");
             Copy_Field(item, form, "colPD_WartoscStraty");
 
             Copy_Field(item, "selOperator", form, "selOperator_PD");
             Copy_Field(item, "colNotatka", form, "colUwagiPD");
             Copy_Id(item, form, "selZadanie_PD");
+
+            Copy_Field(item, form, "colPD_TerminPlatnosciPodatku");
+            Copy_Id(item, form, "selZadanie_PD");
             Copy_Field(item, "enumStatusZadania", form, "colPD_StatusZadania");
+
         }
 
         public static void Update_PDS_Data(SPListItem item)
@@ -95,6 +98,7 @@ namespace BLL
             Copy_Field(item, form, "colVAT_WartoscDoZaplaty");
             Copy_Field(item, form, "colVAT_WartoscDoPrzeniesienia");
             Copy_Field(item, form, "colVAT_WartoscDoZwrotu");
+            Copy_Field(item, form, "colVAT_TerminZwrotuPodatku");
             Copy_Field(item, form, "colVAT_eDeklaracja");
             Copy_Field(item, form, "colVAT_VAT-UE_Zalaczony");
             Copy_Field(item, form, "colVAT_VAT-27_Zalaczony");
@@ -102,6 +106,7 @@ namespace BLL
             Copy_Field(item, "selOperator", form, "selOperator_VAT");
             Copy_Field(item, "colNotatka", form, "colUwagiVAT");
 
+            Copy_Field(item, form, "colVAT_TerminPlatnosciPodatku");
             Copy_Id(item, form, "selZadanie_VAT");
             Copy_Field(item, "enumStatusZadania", form, "colVAT_StatusZadania");
 
@@ -126,6 +131,7 @@ namespace BLL
             Copy_Field(item, form, "colZUS_PIT-8AR");
             Copy_Field(item, form, "colZUS_ListaPlac_Zalaczona");
             Copy_Field(item, form, "colZUS_Rachunki_Zalaczone");
+            Copy_Field(item, form, "colZUS_TerminPlatnosciSkladek");
 
             Copy_Field(item, "selOperator", form, "selOperator_ZUS");
 
@@ -135,7 +141,18 @@ namespace BLL
             BLL.Models.Klient k = new Models.Klient(item.Web, Get_LookupId(item, "selKlient"));
             form["colDataRozpoczeciaDzialalnosci"] = k.DataRozpoczeciaDzialalnosci;
 
+            //ustaw termin płątności na podstawie miesięcznego terminu podatku dochodowego
+            BLL.Tools.Set_Date(form, "colZUSPD_TerminPlatnosciPodatku", BLL.tabOkresy.Get_TerminPlatnosciByOkresId(item.Web, "colPD_TerminPlatnosciPodatku", BLL.Tools.Get_LookupId(item, "selOkres")));
+
+            Copy_Id(item, form, "selZadanie_ZUS");
+            Copy_Field(item, "enumStatusZadania", form, "colZUS_StatusZadania");
+
             form.SystemUpdate();
+        }
+
+        private static void Ensure(ref Models.Klient iok)
+        {
+            throw new NotImplementedException();
         }
 
         public static void Update_RBR_Data(SPListItem item)
@@ -150,8 +167,11 @@ namespace BLL
             Copy_Field(item, form, "colBR_TerminPlatnosci");
             Copy_Field(item, form, "colBR_FakturaZalaczona");
 
+            Copy_Field(item, "selOperator", form, "selOperator_RBR");
             Copy_Field(item, "colNotatka", form, "colUwagiRBR");
-            Copy_Id(item, form, "selZadanieRBR");
+
+            Copy_Id(item, form, "selZadanie_RBR");
+            Copy_Field(item, "enumStatusZadania", form, "colRBR_StatusZadania");
 
             form.SystemUpdate();
         }

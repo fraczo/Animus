@@ -760,5 +760,28 @@ namespace BLL
 
             item.SystemUpdate();
         }
+
+        public static string Get_InfoDlaKlientaById(SPWeb web, int zadanieId)
+        {
+            SPListItem item = Get_ItemById(web, zadanieId);
+            if (item != null) return BLL.Tools.Get_Text(item, "colInformacjaDlaKlienta").Trim();
+            else return string.Empty;
+        }
+
+        /// <summary>
+        /// dotyczy wyłącznie komendarza ZUSPD
+        /// </summary>
+        public static string Get_InfoDlaKlienta2ById(SPWeb web, int zadanieId)
+        {
+            SPListItem item = Get_ItemById(web, zadanieId);
+            if (item != null) return BLL.Tools.Get_Text(item, "colInformacjaDlaKlienta2").Trim();
+            else return string.Empty;
+        }
+
+        private static SPListItem Get_ItemById(SPWeb web, int zadanieId)
+        {
+            SPList list = web.Lists.TryGetList(targetList);
+            return list.GetItemById(zadanieId);
+        }
     }
 }
