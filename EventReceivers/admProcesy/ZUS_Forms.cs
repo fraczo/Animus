@@ -12,6 +12,10 @@ namespace EventReceivers.admProcesy
     {
         const string ctZUS = @"Rozliczenie ZUS";
 
+        /// <summary>
+        /// jeżeli klient ma przypisane serwisy ZUS zgodne z zadaną maską i klucz KEY nie jest zdublowany
+        /// uruchamiana jest procedura tworzenia zadania
+        /// </summary>
         internal static void Manage_ZUS_Form(SPWeb web, int okresId, SPListItem klientItem, BLL.Models.Klient iok)
         {
             if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-*"))

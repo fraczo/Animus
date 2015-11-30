@@ -425,7 +425,7 @@ namespace BLL
             return date.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture);
         }
 
-        internal static void Set_Date(SPListItem item, string col, DateTime dateTime)
+        public static void Set_Date(SPListItem item, string col, DateTime dateTime)
         {
             item[col] = dateTime;
         }
@@ -457,5 +457,11 @@ namespace BLL
 
             item[col] = fmcv;
         }
+
+        public static SPFieldMultiChoiceValue Get_MutichoiceValue(SPListItem item, string col)
+        {
+            return new SPFieldMultiChoiceValue(item[col].ToString());
+        }
+
     }
 }

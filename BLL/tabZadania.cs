@@ -412,28 +412,28 @@ namespace BLL
         }
 
 
-        public static void Update_PD_DataWysylki(SPListItem item, DateTime date)
+        public static void Update_PD_Status_DataWysylki(SPListItem item, DateTime date)
         {
             item["colPD_DataWylaniaInformacji"] = date;
             Update_StatusZadania_Zakonczone(item);
             item.SystemUpdate();
         }
 
-        public static void Update_VAT_DataWysylki(SPListItem item, DateTime date)
+        public static void Update_VAT_Status_DataWysylki(SPListItem item, DateTime date)
         {
             item["colVAT_DataWyslaniaInformacji"] = date;
             Update_StatusZadania_Zakonczone(item);
             item.SystemUpdate();
         }
 
-        public static void Update_ZUS_DataWysylki(SPListItem item, DateTime date)
+        public static void Update_ZUS_Status_DataWysylki(SPListItem item, DateTime date)
         {
             item["colZUS_DataWyslaniaInformacji"] = date;
             Update_StatusZadania_Zakonczone(item);
             item.SystemUpdate();
         }
 
-        public static void Update_RBR_DataWysylki(SPListItem item, DateTime date)
+        public static void Update_RBR_Status_DataWysylki(SPListItem item, DateTime date)
         {
             item["colBR_DataPrzekazania"] = date;
             Update_StatusZadania_Zakonczone(item);
@@ -799,6 +799,12 @@ namespace BLL
             SPListItem item = web.Lists.TryGetList(targetList).GetItemById(zadanieId);
             BLL.Tools.Set_Text(item, "enumStatusZadania", value);
             item.SystemUpdate();
+        }
+
+
+        public static SPListItem GetItemById(SPWeb web, int itemId)
+        {
+            return web.Lists.TryGetList(targetList).Items.GetItemById(itemId);
         }
 
     }

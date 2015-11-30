@@ -65,6 +65,9 @@
     <None Include="CustomActions\GenerujFormatkiRozliczeniowe\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{03bbfeac-ebcd-4bf7-bc9d-8c9aeb6f24df}</SharePointProjectItemId>
     </None>
+    <None Include="CustomActions\PrzygotujWiadomosciZKartKontrolnych\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{eda6c31c-a6f7-413e-a71e-08bcac5fd0e8}</SharePointProjectItemId>
+    </None>
     <None Include="Features\EventReceivers\EventReceivers.feature">
       <FeatureId>{238ee3f0-273f-4479-8f86-e8795048cec7}</FeatureId>
     </None>
@@ -96,6 +99,7 @@
     <Content Include="CustomActions\AkcjeWitrynyMenu\Elements.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="CustomActions\PrzygotujWiadomosciZKartKontrolnych\Elements.xml" />
     <Content Include="Features\EventReceivers\EventReceivers.Template.xml">
       <DependentUpon>EventReceivers.feature</DependentUpon>
     </Content>

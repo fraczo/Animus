@@ -51,6 +51,11 @@ namespace EventReceivers.admProcesy
                         ObslugaWiadomosci.Execute(item);
                         this.EventFiringEnabled = true;
                         break;
+                    case "Przygotuj wiadomości z kart kontrolnych":
+                        this.EventFiringEnabled = false;
+                        ObslugaKartKontrolnych.Execute(item);
+                        this.EventFiringEnabled = true;
+                        break;
                     default:
                         break;
                 }

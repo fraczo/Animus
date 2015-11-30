@@ -51,6 +51,7 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admProcesy\ObslugaKartKontrolnych.cs" />
     <Compile Include="admProcesy\ObslugaWiadomosci.cs" />
     <Compile Include="admProcesy\RBR_Forms.cs">
       <SubType>Code</SubType>

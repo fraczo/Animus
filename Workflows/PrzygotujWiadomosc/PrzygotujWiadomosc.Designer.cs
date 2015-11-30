@@ -29,10 +29,10 @@ namespace Workflows.PrzygotujWiadomosc
             System.Workflow.Activities.CodeCondition codecondition1 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.Activities.CodeCondition codecondition2 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.ComponentModel.ActivityBind activitybind1 = new System.Workflow.ComponentModel.ActivityBind();
+            System.Workflow.Runtime.CorrelationToken correlationtoken1 = new System.Workflow.Runtime.CorrelationToken();
             System.Workflow.Activities.CodeCondition codecondition3 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.Activities.CodeCondition codecondition4 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.ComponentModel.ActivityBind activitybind3 = new System.Workflow.ComponentModel.ActivityBind();
-            System.Workflow.Runtime.CorrelationToken correlationtoken1 = new System.Workflow.Runtime.CorrelationToken();
             System.Workflow.ComponentModel.ActivityBind activitybind2 = new System.Workflow.ComponentModel.ActivityBind();
             this.logStatusyKK = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Update_StatusyKK = new System.Workflow.Activities.CodeActivity();
@@ -62,7 +62,8 @@ namespace Workflows.PrzygotujWiadomosc
             this.Manage_PD = new System.Workflow.Activities.CodeActivity();
             this.Manage_ZUSPD = new System.Workflow.Activities.CodeActivity();
             this.Manage_ZUS = new System.Workflow.Activities.CodeActivity();
-            this.terminateActivity1 = new System.Workflow.ComponentModel.TerminateActivity();
+            this.STOP1 = new System.Workflow.ComponentModel.TerminateActivity();
+            this.setState1 = new Microsoft.SharePoint.WorkflowActions.SetState();
             this.logPreferowanyKontaktBezposredni = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.logMailOK = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.faultHandlerActivity1 = new System.Workflow.ComponentModel.FaultHandlerActivity();
@@ -94,7 +95,6 @@ namespace Workflows.PrzygotujWiadomosc
             // 
             // Update_StatusyKK
             // 
-            this.Update_StatusyKK.Enabled = false;
             this.Update_StatusyKK.Name = "Update_StatusyKK";
             this.Update_StatusyKK.ExecuteCode += new System.EventHandler(this.Update_StatusyKK_ExecuteCode);
             // 
@@ -266,9 +266,18 @@ namespace Workflows.PrzygotujWiadomosc
             this.Manage_ZUS.Name = "Manage_ZUS";
             this.Manage_ZUS.ExecuteCode += new System.EventHandler(this.Manage_ZUS_ExecuteCode);
             // 
-            // terminateActivity1
+            // STOP1
             // 
-            this.terminateActivity1.Name = "terminateActivity1";
+            this.STOP1.Error = "STOP";
+            this.STOP1.Name = "STOP1";
+            // 
+            // setState1
+            // 
+            correlationtoken1.Name = "workflowToken";
+            correlationtoken1.OwnerActivityName = "PrzygotujWiadomosc";
+            this.setState1.CorrelationToken = correlationtoken1;
+            this.setState1.Name = "setState1";
+            this.setState1.State = 3;
             // 
             // logPreferowanyKontaktBezposredni
             // 
@@ -338,7 +347,8 @@ namespace Workflows.PrzygotujWiadomosc
             // Else2
             // 
             this.Else2.Activities.Add(this.logPreferowanyKontaktBezposredni);
-            this.Else2.Activities.Add(this.terminateActivity1);
+            this.Else2.Activities.Add(this.setState1);
+            this.Else2.Activities.Add(this.STOP1);
             this.Else2.Name = "Else2";
             // 
             // ifZgodaNaWysylkeMaili
@@ -382,8 +392,6 @@ namespace Workflows.PrzygotujWiadomosc
             // 
             // onWorkflowActivated1
             // 
-            correlationtoken1.Name = "workflowToken";
-            correlationtoken1.OwnerActivityName = "PrzygotujWiadomosc";
             this.onWorkflowActivated1.CorrelationToken = correlationtoken1;
             this.onWorkflowActivated1.EventName = "OnWorkflowActivated";
             this.onWorkflowActivated1.Name = "onWorkflowActivated1";
@@ -408,7 +416,9 @@ namespace Workflows.PrzygotujWiadomosc
 
         #endregion
 
-        private TerminateActivity terminateActivity1;
+        private Microsoft.SharePoint.WorkflowActions.SetState setState1;
+
+        private TerminateActivity STOP1;
 
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logPreferowanyKontaktBezposredni;
 
@@ -501,6 +511,12 @@ namespace Workflows.PrzygotujWiadomosc
         private IfElseActivity Czy_są_zwolnione_do_wysyłki;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
+
+
+
+
+
 
 
 

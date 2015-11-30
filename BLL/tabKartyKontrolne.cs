@@ -11,10 +11,32 @@ namespace BLL
         const string targetList = "Karty kontrolne";
         const string colPOTWIERDZENIE_ODBIORU_DOKUMENTOW = "colPotwierdzenieOdbioruDokumento";
 
-        public static void Ensure_KartaKontrolna(SPWeb web, int klientId, int okresId, BLL.Models.Klient iok)
+        public static int Ensure_KartaKontrolna(SPWeb web, int klientId, int okresId, BLL.Models.Klient iok)
         {
             string KEY = Create_KEY(klientId, okresId);
             int formId = Get_KartaKontrolnaId(web, klientId, okresId, KEY, iok);
+
+            if (formId > 0) return formId;
+            else
+            {
+                SPListItem newItem = web.Lists.TryGetList(targetList).Items.Add();
+                newItem["KEY"] = KEY;
+                newItem["selKlient"] = klientId;
+                newItem["selOkres"] = okresId;
+
+                newItem["enumRozliczeniePD"] = iok.RozliczeniePD;
+                newItem["enumRozliczenieVAT"] = iok.RozliczenieVAT;
+                newItem["colFormaOpodatkowaniaPD"] = iok.FormaOpodatkowaniaPD;
+                newItem["colFormaOpodatkowaniaVAT"] = iok.FormaOpodatkowaniaVAT;
+                newItem["colFormaOpodakowania_ZUS"] = iok.FormaOpodatkowaniaZUS;
+
+                //ustaw CT
+                if (iok.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
+                else newItem["ContentType"] = "Karta kontrolna KPiR";
+
+                newItem.SystemUpdate();
+                return newItem.ID;
+            }
         }
 
         public static void Update_PD_Data(Microsoft.SharePoint.SPListItem item)
@@ -44,6 +66,7 @@ namespace BLL
             Copy_Field(item, form, "colPD_TerminPlatnosciPodatku");
             Copy_Id(item, form, "selZadanie_PD");
             Copy_Field(item, "enumStatusZadania", form, "colPD_StatusZadania");
+            BLL.Tools.Set_Text(form, "colPD_StatusWysylki", string.Empty);
 
         }
 
@@ -105,7 +128,7 @@ namespace BLL
             }
             else
             {
-                BLL.Tools.Set_Text(form, "colVAT_TerminZwrotuPodatku",string.Empty);
+                BLL.Tools.Set_Text(form, "colVAT_TerminZwrotuPodatku", string.Empty);
             }
 
             Copy_Field(item, form, "colVAT_eDeklaracja");
@@ -118,6 +141,7 @@ namespace BLL
             Copy_Field(item, form, "colVAT_TerminPlatnosciPodatku");
             Copy_Id(item, form, "selZadanie_VAT");
             Copy_Field(item, "enumStatusZadania", form, "colVAT_StatusZadania");
+            BLL.Tools.Set_Text(form, "colVAT_StatusWysylki", string.Empty);
 
             form.SystemUpdate();
         }
@@ -155,6 +179,7 @@ namespace BLL
 
             Copy_Id(item, form, "selZadanie_ZUS");
             Copy_Field(item, "enumStatusZadania", form, "colZUS_StatusZadania");
+            BLL.Tools.Set_Text(form, "colZUS_StatusWysylki", string.Empty);
 
             form.SystemUpdate();
         }
@@ -181,6 +206,7 @@ namespace BLL
 
             Copy_Id(item, form, "selZadanie_RBR");
             Copy_Field(item, "enumStatusZadania", form, "colRBR_StatusZadania");
+            BLL.Tools.Set_Text(form, "colRBR_StatusWysylki", string.Empty);
 
             form.SystemUpdate();
         }
@@ -270,7 +296,7 @@ namespace BLL
 
         private static int Get_KartaKontrolnaId(SPWeb web, int klientId, int okresId, string KEY, Models.Klient iok)
         {
-            if (iok==null)
+            if (iok == null)
             {
                 iok = new Models.Klient(web, klientId);
             }
@@ -285,24 +311,7 @@ namespace BLL
             }
             else
             {
-                SPListItem newItem = list.AddItem();
-                newItem["KEY"] = KEY;
-                newItem["selKlient"] = klientId;
-                newItem["selOkres"] = okresId;
-
-                newItem["enumRozliczeniePD"] = iok.RozliczeniePD;
-                newItem["enumRozliczenieVAT"] = iok.RozliczenieVAT;
-                newItem["colFormaOpodatkowaniaPD"] = iok.FormaOpodatkowaniaPD;
-                newItem["colFormaOpodatkowaniaVAT"] = iok.FormaOpodatkowaniaVAT;
-                newItem["colFormaOpodakowania_ZUS"] = iok.FormaOpodatkowaniaZUS;
-
-                //ustaw CT
-                if (iok.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
-                else newItem["ContentType"] = "Karta kontrolna KPiR";
-
-                newItem.SystemUpdate();
-
-                return newItem.ID;
+                return 0;
             }
         }
 
@@ -379,6 +388,39 @@ namespace BLL
             }
 
             return 0;
+        }
+
+        public static SPListItem GetItemById(SPWeb web, int itemId)
+        {
+            return web.Lists.TryGetList(targetList).Items.GetItemById(itemId);
+        }
+
+        public static void Set_StatusWysylki(SPListItem item, string col, string value)
+        {
+            BLL.Tools.Set_Text(item, col, value);
+        }
+
+        public static void Set_StatusZadania(SPListItem item, int zadanieId, string col, string value, DateTime date)
+        {
+            BLL.Tools.Set_Text(item, col, value);
+
+            //aktualizacja zdania
+            SPListItem zadanie = BLL.tabZadania.GetItemById(item.Web, zadanieId);
+
+            BLL.Tools.Set_Date(zadanie, col, date);
+
+            BLL.Tools.Set_Text(zadanie, "enumStatusZadania", value);
+            zadanie.SystemUpdate();
+        }
+
+        public static void Set_DataWyslania(SPListItem item, string col, DateTime data)
+        {
+            item[col] = data;
+        }
+
+        public static void Set_StatusZadania(SPListItem item, string col, string status)
+        {
+            item[col] = status;
         }
     }
 }

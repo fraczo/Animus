@@ -22,7 +22,7 @@ namespace EventReceivers.admProcesy
 
                 SPListItem klientItem = BLL.tabKlienci.Get_KlientById(item.Web, klientId);
 
-                BLL.tabKartyKontrolne.Ensure_KartaKontrolna(item.Web, klientId, okresId, iok);
+                int formId = BLL.tabKartyKontrolne.Ensure_KartaKontrolna(item.Web, klientId, okresId, iok);
 
                 switch (iok.TypKlienta)
                 {

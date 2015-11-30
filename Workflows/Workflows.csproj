@@ -76,6 +76,7 @@
     <Compile Include="PrzygotujWiadomosc\PrzygotujWiadomosc.Designer.cs">
       <DependentUpon>PrzygotujWiadomosc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GFR_K\SharePointProjectItem.spdata">

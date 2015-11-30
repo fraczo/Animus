@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activity.cs" />
     <Compile Include="admProcessRequests.cs" />
     <Compile Include="admProcesy.cs" />
     <Compile Include="admSetup.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="dicTerminyPlatnosci.cs" />
     <Compile Include="dicUrzedySkarbowe.cs" />
     <Compile Include="ElasticEmail.cs" />
+    <Compile Include="FaultHandlerActivity.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Models\Markery.cs" />
     <Compile Include="Models\Okres.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.Collections.Specialized;
 using Microsoft.SharePoint;
+using BLL;
 
 namespace ElasticEmail
 {
@@ -95,5 +96,18 @@ namespace ElasticEmail
         }
 
 
+
+        public static object ReportErrorFromWorkflow(Microsoft.SharePoint.Workflow.SPWorkflowActivationProperties workflowProperties, string message, string stackTrace)
+        {
+            string subject = string.Format(":: ERR :: {0}", workflowProperties.WebUrl);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(@"<table>");
+            sb.AppendFormat(@"<tr valign='top'><td>{0}</td><td>{1}</td></tr>", "Message", message);
+            sb.AppendFormat(@"<tr valign='top'><td>{0}</td><td>{1}</td></tr>", "Stack Trace", stackTrace);
+            sb.Append(@"</table>");
+
+            return ElasticEmail.EmailGenerator.SendMail(subject, sb.ToString());
+        
+        }
     }
 }

@@ -152,24 +152,21 @@ namespace SPEmail
                 }
 
                 //wstawia kontrolny ciąg znaków
-                string body = string.Format(@"{1}<blockquote style='background-color: #FFFFFF'><ul>{0}</ul></blockquote>",
-                    sb.ToString(),
-                    mail.Body);
-
-                mail.Body = body;
+                string marker = string.Format(@"<blockquote style='background-color: #FFFFFF; text-align: left;'><ul>{0}</ul></blockquote>",
+                    sb.ToString());
+                mail.Body = mail.Body.Replace("[[MessageId]]", marker);
 
                 mail.Subject = String.Format(":TEST {0}", mail.Subject);
             }
             else
             {
                 //dodaje sygnarurę wiadomości
-                string msgIndex = string.Format(@"<blockquote style='font-size: x-small; color: #808080'>#{0}.{1}</blockquote>",
+                string msgIndex = string.Format(@"<blockquote style='font-size: x-small; color: #808080'>#{0}.{1}.{2}</blockquote>",
                     item.ID.ToString(),
-                    BLL.Tools.Get_Value(item, "_ZadanieId").ToString());
+                    BLL.Tools.Get_Value(item, "_ZadanieId").ToString(),
+                    BLL.Tools.Get_Value(item, "_KartaKontrolnaId").ToString());
 
-                StringBuilder sb = new StringBuilder(mail.Body);
-                sb.Replace(@"</body></html>", msgIndex + @"</body></html>");
-                mail.Body = sb.ToString();
+                mail.Body = mail.Body.Replace("[[MessageId]]", msgIndex);
             }
 
             bool result = SendMailWithAttachment(item, mail);

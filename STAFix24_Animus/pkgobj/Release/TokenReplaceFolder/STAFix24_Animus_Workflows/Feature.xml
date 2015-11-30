@@ -3,5 +3,6 @@
   <ElementManifests>
     <ElementManifest Location="ObslugaWiadomosci\Elements.xml" />
     <ElementManifest Location="GFR_K\Elements.xml" />
+    <ElementManifest Location="PrzygotujWiadomosc\Elements.xml" />
   </ElementManifests>
 </Feature>

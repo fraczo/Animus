@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/sharepoint/">
+	<Workflow
+		Name="WorkflowImportProject2 - wf001FT"
+		CodeBesideAssembly="$assemblyname$"
+		CodeBesideClass="WorkflowImportProject2.wf001FT"
+		Description=""
+		Id="{63ADA7C2-0F03-429C-88CA-E4B60B82D26D}"
+		InstantiationUrl="_layouts/WorkflowImportProject2/wf001FT/3Przygotujwiadomocizkartkontrolnych.aspx">
+		<MetaData>
+			<AssociationCategories>List</AssociationCategories>
+			<Instantiation_FieldML>
+				<Fields />
+			</Instantiation_FieldML>
+			<Initiation_Parameters>
+				<Parameters />
+			</Initiation_Parameters>
+			<StatusPageUrl>_layouts/WrkStat.aspx</StatusPageUrl>
+		</MetaData>
+	</Workflow>
+</Elements>

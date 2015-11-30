@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <CustomAction Description="Uruchamia proces przygotowania wiadomości do klientów na podstawie dostępnych danych do wysyłki w rejestrze kart kontrolnych. Wiadomości zapisywane są do kolejki wiadomości oczekujących. Proces ignoruje karty kontrolne, które były aktualizowane w ciągu ostatnich X minut."
+        Id="db0f2de1-166d-4985-95da-3341985dd7c7"
+        GroupId="SiteActions"
+        ImageUrl="/_layouts/images/Settings.gif"
+        Location="Microsoft.SharePoint.StandardMenu"
+        Sequence="504"
+        Title="Przygotuj wiadomości z kart kontolnych" >
+    <UrlAction Url="~site/Lists/admProcesy/NewForm.aspx?ContentTypeId=0x0100139E4FA48F68774F91F94D10DD51A63D000ABE0D3CCA2D764B90E373507316F66A007BC310FCA848A04FA04D4E83E935C54A"/>
+  </CustomAction>
+</Elements>

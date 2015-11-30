@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
-  <CustomAction Description="Uruchamia proces obsługi wiadomości oczekujących w buforze"
+  <CustomAction Description="Uruchamia proces wysyłki wiadomości oczekujących aktualnie w kolejce wiadomości. Proces ignoruje wiadomości z przyszłą planowaną datą nadania."
           Id="CEDAB869-3F68-4D48-94AC-0A21157FC105"
           GroupId="SiteActions"
           ImageUrl="/_layouts/images/Settings.gif"

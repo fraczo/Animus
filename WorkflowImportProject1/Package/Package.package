@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="f5281130-0416-4d67-9b38-6a0053c5ba53" solutionId="9856ccf6-3667-4dba-94b3-c212da53d58f" resetWebServer="false" name="WorkflowImportProject1" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <features>
+    <featureReference itemId="43891e6b-21e3-437e-aca7-592343eff6f4" />
+  </features>
+</package>

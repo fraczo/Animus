@@ -18,11 +18,14 @@ namespace EventReceivers.admProcesy
 
             list.Items.Cast<SPListItem>()
                 .Where(i => (bool)i["colCzyWyslana"] != true)
-                .Where(i => i["colPlanowanaDataNadania"] == null || (i["colPlanowanaDataNadania"] != null && (DateTime)i["colPlanowanaDataNadania"] <= DateTime.Now))
+                .Where(i => i["colPlanowanaDataNadania"] == null
+                    || (i["colPlanowanaDataNadania"] != null
+                       && (DateTime)i["colPlanowanaDataNadania"] <= DateTime.Now))
                 .ToList()
                 .ForEach(i =>
                 {
                     BLL.Workflows.StartWorkflow(i, "Obsługa wiadomości");
+                    BLL.Logger.LogEvent(BLL.Tools.Get_LookupValue(i, "selKlient_NazwaSkrocona").ToString(), i.ID.ToString());
                 });
         }
     }
