@@ -81,7 +81,14 @@ namespace BLL
         public static bool Check_IfExist(SPWeb web, int usVATId)
         {
             SPList list = GetList(web);
-            SPListItem item = list.GetItemById(usVATId);
+            SPListItem item = null;
+            try
+            {
+                item = list.GetItemById(usVATId);
+            }
+            catch (Exception)
+            {}
+
             if (item != null) return true;
             else return false;
         }
