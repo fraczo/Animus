@@ -12,8 +12,10 @@ namespace EventReceivers.admProcesy
     {
         const string _CT_GFR_K = "Generowanie formatek rozliczeniowych dla klienta";
         const string _CT_GFR = "Generowanie formatek rozliczeniowych";
-        private string _STATUS_NOWY = "Nowy";
+        private string _ZLECENIE_NOWY = "Nowy";
         private string _WF_GFR_K = "Generuj formatki rozliczeniowe dla klienta";
+        private string _ZLECENIE_ZAKONCZONE = "Zakończony";
+        private string _ZLECENIE_OBSLUGA = "Obsługa";
 
         public override void ItemAdded(SPItemEventProperties properties)
         {
@@ -36,24 +38,32 @@ namespace EventReceivers.admProcesy
                     case _CT_GFR:
                         //SPSecurity.RunWithElevatedPrivileges(delegate()
                         // {
-                             this.EventFiringEnabled = false;
-                             GFR_Request.Create(item);
-                             this.EventFiringEnabled = true;
+                        this.EventFiringEnabled = false;
+                        GFR_Request.Create(item);
+                        this.EventFiringEnabled = true;
 
-                             Start_GFR_K_Workflows(item);
+                        Start_GFR_K_Workflows(item);
 
-                             //BLL.Logger.LogEvent_Procedure("WF:Generuj formatki rozliczeniowe", item, "init");
-                             //BLL.Workflows.StartWorkflow(item, "Generuj formatki rozliczeniowe");
-                         //});
+                        //BLL.Logger.LogEvent_Procedure("WF:Generuj formatki rozliczeniowe", item, "init");
+                        //BLL.Workflows.StartWorkflow(item, "Generuj formatki rozliczeniowe");
+                        //});
                         break;
                     case "Obsługa wiadomości":
                         this.EventFiringEnabled = false;
+                        BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_OBSLUGA);
+                        item.SystemUpdate();
                         ObslugaWiadomosci.Execute(item);
+                        BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_ZAKONCZONE);
+                        item.SystemUpdate();
                         this.EventFiringEnabled = true;
                         break;
                     case "Przygotuj wiadomości z kart kontrolnych":
                         this.EventFiringEnabled = false;
+                        BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_OBSLUGA);
+                        item.SystemUpdate();
                         ObslugaKartKontrolnych.Execute(item);
+                        BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_ZAKONCZONE);
+                        item.SystemUpdate();
                         this.EventFiringEnabled = true;
                         break;
                     default:
@@ -77,7 +87,7 @@ namespace EventReceivers.admProcesy
         /// </summary>
         private void Start_GFR_K_Workflows(SPListItem item)
         {
-            Array zlecenia = BLL.admProcesy.SelectItems(item.Web, _CT_GFR_K, _STATUS_NOWY, item.ID);
+            Array zlecenia = BLL.admProcesy.SelectItems(item.Web, _CT_GFR_K, _ZLECENIE_NOWY, item.ID);
             foreach (SPListItem zlecenie in zlecenia)
             {
                 BLL.Logger.LogEvent_Procedure("WF:Generuj formatki rozliczeniowe dla klienta", zlecenie, "init");

@@ -156,26 +156,32 @@ namespace BLL
             Copy_Field(item, form, "colZUS_SP_Skladka");
             Copy_Field(item, form, "colZUS_ZD_Skladka");
             Copy_Field(item, form, "colZUS_FP_Skladka");
+
             Copy_Field(item, form, "colZatrudniaPracownikow");
-            Copy_Field(item, form, "colZUS_PIT-4R_Zalaczony");
-            Copy_Field(item, form, "colZUS_PIT-4R");
-            Copy_Field(item, form, "colVAT_eDeklaracja");
-            Copy_Field(item, form, "colZUS_PIT-8AR_Zalaczony");
-            Copy_Field(item, form, "colZUS_PIT-8AR");
-            Copy_Field(item, form, "colZUS_ListaPlac_Zalaczona");
-            Copy_Field(item, form, "colZUS_Rachunki_Zalaczone");
+            if (BLL.Tools.Get_Flag(item, "colZatrudniaPracownikow"))
+            {
+                Copy_Field(item, form, "colZUS_PIT-4R_Zalaczony");
+                Copy_Field(item, form, "colZUS_PIT-4R");
+                Copy_Field(item, form, "colVAT_eDeklaracja");
+                Copy_Field(item, form, "colZUS_PIT-8AR_Zalaczony");
+                Copy_Field(item, form, "colZUS_PIT-8AR");
+                Copy_Field(item, form, "colZUS_ListaPlac_Zalaczona");
+                Copy_Field(item, form, "colZUS_Rachunki_Zalaczone");
+
+                //ustaw termin płątności na podstawie miesięcznego terminu podatku dochodowego
+                BLL.Tools.Set_Date(form, "colZUSPD_TerminPlatnosciPodatku", BLL.tabOkresy.Get_TerminPlatnosciByOkresId(item.Web, "colPD_TerminPlatnosciPodatku", BLL.Tools.Get_LookupId(item, "selOkres")));
+            }
+
             Copy_Field(item, form, "colZUS_TerminPlatnosciSkladek");
 
             Copy_Field(item, "selOperator", form, "selOperator_ZUS");
 
-            Copy_Field(item, form, "colZUS_Rachunki_Zalaczone");
             Copy_Field(item, "colNotatka", form, "colUwagiKadrowe");
 
             BLL.Models.Klient k = new Models.Klient(item.Web, Get_LookupId(item, "selKlient"));
             form["colDataRozpoczeciaDzialalnosci"] = k.DataRozpoczeciaDzialalnosci;
 
-            //ustaw termin płątności na podstawie miesięcznego terminu podatku dochodowego
-            BLL.Tools.Set_Date(form, "colZUSPD_TerminPlatnosciPodatku", BLL.tabOkresy.Get_TerminPlatnosciByOkresId(item.Web, "colPD_TerminPlatnosciPodatku", BLL.Tools.Get_LookupId(item, "selOkres")));
+            Copy_Field(item, "colNotatka", form, "colUwagiKadrowe");
 
             Copy_Id(item, form, "selZadanie_ZUS");
             Copy_Field(item, "enumStatusZadania", form, "colZUS_StatusZadania");
@@ -421,6 +427,21 @@ namespace BLL
         public static void Set_StatusZadania(SPListItem item, string col, string status)
         {
             item[col] = status;
+        }
+
+        public static void Update_POD(SPListItem item)
+        {
+            string KEY = Create_KEY(item);
+            int formId = Get_KartaKontrolnaId(item, KEY);
+
+            SPListItem form = Get_KartaKontrolnaById(item.Web, formId);
+            bool pod = BLL.Tools.Get_Flag(item, "colPotwierdzenieOdbioruDokumentow");
+            if (BLL.Tools.Get_Flag(form, "colPotwierdzenieOdbioruDokumentow") != pod)
+            {
+                BLL.Tools.Set_Flag(form, "colPotwierdzenieOdbioruDokumentow", pod);
+                form.SystemUpdate();
+            }
+
         }
     }
 }

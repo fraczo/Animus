@@ -171,7 +171,9 @@ namespace Workflows.PrzygotujWiadomosc
 
         private void Manage_ZUSPD_ExecuteCode(object sender, EventArgs e)
         {
-            if (HasStatus(item, "colZUS_StatusZadania", _ZADANIE_ZWOLNIONE))
+            if (HasStatus(item, "colZUS_StatusZadania", _ZADANIE_ZWOLNIONE)
+                && (BLL.Tools.Get_Flag(item, "colZUS_PIT_4R_Zaloczony")
+                    || BLL.Tools.Get_Flag(item, "colZUS_PIT_8AR_Zaloczony")) )
             {
                 sbZUSPD = new StringBuilder(BLL.dicSzablonyKomunikacji.Ensure_HTMLByKod(item.Web, _ZUSPD_HTML_TEMPLATE_NAME));
             }

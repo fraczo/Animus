@@ -20,14 +20,14 @@ namespace EventReceivers.admProcesy
 
             //ustaw okres karencji
             int offset = int.Parse(BLL.admSetup.GetValue(item.Web, "KK_IGNORE_UPDATES_MINUTES"));
-            DateTime targetDate = DateTime.Now.AddSeconds(-1*offset);
+            DateTime targetDate = DateTime.Now.AddMinutes(-1*offset);
 
             list.Items.Cast<SPListItem>()
                 .Where(i => BLL.Tools.Get_Date(i, "Modified")<targetDate) //nie ruszaj modyfikowanych w ciągu istatnicj x minut
                 .Where(i => BLL.Tools.Get_Text(i,"colZUS_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
-                            | BLL.Tools.Get_Text(i, "colPD_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
-                            | BLL.Tools.Get_Text(i, "colVAT_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
-                            | BLL.Tools.Get_Text(i, "colRBR_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE))
+                            || BLL.Tools.Get_Text(i, "colPD_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
+                            || BLL.Tools.Get_Text(i, "colVAT_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
+                            || BLL.Tools.Get_Text(i, "colRBR_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE))
 
                 .ToList()
                 .ForEach(i =>

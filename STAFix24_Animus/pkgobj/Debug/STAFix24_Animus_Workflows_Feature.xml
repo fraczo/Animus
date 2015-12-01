@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Id="e30fd305-bdc8-4295-b11e-6f9afe0419e4" Scope="Site" Title="STAFix24_Animus Workflows">
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Workflows" Id="e30fd305-bdc8-4295-b11e-6f9afe0419e4" Scope="Site">
   <ElementManifests>
     <ElementManifest Location="ObslugaWiadomosci\Elements.xml" />
     <ElementManifest Location="GFR_K\Elements.xml" />

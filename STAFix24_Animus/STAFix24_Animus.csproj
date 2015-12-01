@@ -72,7 +72,7 @@
       <FeatureId>{238ee3f0-273f-4479-8f86-e8795048cec7}</FeatureId>
     </None>
     <None Include="Features\CustomActions\CustomActions.feature">
-      <FeatureId>{1979d449-45cd-417e-aee1-62d8c93f1c19}</FeatureId>
+      <FeatureId>{2e1ac316-908f-43c3-8f6f-334601c5c214}</FeatureId>
     </None>
     <None Include="Features\ObslugaWiadomosciTJ\ObslugaWiadomosciTJ.feature">
       <FeatureId>{a72269f1-06a4-4040-8c0e-a43b848c6746}</FeatureId>

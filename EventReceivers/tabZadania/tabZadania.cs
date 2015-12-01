@@ -91,6 +91,11 @@ namespace EventReceivers.tabZadania
 
                     Reset_CMD(item);
                 }
+                else
+                {
+                    //aktualizuj informacje o dostarczeniu dokumentów na karcie kontrolnej
+                    BLL.tabKartyKontrolne.Update_POD(item);
+                }
 
                 item.SystemUpdate();
 
@@ -106,8 +111,8 @@ namespace EventReceivers.tabZadania
 #else
                 BLL.Tools.Set_Text(item, "enumStatusZadania", "Anulowane");
                 item.SystemUpdate();
-                BLL.Logger.LogError(properties.WebUrl, 
-                    string.Format("klient:{0}, {1}", BLL.Tools.Get_LookupId(item, "selKlient"),ex.ToString()));
+                BLL.Logger.LogError(properties.WebUrl,
+                    string.Format("klient:{0}, {1}", BLL.Tools.Get_LookupId(item, "selKlient"), ex.ToString()));
                 var result = ElasticEmail.EmailGenerator.ReportError(ex, properties.WebUrl.ToString());
 #endif
             }
@@ -223,8 +228,8 @@ namespace EventReceivers.tabZadania
                         if (zp)
                         {
                             if (HasValue(item, "colZUS_SP_Skladka")
-                                & HasValue(item, "colZUS_ZD_Skladka")
-                                & HasValue(item, "colZUS_FP_Skladka"))
+                                && HasValue(item, "colZUS_ZD_Skladka")
+                                && HasValue(item, "colZUS_FP_Skladka"))
                             { }
                             else
                             {
@@ -235,12 +240,12 @@ namespace EventReceivers.tabZadania
                         else
                         {
                             if (HasValue(item, "colZUS_ZD_Skladka"))
+                            { }
+                            else
                             {
                                 errLog.AppendLine("Nieprawidłowa warotść składki zdrowotnej");
                                 result = false;
-                            }
-                            else
-                            {
+
                                 BLL.Tools.Set_Value(item, "colZUS_SP_Skladka", 0);
                                 BLL.Tools.Set_Value(item, "colZUS_FP_Skladka", 0);
                             }
@@ -289,7 +294,9 @@ namespace EventReceivers.tabZadania
                 bool pit4R = BLL.Tools.Get_Flag(item, "colZUS_PIT-4R_Zalaczony");
                 if (pit4R)
                 {
-                    if (!HasValue(item, "colZUS_PIT-4R"))
+                    if (HasValue(item, "colZUS_PIT-4R"))
+                    { }
+                    else
                     {
                         errLog.AppendLine("Nieprawidłowa warotść PIT-4R");
                         result = false;
@@ -304,7 +311,9 @@ namespace EventReceivers.tabZadania
                 bool pit8AR = BLL.Tools.Get_Flag(item, "colZUS_PIT-8AR_Zalaczony");
                 if (pit8AR)
                 {
-                    if (!HasValue(item, "colZUS_PIT-8AR"))
+                    if (HasValue(item, "colZUS_PIT-8AR"))
+                    { }
+                    else
                     {
                         errLog.AppendLine("Nieprawidłowa warotść PIT-8AR");
                         result = false;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Id="1414b1d3-d0eb-47de-b4b6-4a20e4e5745a" Scope="WebApplication" Title="STAFix24_Animus Custom Actions">
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Custom Actions" Id="5f21d98f-9a9f-47a9-a48a-455355a855bb" Scope="Web">
   <ElementManifests>
-    <ElementManifest Location="ObslugaKolejkiWiadomosci\Elements.xml" />
     <ElementManifest Location="PrzygotujWiadomosciZKartKontrolnych\Elements.xml" />
+    <ElementManifest Location="ObslugaKolejkiWiadomosci\Elements.xml" />
   </ElementManifests>
 </Feature>
