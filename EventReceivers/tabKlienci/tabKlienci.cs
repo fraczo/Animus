@@ -55,7 +55,13 @@ namespace EventReceivers.tabKlienci
             {
                 SPSecurity.RunWithElevatedPrivileges(delegate()
                 {
-                    BLL.tabStawki.Ensure_KlientExist(item.Web, item.ID);
+                    using (SPSite eSite = new SPSite(item.Web.Site.ID))
+                    {
+                        using (SPWeb eWeb = eSite.OpenWeb())
+                        {
+                            BLL.tabStawki.Ensure_KlientExist(eWeb, item.ID);
+                        }
+                    }
                 });
             }
         }

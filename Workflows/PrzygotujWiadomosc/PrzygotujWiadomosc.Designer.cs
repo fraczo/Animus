@@ -34,6 +34,8 @@ namespace Workflows.PrzygotujWiadomosc
             System.Workflow.Activities.CodeCondition codecondition4 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.ComponentModel.ActivityBind activitybind3 = new System.Workflow.ComponentModel.ActivityBind();
             System.Workflow.ComponentModel.ActivityBind activitybind2 = new System.Workflow.ComponentModel.ActivityBind();
+            this.logStatusyZadanPowiazanych = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
+            this.Update_StatusyZadanPowiazanych = new System.Workflow.Activities.CodeActivity();
             this.logStatusyKK = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Update_StatusyKK = new System.Workflow.Activities.CodeActivity();
             this.ifMessage_Created = new System.Workflow.Activities.IfElseBranchActivity();
@@ -83,6 +85,21 @@ namespace Workflows.PrzygotujWiadomosc
             this.Czy_można_wysyłać_maile = new System.Workflow.Activities.IfElseActivity();
             this.onWorkflowActivated1 = new Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated();
             // 
+            // logStatusyZadanPowiazanych
+            // 
+            this.logStatusyZadanPowiazanych.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logStatusyZadanPowiazanych.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            this.logStatusyZadanPowiazanych.HistoryDescription = "Statusy skojarzonych zadań zaktualizowane";
+            this.logStatusyZadanPowiazanych.HistoryOutcome = "";
+            this.logStatusyZadanPowiazanych.Name = "logStatusyZadanPowiazanych";
+            this.logStatusyZadanPowiazanych.OtherData = "";
+            this.logStatusyZadanPowiazanych.UserId = -1;
+            // 
+            // Update_StatusyZadanPowiazanych
+            // 
+            this.Update_StatusyZadanPowiazanych.Name = "Update_StatusyZadanPowiazanych";
+            this.Update_StatusyZadanPowiazanych.ExecuteCode += new System.EventHandler(this.Update_StatusyZadanpowiazanych_ExecuteCode);
+            // 
             // logStatusyKK
             // 
             this.logStatusyKK.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
@@ -102,6 +119,8 @@ namespace Workflows.PrzygotujWiadomosc
             // 
             this.ifMessage_Created.Activities.Add(this.Update_StatusyKK);
             this.ifMessage_Created.Activities.Add(this.logStatusyKK);
+            this.ifMessage_Created.Activities.Add(this.Update_StatusyZadanPowiazanych);
+            this.ifMessage_Created.Activities.Add(this.logStatusyZadanPowiazanych);
             codecondition1.Condition += new System.EventHandler<System.Workflow.Activities.ConditionalEventArgs>(this.isMessage_Created);
             this.ifMessage_Created.Condition = codecondition1;
             this.ifMessage_Created.Name = "ifMessage_Created";
@@ -416,6 +435,10 @@ namespace Workflows.PrzygotujWiadomosc
 
         #endregion
 
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logStatusyZadanPowiazanych;
+
+        private CodeActivity Update_StatusyZadanPowiazanych;
+
         private Microsoft.SharePoint.WorkflowActions.SetState setState1;
 
         private TerminateActivity STOP1;
@@ -511,6 +534,7 @@ namespace Workflows.PrzygotujWiadomosc
         private IfElseActivity Czy_są_zwolnione_do_wysyłki;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 

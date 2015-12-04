@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.SharePoint;
+using System.Diagnostics;
 
 namespace BLL
 {
@@ -72,25 +73,38 @@ namespace BLL
                     }
                 }
                 catch (Exception)
-                {}
+                { }
             }
 
             return 0;
         }
 
-        public static bool Check_IfExist(SPWeb web, int usVATId)
+        public static bool Check_IfExist(SPWeb web, int urzadId)
         {
-            SPList list = GetList(web);
-            SPListItem item = null;
-            try
-            {
-                item = list.GetItemById(usVATId);
-            }
-            catch (Exception)
-            {}
+            Debug.WriteLine("BLL.dicUrzedySkarbowe.Check_IfExist");
 
-            if (item != null) return true;
-            else return false;
+            Debug.WriteLine("urzadId=" + urzadId.ToString());
+
+            if (urzadId > 0)
+            {
+                SPList list = GetList(web);
+                SPListItem item = null;
+                try
+                {
+                    item = list.GetItemById(urzadId);
+
+                    Debug.WriteLine("urzadId=" + urzadId.ToString() + " znaleziony");
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("urzadId=" + urzadId.ToString() + " nie znaleziony");
+                }
+
+                if (item != null) return true;
+                else return false;
+            }
+
+            return false;
         }
 
         private static SPList GetList(SPWeb web)

@@ -12,3 +12,4 @@ C:\_GitHub\Animus\BLL\bin\Debug\STAFix24.Animus.BLL.dll
 C:\_GitHub\Animus\BLL\bin\Debug\STAFix24.Animus.BLL.pdb
 C:\_GitHub\Animus\BLL\obj\Debug\STAFix24.Animus.BLL.dll
 C:\_GitHub\Animus\BLL\obj\Debug\STAFix24.Animus.BLL.pdb
+C:\_GitHub\Animus\BLL\obj\Debug\BLL.csprojResolveAssemblyReference.cache

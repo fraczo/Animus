@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.SharePoint;
+using System.Diagnostics;
 
 namespace BLL
 {
@@ -13,30 +14,35 @@ namespace BLL
 
         public static int Ensure_KartaKontrolna(SPWeb web, int klientId, int okresId, BLL.Models.Klient iok)
         {
+            Debug.WriteLine("BLL.tabKartyKontrolne.Ensure_KartaKontrolna");
+
             string KEY = Create_KEY(klientId, okresId);
             int formId = Get_KartaKontrolnaId(web, klientId, okresId, KEY, iok);
 
             if (formId > 0) return formId;
             else
             {
-                SPListItem newItem = web.Lists.TryGetList(targetList).Items.Add();
-                newItem["KEY"] = KEY;
-                newItem["selKlient"] = klientId;
-                newItem["selOkres"] = okresId;
-
-                newItem["enumRozliczeniePD"] = iok.RozliczeniePD;
-                newItem["enumRozliczenieVAT"] = iok.RozliczenieVAT;
-                newItem["colFormaOpodatkowaniaPD"] = iok.FormaOpodatkowaniaPD;
-                newItem["colFormaOpodatkowaniaVAT"] = iok.FormaOpodatkowaniaVAT;
-                newItem["colFormaOpodakowania_ZUS"] = iok.FormaOpodatkowaniaZUS;
-
-                //ustaw CT
-                if (iok.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
-                else newItem["ContentType"] = "Karta kontrolna KPiR";
-
-                newItem.SystemUpdate();
-                return newItem.ID;
+                return Create_KartaKontrolna(web, klientId, okresId, iok, KEY);
             }
+        }
+
+        private static int Create_KartaKontrolna(SPWeb web, int klientId, int okresId, BLL.Models.Klient iok, string KEY)
+        {
+            Debug.WriteLine("BLL.tabKartyKontrolne.Create_KartaKontrolna");
+
+            SPListItem newItem = web.Lists.TryGetList(targetList).Items.Add();
+            newItem["KEY"] = KEY;
+            newItem["selKlient"] = klientId;
+            newItem["selOkres"] = okresId;
+
+            Set_KartaKontrolna_InitValues(newItem, iok);
+
+            //ustaw CT
+            if (iok.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
+            else newItem["ContentType"] = "Karta kontrolna KPiR";
+
+            newItem.SystemUpdate();
+            return newItem.ID;
         }
 
         public static void Update_PD_Data(Microsoft.SharePoint.SPListItem item)
@@ -179,7 +185,10 @@ namespace BLL
             Copy_Field(item, "colNotatka", form, "colUwagiKadrowe");
 
             BLL.Models.Klient k = new Models.Klient(item.Web, Get_LookupId(item, "selKlient"));
-            form["colDataRozpoczeciaDzialalnosci"] = k.DataRozpoczeciaDzialalnosci;
+            if (k.DataRozpoczeciaDzialalnosci!=new DateTime())
+            {
+                form["colDataRozpoczeciaDzialalnosci"] = k.DataRozpoczeciaDzialalnosci;
+            }
 
             Copy_Field(item, "colNotatka", form, "colUwagiKadrowe");
 
@@ -264,11 +273,11 @@ namespace BLL
             return list.Items.GetItemById(formId);
         }
 
-        private static int Get_KartaKontrolnaId(SPListItem task, string KEY)
+        private static int Get_KartaKontrolnaId(SPListItem zadanieItem, string KEY)
         {
-            SPList list = task.Web.Lists.TryGetList(targetList);
+            SPList list = zadanieItem.Web.Lists.TryGetList(targetList);
             SPListItem item = list.Items.Cast<SPListItem>()
-                .Where(i => i["KEY"].ToString() == KEY)
+                .Where(i => BLL.Tools.Get_Text(i,"KEY").Equals(KEY))
                 .FirstOrDefault();
             if (item != null)
             {
@@ -276,28 +285,40 @@ namespace BLL
             }
             else
             {
-                SPListItem newItem = list.AddItem();
-                newItem["KEY"] = KEY;
-                newItem["selKlient"] = Get_LookupId(task, "selKlient");
-                newItem["selOkres"] = Get_LookupId(task, "selOkres");
-
-                BLL.Models.Klient k = new Models.Klient(task.Web, Get_LookupId(task, "selKlient"));
-
-                newItem["enumRozliczeniePD"] = k.RozliczeniePD;
-                newItem["enumRozliczenieVAT"] = k.RozliczenieVAT;
-                newItem["colFormaOpodatkowaniaPD"] = k.FormaOpodatkowaniaPD;
-                newItem["colFormaOpodatkowaniaVAT"] = k.FormaOpodatkowaniaVAT;
-                newItem["colFormaOpodakowania_ZUS"] = k.FormaOpodatkowaniaZUS;
-
-                //ustaw CT
-                if (k.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
-                else newItem["ContentType"] = "Karta kontrolna KPiR";
-
-                newItem.SystemUpdate();
-
-                return newItem.ID;
+                return Create_KartaKontrolna(zadanieItem, KEY, list);
             }
 
+        }
+
+        private static int Create_KartaKontrolna(SPListItem task, string KEY, SPList list)
+        {
+            SPListItem newItem = list.AddItem();
+            newItem["KEY"] = KEY;
+            newItem["selKlient"] = Get_LookupId(task, "selKlient");
+            newItem["selOkres"] = Get_LookupId(task, "selOkres");
+
+            BLL.Models.Klient k = new Models.Klient(task.Web, Get_LookupId(task, "selKlient"));
+
+            Set_KartaKontrolna_InitValues(newItem, k);
+
+            //ustaw CT
+            if (k.TypKlienta == "KSH") newItem["ContentType"] = "Karta kontrolna KSH";
+            else newItem["ContentType"] = "Karta kontrolna KPiR";
+
+            newItem.SystemUpdate();
+
+            return newItem.ID;
+        }
+
+        private static void Set_KartaKontrolna_InitValues(SPListItem newItem, BLL.Models.Klient k)
+        {
+            newItem["enumRozliczeniePD"] = k.RozliczeniePD;
+            newItem["enumRozliczenieVAT"] = k.RozliczenieVAT;
+            newItem["colFormaOpodatkowaniaPD"] = k.FormaOpodatkowaniaPD;
+            newItem["colFormaOpodatkowaniaVAT"] = k.FormaOpodatkowaniaVAT;
+            newItem["colFormaOpodakowania_ZUS"] = k.FormaOpodatkowaniaZUS;
+            newItem["colVAT_TerminZwrotuPodatku"] = string.Empty;
+            newItem["colZatrudniaPracownikow"] = k.ZatrudniaPracownikow;
         }
 
         private static int Get_KartaKontrolnaId(SPWeb web, int klientId, int okresId, string KEY, Models.Klient iok)
@@ -366,17 +387,6 @@ namespace BLL
 
         #endregion
 
-
-        public static void Set_PotwierdzenieOdbioruDokumentow(SPWeb web, int klientId, int okresId)
-        {
-            string KEY = Create_KEY(klientId, okresId);
-            int kkId = Get_KartaKontrolnaId(web, klientId, okresId, KEY, null);
-            SPListItem item = Get_KartaKontrolnaById(web, kkId);
-            item[colPOTWIERDZENIE_ODBIORU_DOKUMENTOW] = true;
-            item.SystemUpdate();
-
-        }
-
         internal static double Get_WartoscNadwyzkiDoPrzeniesienia(SPWeb web, int klientId, int okresId)
         {
             SPList list = web.Lists.TryGetList(targetList);
@@ -429,17 +439,19 @@ namespace BLL
             item[col] = status;
         }
 
-        public static void Update_POD(SPListItem item)
+        public static void Update_POD(SPListItem zadanieItem)
         {
-            string KEY = Create_KEY(item);
-            int formId = Get_KartaKontrolnaId(item, KEY);
+            string KEY = Create_KEY(zadanieItem);
+            int formId = Get_KartaKontrolnaId(zadanieItem, KEY);
 
-            SPListItem form = Get_KartaKontrolnaById(item.Web, formId);
-            bool pod = BLL.Tools.Get_Flag(item, "colPotwierdzenieOdbioruDokumentow");
+            SPListItem form = Get_KartaKontrolnaById(zadanieItem.Web, formId);
+            bool pod = BLL.Tools.Get_Flag(zadanieItem, "colPotwierdzenieOdbioruDokumentow");
             if (BLL.Tools.Get_Flag(form, "colPotwierdzenieOdbioruDokumentow") != pod)
             {
+                Debug.WriteLine("wymagana aktualizacja flagi POD na karcie kontrolnej");
                 BLL.Tools.Set_Flag(form, "colPotwierdzenieOdbioruDokumentow", pod);
                 form.SystemUpdate();
+                Debug.WriteLine("flaga POD=" + pod.ToString());
             }
 
         }

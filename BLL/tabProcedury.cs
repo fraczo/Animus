@@ -92,7 +92,7 @@ namespace BLL
             SPList list = web.Lists.TryGetList(targetList);
 
             SPListItem item = list.Items.Cast<SPListItem>()
-                .Where(i => i.Title == procName)
+                .Where(i => i.Title.Equals(procName))
                 .FirstOrDefault();
 
             if (item == null)
@@ -100,7 +100,7 @@ namespace BLL
                 SPListItem newItem = list.AddItem();
                 newItem["Title"] = procName;
                 newItem["enumStatusProcedury"] = "Nowa";
-                newItem.SystemUpdate();
+                newItem.Update();
                 return newItem.ID;
             }
             else

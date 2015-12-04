@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.SharePoint;
 using BLL.Models;
 using System.IO;
+using System.Diagnostics;
 
 namespace BLL
 {
@@ -169,7 +170,7 @@ namespace BLL
                 }
                 else if (BLL.Tools.Has_SerwisAssigned(klientItem, "selSewisy", "ZUS-M+C"))
                 {
-                    item["colZUS_SP_Skladka"] = o.Skladka_ZUS_D_SPC;
+                    item["colZUS_SP_Skladka"] = o.Skladka_ZUS_M_SPC;
                     item["colZUS_ZD_Skladka"] = o.Skladka_ZUS_M_ZD;
                     item["colZUS_FP_Skladka"] = o.Skladka_ZUS_M_FP;
                 }
@@ -796,6 +797,9 @@ namespace BLL
 
         public static void Update_StatusZadania(SPWeb web, int zadanieId, string value)
         {
+            Debug.WriteLine("BLL.tabZadania.Update_StatusZadania");
+            Debug.WriteLine("zadanieId=" + zadanieId.ToString());
+
             SPListItem item = web.Lists.TryGetList(targetList).GetItemById(zadanieId);
             BLL.Tools.Set_Text(item, "enumStatusZadania", value);
             item.SystemUpdate();

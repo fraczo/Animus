@@ -5,6 +5,7 @@ using Microsoft.SharePoint.Security;
 using Microsoft.SharePoint.Utilities;
 using Microsoft.SharePoint.Workflow;
 using System.Text;
+using System.Diagnostics;
 
 namespace EventReceivers.tabZadania
 {
@@ -34,6 +35,8 @@ namespace EventReceivers.tabZadania
 
         private void Execute(SPItemEventProperties properties)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.Execute");
+
             this.EventFiringEnabled = false;
 
             SPListItem item = properties.ListItem;
@@ -47,9 +50,11 @@ namespace EventReceivers.tabZadania
                 Update_Extras(item);
 
                 if (BLL.Tools.Get_Text(item, "cmdFormatka").Length > 0
-                || BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc").Length > 0
-                || BLL.Tools.Get_Text(item, "cmdFormatka_Zadanie").Length > 0)
+                | BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc").Length > 0
+                | BLL.Tools.Get_Text(item, "cmdFormatka_Zadanie").Length > 0)
                 {
+                    Debug.WriteLine("wybrano akcję na formatce");
+
                     switch (item.ContentType.Name)
                     {
 
@@ -121,6 +126,8 @@ namespace EventReceivers.tabZadania
 
         private void Reset_CMD(SPListItem item)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Reset_CMD");
+
             BLL.Tools.Set_Text(item, "cmdFormatka", string.Empty);
             BLL.Tools.Set_Text(item, "cmdFormatka_Wiadomosc", string.Empty);
             BLL.Tools.Set_Text(item, "cmdFormatka_Zadanie", string.Empty);
@@ -199,6 +206,8 @@ namespace EventReceivers.tabZadania
         #region ZUS
         private void Manage_ZUS(SPListItem item)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Manage_ZUS");
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka");
             if (string.IsNullOrEmpty(cmd)) return;
 
@@ -418,6 +427,8 @@ namespace EventReceivers.tabZadania
         #region PD
         private void Manage_PD(SPListItem item)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Manage_PD");
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka");
             if (string.IsNullOrEmpty(cmd)) return;
 
@@ -438,6 +449,7 @@ namespace EventReceivers.tabZadania
 
         private static void Update_StatusZadania(SPListItem item, string cmd)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Update_StatusZadania");
             switch (cmd)
             {
                 case _CMD_ZAPISZ_WYNIKI:
@@ -453,6 +465,8 @@ namespace EventReceivers.tabZadania
                     BLL.Tools.Set_Text(item, "enumStatusZadania", _ZADANIE_OBSLUGA);
                     break;
             }
+
+            Debug.WriteLine("enumStatusZadania=" + BLL.Tools.Get_Text(item, "enumStatusZadania"));
         }
 
         private bool IsValid_PD_Form(SPListItem item)
@@ -539,6 +553,8 @@ namespace EventReceivers.tabZadania
         #region PDS
         private void Manage_PDS(SPListItem item)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Manage_PDS");
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka");
             if (string.IsNullOrEmpty(cmd)) return;
 
@@ -571,6 +587,8 @@ namespace EventReceivers.tabZadania
         #region VAT
         private void Manage_VAT(SPListItem item)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Manage_VAT");
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka");
             if (string.IsNullOrEmpty(cmd)) return;
 
@@ -717,6 +735,8 @@ namespace EventReceivers.tabZadania
         #region RBR
         private void Manage_RBR(SPListItem item)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Manage_RBR");
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka");
             if (string.IsNullOrEmpty(cmd)) return;
 
@@ -765,6 +785,8 @@ namespace EventReceivers.tabZadania
 
         private void Manage_Zadanie(SPListItem item)
         {
+            Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Manage_Zadanie");
+
             //todo: throw new NotImplementedException();
         }
 

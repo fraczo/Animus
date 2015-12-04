@@ -16,6 +16,7 @@ using Microsoft.SharePoint.Workflow;
 using Microsoft.SharePoint.WorkflowActions;
 using System.Text;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Workflows.PrzygotujWiadomosc
 {
@@ -69,6 +70,7 @@ namespace Workflows.PrzygotujWiadomosc
         private string _RBR_TYTUL = "Rozliczenie z biurem rachunkowym";
         private string mailBCC;
         private int selectedOperatorId;
+        private string _STATUS_ZADANIA_WYSYLKA = "Wysyłka";
 
 
         #region Helpers
@@ -172,8 +174,8 @@ namespace Workflows.PrzygotujWiadomosc
         private void Manage_ZUSPD_ExecuteCode(object sender, EventArgs e)
         {
             if (HasStatus(item, "colZUS_StatusZadania", _ZADANIE_ZWOLNIONE)
-                && (BLL.Tools.Get_Flag(item, "colZUS_PIT_4R_Zaloczony")
-                    || BLL.Tools.Get_Flag(item, "colZUS_PIT_8AR_Zaloczony")) )
+                && (BLL.Tools.Get_Flag(item, "colZUS_PIT-4R_Zalaczony")
+                    | BLL.Tools.Get_Flag(item, "colZUS_PIT-8AR_Zalaczony")))
             {
                 sbZUSPD = new StringBuilder(BLL.dicSzablonyKomunikacji.Ensure_HTMLByKod(item.Web, _ZUSPD_HTML_TEMPLATE_NAME));
             }
@@ -679,36 +681,76 @@ namespace Workflows.PrzygotujWiadomosc
         {
             if (sbZUS != null)
             {
-                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_ZUS"), "colZUS_StatusZadania", "Wysyłka");
-                Update_StatusWysylki(item, "colZUS_StatusWysylki", "Oczekuje");
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_ZUS"), "colZUS_StatusZadania", _STATUS_ZADANIA_WYSYLKA);
+                Set_StatusWysylki(item, "colZUS_StatusWysylki", "Oczekuje");
             }
             if (sbZUSPD != null)
             {
-                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_ZUS"), "colZUS_StatusZadania", "Wysyłka");
-                Update_StatusWysylki(item, "colZUSPD_StatusWysylki", "Oczekuje");
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_ZUS"), "colZUS_StatusZadania", _STATUS_ZADANIA_WYSYLKA);
+                Set_StatusWysylki(item, "colZUSPD_StatusWysylki", "Oczekuje");
             }
             if (sbPD != null)
             {
-                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_PD"), "colPD_StatusZadania", "Wysyłka");
-                Update_StatusWysylki(item, "colPD_StatusWysylki", "Oczekuje");
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_PD"), "colPD_StatusZadania", _STATUS_ZADANIA_WYSYLKA);
+                Set_StatusWysylki(item, "colPD_StatusWysylki", "Oczekuje");
             }
             if (sbVAT != null)
             {
-                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_VAT"), "colVAT_StatusZadania", "Wysyłka");
-                Update_StatusWysylki(item, "colVAT_StatusWysylki", "Oczekuje");
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_VAT"), "colVAT_StatusZadania", _STATUS_ZADANIA_WYSYLKA);
+                Set_StatusWysylki(item, "colVAT_StatusWysylki", "Oczekuje");
             }
             if (sbRBR != null)
             {
-                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_RBR"), "colRBR_StatusZadania", "Wysyłka");
-                Update_StatusWysylki(item, "colRBR_StatusWysylki", "Oczekuje");
+                Update_StatusZadania(item, BLL.Tools.Get_LookupId(item, "selZadanie_RBR"), "colRBR_StatusZadania", _STATUS_ZADANIA_WYSYLKA);
+                Set_StatusWysylki(item, "colRBR_StatusWysylki", "Oczekuje");
             }
 
             item.SystemUpdate();
         }
 
+        private void Update_StatusyZadanpowiazanych_ExecuteCode(object sender, EventArgs e)
+        {
+            if (sbZUS != null)
+            {
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_ZUS");
+                Update_RelatedTaskStatus(item, zadanieId, _STATUS_ZADANIA_WYSYLKA);
+
+            }
+            if (sbZUSPD != null)
+            {
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_ZUS");
+                if (zadanieId > 0) Update_RelatedTaskStatus(item, zadanieId, _STATUS_ZADANIA_WYSYLKA);
+            }
+            if (sbPD != null)
+            {
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_PD");
+                if (zadanieId > 0) Update_RelatedTaskStatus(item, zadanieId, _STATUS_ZADANIA_WYSYLKA);
+            }
+            if (sbVAT != null)
+            {
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_VAT");
+                if (zadanieId > 0) Update_RelatedTaskStatus(item, zadanieId, _STATUS_ZADANIA_WYSYLKA);
+            }
+            if (sbRBR != null)
+            {
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_RBR");
+                if (zadanieId > 0) Update_RelatedTaskStatus(item, zadanieId, _STATUS_ZADANIA_WYSYLKA);
+            }
+        }
+
         private void Update_StatusZadania(SPListItem item, int zadanieId, string col, string value)
         {
+            Debug.WriteLine("Workflows.PrzygotujWiadomosc.Update_StatusZadania");
+            Debug.WriteLine("kkId=" + item.ID.ToString());
+            Debug.WriteLine("zadanieId=" + zadanieId.ToString());
+
             BLL.Tools.Set_Text(item, col, value);
+            Debug.WriteLine("statusZadania=" + value);
+
+        }
+
+        private void Update_RelatedTaskStatus(SPListItem item, int zadanieId, string value)
+        {
             //aktulizuj status skojarzonego zadania
             if (zadanieId > 0)
             {
@@ -717,12 +759,15 @@ namespace Workflows.PrzygotujWiadomosc
                     string.Format("Zadanie #{0} zaktualizowane", zadanieId.ToString()),
                     "Status=" + value);
             }
-
         }
 
-        private void Update_StatusWysylki(SPListItem item, string col, string s)
+        private void Set_StatusWysylki(SPListItem item, string col, string s)
         {
+            Debug.WriteLine("Workflows.PrzygotujWiadomosc.Update_StatusWysylki");
+            Debug.WriteLine("kkId=" + item.ID.ToString());
+
             BLL.Tools.Set_Text(item, col, s);
+            Debug.WriteLine("statusWysylki=" + s);
         }
 
 
