@@ -87,6 +87,7 @@
     <Compile Include="tabProcedury.cs" />
     <Compile Include="tabRozliczeniaGotowkowe.cs" />
     <Compile Include="tabStawki.cs" />
+    <Compile Include="tabStratyZLatUbieglych.cs" />
     <Compile Include="tabSzablonyWiadomosci.cs" />
     <Compile Include="tabUrzedySkarbowe.cs" />
     <Compile Include="tabWiadomosci.cs" />

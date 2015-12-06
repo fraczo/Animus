@@ -49,6 +49,15 @@
           <StartOnCreate>false</StartOnCreate>
           <StartOnChange>false</StartOnChange>
         </ProjectItemStore>
+        <ProjectItemStore Id="{319d9e60-832a-4002-b9cc-e7fe292da6f3}">
+          <DisplayName>Generator rekordów - Straty z lat ubiegłych</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+        </ProjectItemStore>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>

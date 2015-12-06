@@ -76,6 +76,12 @@
     <Compile Include="PrzygotujWiadomosc\PrzygotujWiadomosc.Designer.cs">
       <DependentUpon>PrzygotujWiadomosc.cs</DependentUpon>
     </Compile>
+    <Compile Include="swfStratyZLatUbieglych\swfStratyZLatUbieglych.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="swfStratyZLatUbieglych\swfStratyZLatUbieglych.Designer.cs">
+      <DependentUpon>swfStratyZLatUbieglych.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +101,9 @@
     <None Include="PrzygotujWiadomosc\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{ed67c847-7cba-4151-94bb-a4c006d05bce}</SharePointProjectItemId>
     </None>
+    <None Include="swfStratyZLatUbieglych\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{319d9e60-832a-4002-b9cc-e7fe292da6f3}</SharePointProjectItemId>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -105,6 +114,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="PrzygotujWiadomosc\Elements.xml" />
+    <Content Include="swfStratyZLatUbieglych\Elements.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">
