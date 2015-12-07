@@ -91,16 +91,16 @@ namespace EventReceivers.tabKlienci
             }
 
             // mail uzupełniający
-            email = BLL.Tools.Get_Text(item, "colEmail2");
+            email = BLL.Tools.Get_Text(item, "colEmailCC");
             if (BLL.Tools.IsValidEmail(email))
             {
-                item["colEmail2"] = email;
+                item["colEmailCC"] = email;
             }
             else
             {
                 if (!string.IsNullOrEmpty(email))
                 {
-                    item["colEmail2"] = string.Empty;
+                    item["colEmailCC"] = string.Empty;
                     string memo = string.Format("{0} nie jest poprawnym adresem i został usunięty z kartoteki klienta", email);
                     //ToDo: wyślij wiadomość do operatora
                 }

@@ -5,6 +5,6 @@ C:\_GitHub\Biuromagda\STAFix24_Biuromagda\STAFix24_Biuromagda_BLL\obj\Release\BR
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\STAFix24_Biuromagda_BLL\obj\Release\BLL.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\BLL\bin\Release\STAFix24.Animus.BLL.dll
 C:\_GitHub\Animus\BLL\bin\Release\STAFix24.Animus.BLL.pdb
+C:\_GitHub\Animus\BLL\obj\Release\BLL.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\BLL\obj\Release\STAFix24.Animus.BLL.dll
 C:\_GitHub\Animus\BLL\obj\Release\STAFix24.Animus.BLL.pdb
-C:\_GitHub\Animus\BLL\obj\Release\BLL.csprojResolveAssemblyReference.cache

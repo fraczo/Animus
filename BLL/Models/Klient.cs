@@ -76,10 +76,16 @@ namespace BLL.Models
                 }
 
                 OsobaDoKontaktu = item["colOsobaDoKontaktu"] != null ? item["colOsobaDoKontaktu"].ToString() : string.Empty;
-                Email = item["colEmail"] != null ? item["colEmail"].ToString() : string.Empty;
-                Telefon = item["colTelefon"] != null ? item["colTelefon"].ToString() : string.Empty;
+                
+                this.Email = BLL.Tools.Get_Email(item, "colEmail");
 
                 this.PreferowanaFormaKontaktu = BLL.Tools.Get_Text(item, "enumPreferowanaFormaKomunikacji");
+                if (this.PreferowanaFormaKontaktu.Equals("Email")) this.KopiaDla = BLL.Tools.Get_Email(item, "colEmailCC");
+                else this.KopiaDla = string.Empty;
+
+                Telefon = item["colTelefon"] != null ? item["colTelefon"].ToString() : string.Empty;
+
+                
                 Adres = item["colAdres"] != null ? item["colAdres"].ToString() : string.Empty;
                 KodPocztowy = item["colKodPocztowy"] != null ? item["colKodPocztowy"].ToString() : string.Empty;
                 Miejscowosc = item["colMiejscowosc"] != null ? item["colMiejscowosc"].ToString() : string.Empty;
@@ -302,5 +308,7 @@ namespace BLL.Models
 
         public bool ZablokujFunduszPracy { get; set; }
         public string PreferowanaFormaKontaktu { get; set; }
+
+        public string KopiaDla { get; set; }
     }
 }

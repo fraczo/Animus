@@ -82,11 +82,8 @@ namespace EventReceivers.tabZadania
                         case "Wiadomość z szablonu":
                         case "Wiadomość grupowa":
                         case "Wiadomość grupowa z szablonu":
-                            BLL.tabWiadomosci.CreateMailMessage(item);
-                            break;
-
                         case "Informacja uzupełniająca":
-                            //BLL.tabWiadomosci.CreateMailMessage_InformacjaUzupelniajaca(item);
+                            BLL.tabWiadomosci.CreateMailMessage(item);
                             break;
 
                         default:

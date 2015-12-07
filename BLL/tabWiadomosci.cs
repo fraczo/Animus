@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.SharePoint;
+using System.Diagnostics;
 
 namespace BLL
 {
     public class tabWiadomosci
     {
         const string targetList = "Wiadomości";
+        private const string _INFO_HTML_TEMPLATE_NAME = "INFO_TEMPLATE";
 
         public static int AddNew(SPWeb web, SPListItem item, string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId, int kartaKontrolnaId, BLL.Models.Marker marker)
         {
@@ -19,7 +21,12 @@ namespace BLL
 
             newItem["colNadawca"] = nadawca;
             newItem["colOdbiorca"] = odbiorca;
-            newItem["colKopiaDla"] = kopiaDla;
+
+            if (!string.IsNullOrEmpty(kopiaDla))
+            {
+                newItem["colKopiaDla"] = kopiaDla;
+            }
+
             newItem["colTresc"] = tresc;
             newItem["colTrescHTML"] = trescHTML;
             if (!string.IsNullOrEmpty(planowanaDataNadania.ToString()) && planowanaDataNadania != new DateTime())
@@ -105,6 +112,10 @@ namespace BLL
                     case "Wiadomość grupowa z szablonu":
                         CreateMailMessage_WiadomoscDoGrupyZSzablonu(item);
                         break;
+                    case "Informacja uzupełniająca":
+                        klientId = BLL.Tools.Get_LookupId(item, "selKlient");
+                        CreateMailMessage_InformacjaUzupelniajaca(item, klientId);
+                        break;
                     default:
                         break;
                 }
@@ -113,6 +124,82 @@ namespace BLL
                 item.SystemUpdate();
             }
         }
+
+        private static void CreateMailMessage_InformacjaUzupelniajaca(SPListItem item, int klientId)
+        {
+#if DEBUG
+            Logger.LogEvent("CreateMailMessage_InformacjaUzupelniajaca", item.ID.ToString());
+#endif
+            //subject
+            string subjectTemplate = @":: Informacja uzupełniająca na koniec {0} dla {1}";
+            string subject = string.Format(subjectTemplate,
+                                BLL.Tools.Get_LookupValue(item, "selOkres"),
+                                BLL.Tools.Get_LookupValue(item, "selKlient"));
+
+            //body
+            string trTemplate = BLL.dicSzablonyKomunikacji.Ensure_HTMLByKod(item.Web, "TR_TEMPLATE.Include");
+            StringBuilder rows = new StringBuilder();
+
+            AppendTR(ref rows, item, "colPrzychod", "Przychód", trTemplate);
+            AppendTR(ref rows, item, "colKoszty", "Koszty", trTemplate);
+
+            //dochód/strata
+
+            switch (BLL.Tools.Get_Text(item, "colPD_OcenaWyniku"))
+            {
+                case "Dochód":
+                    AppendTR(ref rows, item, "colPD_WartoscDochodu", "Dochód", trTemplate);
+                    break;
+                case "Strata":
+                    AppendTR(ref rows, item, "colPD_WartoscStraty", "Strata", trTemplate);
+                    break;
+                default:
+                    break;
+            }
+
+            //Obrót
+
+            switch (BLL.Tools.Get_Text(item, "colObrot_Opcja"))
+            {
+                case "Do kasy fiskalnej":
+                    AppendTR(ref rows, item, "colObrotDoKasyFiskalnej", "Obrót do kasy fiskalnej", trTemplate);
+                    break;
+                case "Do VAT":
+                    AppendTR(ref rows, item, "colObrotDoVAT", "Obrót do VAT", trTemplate);
+                    break;
+                default:
+                    break;
+            }
+
+            StringBuilder table = new StringBuilder(BLL.dicSzablonyKomunikacji.Ensure_HTMLByKod(item.Web, "TABLE_TEMPLATE"));
+            table.Replace("[[ROWS]]", rows.ToString());
+
+            // komentarz
+
+            StringBuilder body = new StringBuilder(BLL.dicSzablonyKomunikacji.Ensure_HTMLByKod(item.Web, "INFO_TEMPLATE"));
+            body.Replace("[[Tytul]]", "Wyniki finansowe - informacja uzupełniająca");
+            body.Replace("[[TABLE]]", table.ToString());
+            body.Replace("[[Tresc]]", BLL.Tools.Get_Text(item, "colTresc"));
+
+            StringBuilder sbINFO = new StringBuilder(BLL.dicSzablonyKomunikacji.Ensure_HTMLByKod(item.Web, _INFO_HTML_TEMPLATE_NAME));
+
+
+            CreateMailMessage_Wiadomosc(item, klientId, subject, body.ToString());
+        }
+
+        private static void AppendTR(ref StringBuilder rows, SPListItem item, string col, string desc, string trTemplate)
+        {
+            double v = BLL.Tools.Get_Value(item, col);
+            if (v > 0)
+            {
+                StringBuilder r = new StringBuilder(trTemplate);
+                r.Replace("[[Opis]]", desc);
+                r.Replace("[[Wartosc]]", BLL.Tools.Format_Currency(v));
+                rows.Append(r.ToString());
+            }
+        }
+
+
 
         private static void CreateMailMessage_Wiadomosc(SPListItem item, int klientId, string subject, string bodyHTML)
         {
@@ -123,13 +210,14 @@ namespace BLL
 
             if (!string.IsNullOrEmpty(cmd))
             {
-
+                // adresowanie wiadomości
 
                 string kopiaDla = string.Empty;
+                kopiaDla = BLL.Tools.Append_EmailCC(item.Web, klientId, kopiaDla);
                 bool KopiaDoNadawcy = false;
                 bool KopiaDoBiura = false;
 
-                string nadawca = BLL.Tools.Get_CurrentUser(item);
+                
 
                 if (cmd == "Wyślij z kopią do mnie") KopiaDoNadawcy = true;
 
@@ -137,6 +225,9 @@ namespace BLL
                 string temat = string.Empty;
                 string tresc = string.Empty;
                 string trescHTML = string.Empty;
+
+                //string nadawca = BLL.Tools.Get_CurrentUser(item); - wymusza przypisanie stopki operatora na podstawie aktualnego adresu nadawcy
+                string nadawca = string.Empty; // wymusza przypisanie stopki operatora na podstawie aktualnie wybranego operatora
 
                 BLL.dicSzablonyKomunikacji.Get_TemplateByKod(item, "EMAIL_DEFAULT_BODY.Include", out temat, out trescHTML, nadawca);
                 temat = subject;
@@ -150,7 +241,7 @@ namespace BLL
                         string odbiorca = BLL.tabKlienci.Get_EmailById(item.Web, klientId);
                         if (BLL.Tools.Is_ValidEmail(odbiorca))
                         {
-                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, BLL.Tools.Get_Date(item, "colPlanowanaDataNadania"), item.ID, klientId,0,BLL.Models.Marker.WithAttachements);
+                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, BLL.Tools.Get_Date(item, "colPlanowanaDataNadania"), item.ID, klientId, 0, BLL.Models.Marker.WithAttachements);
                             BLL.Tools.Set_Text(item, "enumStatusZadania", "Wysyłka");
                             item.SystemUpdate();
                         }
@@ -165,7 +256,7 @@ namespace BLL
                         odbiorca = BLL.Tools.Get_CurrentUser(item);
                         if (BLL.Tools.Is_ValidEmail(odbiorca))
                         {
-                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, new DateTime(), 0, 0, 0,Models.Marker.WithAttachements);
+                            BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, new DateTime(), 0, 0, 0, Models.Marker.WithAttachements);
                         }
                         break;
                     default:
@@ -173,6 +264,7 @@ namespace BLL
                 }
             }
         }
+
 
         private static void CreateMailMessage_WiadomoscZReki(SPListItem item, int klientId)
         {

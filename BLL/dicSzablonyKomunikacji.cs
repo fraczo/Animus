@@ -146,12 +146,12 @@ namespace BLL
 
         public static string Ensure_HTMLByKod(SPWeb web, string kod)
         {
-            SPList list =  web.Lists.TryGetList(targetList);
+            SPList list = web.Lists.TryGetList(targetList);
             SPListItem item = list.Items.Cast<SPListItem>()
                 .Where(i => i.Title.Equals(kod))
                 .FirstOrDefault();
-            
-            if (item!=null)
+
+            if (item != null)
             {
                 return BLL.Tools.Get_Text(item, "colHTML");
             }
@@ -160,7 +160,24 @@ namespace BLL
                 //dodaj rekord do listy
                 SPListItem newItem = list.AddItem();
                 BLL.Tools.Set_Text(newItem, "Title", kod);
-                BLL.Tools.Set_Text(newItem, "colOpis", "To be completed...");
+                switch (kod)
+                {
+                    case "TABLE_TEMPLATE":
+                        BLL.Tools.Set_Text(newItem, "colHTML", @"<table align=""center"" cellpadding=""5"" cellspacing=""2"" style=""width: 100%; font-family: Arial, Helvetica, sans-serif; font-size: x-small; text-align: center;"">[[ROWS]]</table>");
+                        BLL.Tools.Set_Text(newItem, "colOpis", "[[ROWS]]");
+                        break;
+                    case "TR_TEMPLATE.Include":
+                        BLL.Tools.Set_Text(newItem, "colHTML", @"<tr><th style=""height: 17px; text-align: left; background-color: #FFFFFF; width: 10%; font-family: Arial, Helvetica, sans-serif;"">&nbsp;</th> <th style=""height: 17px; text-align: left; background-color: #E4E4E4; width: 60%; font-family: Arial, Helvetica, sans-serif;""><span style=""font-weight: normal"">[[Opis]]</span></th> <td style=""height: 17px; background-color: #F4F4F4; width: 20%;"">[[Wartosc]]</td> <td style=""height: 17px; background-color: #FFFFFF; width: 10%;"">&nbsp;</td> </tr>");
+                        BLL.Tools.Set_Text(newItem, "colOpis", @"");
+                        break;
+                    case "INFO_TEMPLATE":
+                        BLL.Tools.Set_Text(newItem, "colHTML", @"<h3 style=""text-align: center; font-family: Arial, Helvetica, sans-serif; color: #808080;"">[[Tytul]]</h3>[[TABLE]] <blockquote><div style=""text-align: left; font-family: Arial, Helvetica, sans-serif; font-size: x-small;"">[[Tresc]]</div></blockquote>");
+                        BLL.Tools.Set_Text(newItem, "colOpis", @"[[Tytul]], [[TABLE]], [[Tresc]]");
+                        break;
+                    default:
+                        BLL.Tools.Set_Text(newItem, "colOpis", "To be completed...");
+                        break;
+                }
 
                 newItem.SystemUpdate();
 

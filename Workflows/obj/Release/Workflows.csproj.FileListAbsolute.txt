@@ -5,6 +5,10 @@ C:\_GitHub\Biuromagda\STAFix24_Biuromagda\Workflows\obj\Release\BRMagda.Workflow
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\Workflows\obj\Release\Workflows.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\Workflows\bin\Release\STAFix24.Animus.Workflows.dll
 C:\_GitHub\Animus\Workflows\bin\Release\STAFix24.Animus.Workflows.pdb
+C:\_GitHub\Animus\Workflows\bin\Release\STAFix24.Animus.BLL.dll
+C:\_GitHub\Animus\Workflows\bin\Release\STAFix24.Animus.EventReceivers.dll
+C:\_GitHub\Animus\Workflows\bin\Release\STAFix24.Animus.BLL.pdb
+C:\_GitHub\Animus\Workflows\bin\Release\STAFix24.Animus.EventReceivers.pdb
 C:\_GitHub\Animus\Workflows\obj\Release\Workflows.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\Workflows\obj\Release\STAFix24.Animus.Workflows.dll
 C:\_GitHub\Animus\Workflows\obj\Release\STAFix24.Animus.Workflows.pdb

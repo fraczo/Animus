@@ -639,13 +639,16 @@ namespace Workflows.PrzygotujWiadomosc
 
         private void Create_Message_ExecuteCode(object sender, EventArgs e)
         {
+            int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
 
             string nadawca = mailFrom;
             string odbiorca = mailTo;
-            string kopiaDla = string.Empty;
+
+            string kopiaDla = BLL.Tools.Append_EmailCC(item.Web, klientId, string.Empty);
+            
             string temat = mailSubject;
             string trescHTML = sbBody.ToString();
-            int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
+            
 
             BLL.tabWiadomosci.Ensure_ColumnExist(item.Web, "_KartaKontrolnaId");
             int messageId = BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, false, false, temat, string.Empty, trescHTML, new DateTime(), 0, klientId, item.ID, BLL.Models.Marker.Ignore);

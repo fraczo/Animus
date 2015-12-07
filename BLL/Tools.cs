@@ -463,5 +463,33 @@ namespace BLL
             return new SPFieldMultiChoiceValue(item[col].ToString());
         }
 
+
+        public static string Get_Email(SPListItem item, string col)
+        {
+            string email = BLL.Tools.Get_Text(item, col);
+            if (Is_ValidEmail(email))
+            {
+                return email;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        public static string Append_EmailCC(SPWeb web, int klientId, string kopiaDla)
+        {
+            BLL.Models.Klient iok = new BLL.Models.Klient(web, klientId);
+
+            if (!string.IsNullOrEmpty(iok.KopiaDla)
+                && !kopiaDla.Contains(iok.KopiaDla))
+            {
+                //dodaj kopię dla
+                kopiaDla = kopiaDla + ";" + iok.KopiaDla;
+                if (kopiaDla.StartsWith(";")) kopiaDla = kopiaDla.Substring(1, kopiaDla.Length - 1);
+            }
+
+            return kopiaDla;
+        }
     }
 }
