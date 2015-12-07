@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.SharePoint;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace BLL
 {
@@ -91,6 +92,8 @@ namespace BLL
 
         public static void CreateMailMessage(SPListItem item)
         {
+            Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage: " + item.ContentType.Name);
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc");
             if (!string.IsNullOrEmpty(cmd))
             {
@@ -127,9 +130,8 @@ namespace BLL
 
         private static void CreateMailMessage_InformacjaUzupelniajaca(SPListItem item, int klientId)
         {
-#if DEBUG
-            Logger.LogEvent("CreateMailMessage_InformacjaUzupelniajaca", item.ID.ToString());
-#endif
+            Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage_InformacjaUzupelniajaca");
+
             //subject
             string subjectTemplate = @":: Informacja uzupełniająca na koniec {0} dla {1}";
             string subject = string.Format(subjectTemplate,
@@ -203,9 +205,8 @@ namespace BLL
 
         private static void CreateMailMessage_Wiadomosc(SPListItem item, int klientId, string subject, string bodyHTML)
         {
-#if DEBUG
-            Logger.LogEvent("CreateMailMessage_Wiadomosc " + item.ContentType.Name + " z:" + item.ID.ToString() + " k:" + klientId.ToString(), string.Empty);
-#endif
+            Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage_Wiadomosc");
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc");
 
             if (!string.IsNullOrEmpty(cmd))
@@ -217,7 +218,7 @@ namespace BLL
                 bool KopiaDoNadawcy = false;
                 bool KopiaDoBiura = false;
 
-                
+
 
                 if (cmd == "Wyślij z kopią do mnie") KopiaDoNadawcy = true;
 
@@ -268,9 +269,8 @@ namespace BLL
 
         private static void CreateMailMessage_WiadomoscZReki(SPListItem item, int klientId)
         {
-#if DEBUG
-            Logger.LogEvent("CreateMailMessage_WiadomoscZReki", item.ID.ToString());
-#endif
+            Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage_WiadomoscZReki");
+
             string bodyHTML = BLL.Tools.Get_Text(item, "colTresc");
             //string subject = BLL.Tools.Get_Text(item, "colTematWiadomosci");
             string subject = item.Title;
@@ -279,22 +279,87 @@ namespace BLL
 
         private static void CreateMailMessage_WiadomoscZSzablonu(SPListItem item, int klientId)
         {
-#if DEBUG
-            Logger.LogEvent("CreateMailMessage_WiadomoscZSzablonu", item.ID.ToString());
-#endif
+            Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage_WiadomoscZSzablonu");
+
             int szablonId = BLL.Tools.Get_LookupId(item, "selSzablonWiadomosci");
             string bodyHTML = BLL.Tools.Get_Text(item, "colInformacjaDlaKlienta");
             string subject = string.Empty;
-            BLL.tabSzablonyWiadomosci.GetSzablonId(item.Web, szablonId, out subject, ref bodyHTML);
+            string funkcjeSzablonu = string.Empty;
+            BLL.tabSzablonyWiadomosci.GetSzablonId(item.Web, szablonId, out subject, ref bodyHTML, out funkcjeSzablonu);
+
+            //obsługa funkcji specjalnych
+
+            if (!string.IsNullOrEmpty(funkcjeSzablonu))
+            {
+                Debug.WriteLine("Aktywne funkcje szablonu: " + funkcjeSzablonu);
+
+                Array funkcje = Regex.Split(funkcjeSzablonu, ";#");
+                foreach (string f in funkcje)
+                {
+                    switch (f)
+                    {
+                        case "Weryfikuj POD":
+                            if (!_IsAllowedToSendPODReminder(item.Web, klientId))
+                            {
+                                Debug.WriteLine("_IsAllowedToSendPODReminder=false");
+                                return;
+                            }
+                            else
+                            {
+                                Debug.WriteLine("_IsAllowedToSendPODReminder=true");
+                            }
+                            break;
+                        case "Zastąp markery":
+                            _ReplaceKnownMarkers(bodyHTML, klientId);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
 
             CreateMailMessage_Wiadomosc(item, klientId, subject, bodyHTML);
         }
 
+        private static void _ReplaceKnownMarkers(string bodyHTML, int klientId)
+        {
+            //todo: throw new NotImplementedException();
+        }
+
+        private static bool _IsAllowedToSendPODReminder(SPWeb web, int klientId)
+        {
+            // dla zadanego klineta sprawdź czy ma ustawiony Email jako preferowaną formę komunikacji i czy ma adres mailowy
+
+            Models.Klient iok = new Models.Klient(web, klientId);
+            if (iok.PreferowanaFormaKontaktu.Equals("Email")
+                && !string.IsNullOrEmpty(iok.Email)) { }
+            else return false;
+
+            // dla bieżącej daty poszukaj ostatniego aktywnego okresu
+
+            int targetOkresId = BLL.tabOkresy.Get_ActiveOkresId(web);
+            if (targetOkresId > 0) { }
+            else return false;
+
+            // dla okresu odszukaj w kartach kontrolnych rekord klineta i sprawdź wartość flagi potwierdzenia otrzymania dokumentów
+
+            SPListItem kk = BLL.tabKartyKontrolne.Get_KK_ByKlientId_ByOkresId(web, klientId, targetOkresId);
+            if (kk != null)
+            {
+                // jeżeli flaga ustawiona -> zablokuj wysyłkę
+
+                if (BLL.Tools.Get_Flag(kk, "colPotwierdzenieOdbioruDokumentow").Equals(true)) return false;
+
+            }
+
+            return true;
+
+        }
+
         private static void CreateMailMessage_WiadomoscDoGrupy(SPListItem item)
         {
-#if DEBUG
-            Logger.LogEvent("CreateMailMessage_WiadomoscDoGrupy", item.ID.ToString());
-#endif
+            Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage_WiadomoscDoGrupy");
+
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc");
 
             if (!string.IsNullOrEmpty(cmd) && cmd == "Wyślij wiadomość testową")
@@ -304,8 +369,11 @@ namespace BLL
             else
             {
                 Array klientListItems = BLL.tabKlienci.Get_WybraniKlienci(item);
+                Debug.WriteLine("klienci: " + klientListItems.Length);
+
                 foreach (SPListItem klientItem in klientListItems)
                 {
+                    Debug.WriteLine("KlientId: " + klientItem.ID.ToString());
                     CreateMailMessage_WiadomoscZReki(item, klientItem.ID);
                 }
             }
@@ -313,9 +381,7 @@ namespace BLL
 
         private static void CreateMailMessage_WiadomoscDoGrupyZSzablonu(SPListItem item)
         {
-#if DEBUG
-            Logger.LogEvent("CreateMailMessage_WiadomoscDoGrupyZSzablonu", item.ID.ToString());
-#endif
+            Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage_WiadomoscDoGrupyZSzablonu");
 
             string cmd = BLL.Tools.Get_Text(item, "cmdFormatka_Wiadomosc");
 
@@ -326,8 +392,12 @@ namespace BLL
             else
             {
                 Array klientListItems = BLL.tabKlienci.Get_WybraniKlienci(item);
+                Debug.WriteLine("klienci: " + klientListItems.Length);
+
                 foreach (SPListItem klientItem in klientListItems)
                 {
+                    Debug.WriteLine("KlientId: " + klientItem.ID.ToString());
+
                     int klientId = BLL.Tools.Get_LookupId(item, "selKlient");
                     CreateMailMessage_WiadomoscZSzablonu(item, klientItem.ID);
                 }

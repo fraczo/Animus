@@ -4,15 +4,7 @@ C:\_GitHub\Biuromagda\STAFix24_Biuromagda\EventReceivers\bin\Release\BRMagda.Eve
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\EventReceivers\obj\Release\BRMagda.EventReceivers.pdb
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\EventReceivers\obj\Release\EventReceivers.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.EventReceivers.dll
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.EventReceivers.pdb
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.BLL.dll
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.GeneratorDrukow.dll
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.PdfSharp.dll
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.BLL.pdb
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.GeneratorDrukow.pdb
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.PdfSharp.pdb
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.PdfSharp.xml
-C:\_GitHub\Animus\EventReceivers\bin\Release\de\STAFix24.Animus.PdfSharp.resources.dll
 C:\_GitHub\Animus\EventReceivers\obj\Release\EventReceivers.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\EventReceivers\obj\Release\STAFix24.Animus.EventReceivers.dll
+C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.EventReceivers.pdb
 C:\_GitHub\Animus\EventReceivers\obj\Release\STAFix24.Animus.EventReceivers.pdb

@@ -414,5 +414,22 @@ namespace BLL
             DateTime startDate = BLL.Tools.Get_Date(item, "colDataRozpoczecia");
             return string.Format("{0:yyyyMM}", startDate);
         }
+
+        internal static int Get_ActiveOkresId(SPWeb web)
+        {
+            DateTime currentDate = DateTime.Today;
+            DateTime targetDate = new DateTime(currentDate.Year, currentDate.Month, 1);
+            DateTime endDate = targetDate.AddDays(-1);
+            DateTime startDate = targetDate.AddMonths(-1); 
+
+            SPListItem item = web.Lists.TryGetList(targetList).Items.Cast<SPListItem>()
+                .Where(i => BLL.Tools.Get_Date(i, "colDataRozpoczecia").Equals(startDate)
+                            && BLL.Tools.Get_Date(i, "colDataZakonczenia").Equals(endDate))
+                .FirstOrDefault();
+
+            if (item != null) return item.ID;
+            else return 0;
+            
+        }
     }
 }

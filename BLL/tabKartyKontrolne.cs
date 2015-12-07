@@ -455,5 +455,13 @@ namespace BLL
             }
 
         }
+
+        internal static SPListItem Get_KK_ByKlientId_ByOkresId(SPWeb web, int klientId, int okresId)
+        {
+            return web.Lists.TryGetList(targetList).Items.Cast<SPListItem>()
+                .Where(i => BLL.Tools.Get_LookupId(i, "selKlient").Equals(klientId)
+                            && BLL.Tools.Get_LookupId(i, "selOkres").Equals(okresId))
+                .FirstOrDefault();
+        }
     }
 }

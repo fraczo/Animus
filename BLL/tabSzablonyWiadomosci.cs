@@ -26,7 +26,7 @@ namespace BLL
             return 0;
         }
 
-        internal static void GetSzablonId(SPWeb web, int szablonId, out string subject, ref string bodyHTML)
+        internal static void GetSzablonId(SPWeb web, int szablonId, out string subject, ref string bodyHTML, out string funkcjeSzablonu)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -36,6 +36,7 @@ namespace BLL
 
             if (item != null)
             {
+                funkcjeSzablonu = BLL.Tools.Get_Text(item, "colFunkcjeSzablonow");
 
                 subject = BLL.Tools.Get_Text(item, "colTematWiadomosci");
 
@@ -53,6 +54,7 @@ namespace BLL
             }
             else
             {
+                funkcjeSzablonu = string.Empty;
                 subject = string.Empty;
                 sb.Append(bodyHTML);
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.SharePoint;
 using System.Collections;
+using System.Diagnostics;
 
 namespace BLL
 {
@@ -689,13 +690,15 @@ namespace BLL
             {
                 //wybierz aktywnych spełniających kryteria wyboru
                 Array klientItems = BLL.tabKlienci.Get_AktywniKlienci(item.Web);
+                Debug.WriteLine("aktywni klienci: " + klientItems.Length);
+
                 ArrayList results = new ArrayList();
 
                 foreach (SPListItem klientItem in klientItems)
                 {
                     //dodaj w/g selSerwisy
                     Append_BasedOn_ZgodneParametryWyboru(item, klientItem, ref results, "selSewisy");
-
+           
                     //dodaj w/g selParametry
                     Append_BasedOn_ZgodneParametryWyboru(item, klientItem, ref results, "selParametry");
 
@@ -703,6 +706,7 @@ namespace BLL
                     Append_BasedOn_ZgodneIDKlienta(item, ref results);
                 }
 
+                Debug.WriteLine("wybrani klienci: " + results.Count);
                 return results.ToArray();
             }
         }

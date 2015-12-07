@@ -47,6 +47,7 @@ namespace EventReceivers.tabZadania
             {
                 Set_Up(item);
                 Update_Resources(item);
+                Update_Title(item);
                 Update_Extras(item);
 
                 if (BLL.Tools.Get_Text(item, "cmdFormatka").Length > 0
@@ -121,6 +122,14 @@ namespace EventReceivers.tabZadania
 
         }
 
+        private void Update_Title(SPListItem item)
+        {
+            if (string.IsNullOrEmpty(item.Title))
+            {
+                BLL.Tools.Set_Text(item, "Title", BLL.Tools.Get_LookupValue(item, "selProcedura"));
+            }
+        }
+
         private void Reset_CMD(SPListItem item)
         {
             Debug.WriteLine("EventReceivers.tabZadania.tabZadania.Reset_CMD");
@@ -132,11 +141,25 @@ namespace EventReceivers.tabZadania
 
         private void Update_Resources(SPListItem item)
         {
+            //obsługa procedury
+
             int procId = BLL.Tools.Get_LookupId(item, "selProcedura");
             if (procId == 0) //aktualizuj procedurę
             {
-                //przypisz procedurę na podstawie tematu
-                procId = BLL.tabProcedury.Ensure(item.Web, item.Title, false);
+                switch (item.ContentType.Name)
+                {
+                    case "Wiadomość z ręki":
+                    case "Wiadomość z szablonu":
+                    case "Wiadomość grupowa":
+                    case "Wiadomość grupowa z szablonu":
+                    case "Informacja uzupełniająca":
+                        procId = BLL.tabProcedury.Ensure(item.Web, ": " + item.ContentType.Name, true);
+                        break;
+                    default:
+                        //przypisz procedurę na podstawie tematu
+                        procId = BLL.tabProcedury.Ensure(item.Web, item.Title, false);
+                        break;
+                }
 
                 //update procedura
                 BLL.Tools.Set_Value(item, "selProcedura", (int)procId);
