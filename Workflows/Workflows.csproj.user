@@ -58,6 +58,15 @@
           <AutoAssociate>true</AutoAssociate>
           <ManualStart>true</ManualStart>
         </ProjectItemStore>
+        <ProjectItemStore Id="{7675178c-df89-42ec-9d61-ceaa48c352b6}">
+          <DisplayName>Obsługa wiadomości oczekujących</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+        </ProjectItemStore>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>

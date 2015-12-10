@@ -4,10 +4,10 @@ using System.Security.Permissions;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Security;
 
-namespace Animus.Features.ObslugaWiadomosciTJ
+namespace Animus.Features.MsgMgmtTJ
 {
-    [Guid("5E856AF0-C1D2-4F44-AE5E-289AD42EDF83")]
-    public class ObslugaWiadomosciTJEventReceiver : SPFeatureReceiver
+    [Guid("5d3c438b-67a9-4b7e-87f6-48c287db9fe3")]
+    public class ObslugaWiadomosciEventReceiver : SPFeatureReceiver
     {
         public override void FeatureActivated(SPFeatureReceiverProperties properties)
         {
@@ -20,5 +20,6 @@ namespace Animus.Features.ObslugaWiadomosciTJ
             var site = properties.Feature.Parent as SPSite;
             TimerJobs.ObslugaWiadomosciTJ.DelteTimerJob(site);
         }
+
     }
 }

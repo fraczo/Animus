@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Workflow;
+using System.Globalization;
 
 namespace BLL
 {
@@ -40,6 +41,20 @@ namespace BLL
             }
             catch (Exception)
             { }
+        }
+
+        public static void StartSiteWorkflow(SPSite site, string workflowName)
+        {
+            using (SPWeb web = site.OpenWeb()) // get the web
+            {
+                //find workflow to start
+                var assoc = web.WorkflowAssociations.GetAssociationByName(workflowName, CultureInfo.InvariantCulture);
+
+                //this is the call to start the workflow
+                var result = site.WorkflowManager.StartWorkflow(null, assoc, string.Empty, SPWorkflowRunOptions.Synchronous);
+
+            }
+
         }
     }
 }

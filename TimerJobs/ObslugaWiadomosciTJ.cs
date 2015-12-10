@@ -19,7 +19,7 @@ namespace TimerJobs
             {
                 BeginSecond = 0,
                 EndSecond = 0,
-                Interval = 15
+                Interval = 1
             };
 
             timerJob.Update();
@@ -41,8 +41,9 @@ namespace TimerJobs
         }
 
         public ObslugaWiadomosciTJ(SPSite site)
-            : base(string.Format("Animus_Obsługa wiadomości Timer Job ({0})", site.Url), site.WebApplication, null, SPJobLockType.Job)
+            : base(string.Format("XXXXX ({0})", site.Url), site.WebApplication, null, SPJobLockType.Job)
         {
+            //Animus_Obsluga wiadomosci Timer Job ({0})
             Title = Name;
             SiteUrl = site.Url;
         }
@@ -57,11 +58,17 @@ namespace TimerJobs
         {
             using (var site = new SPSite(SiteUrl))
             {
-                SPList list = site.RootWeb.Lists.TryGetList("admProcesy");
+                //SPList list = site.RootWeb.Lists.TryGetList("admProcesy");
 
-                SPListItem item = list.AddItem();
-                item["ContentType"] = "Obsługa wiadomości";
-                item.SystemUpdate();
+                //SPListItem item = list.AddItem();
+                //item["ContentType"] = "Obsługa wiadomości";
+                //item.SystemUpdate();
+
+
+
+                //BLL.Workflows.StartSiteWorkflow(site, "Obsługa wiadomości oczekujących");
+                //Debug.WriteLine("Workflow initiated: " + Title);
+
             }
         }
 

@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,10 +51,11 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\ObslugaWiadomosciTJ\ObslugaWiadomosciTJ.EventReceiver.cs">
-      <DependentUpon>ObslugaWiadomosciTJ.feature</DependentUpon>
+    <Compile Include="Features\TimerJob_ObslugaWiadomosci\TimerJob_ObslugaWiadomosci.EventReceiver.cs">
+      <DependentUpon>TimerJob_ObslugaWiadomosci.feature</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimerJobs\ObslugaWiadomosci.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CustomActions\AkcjeWitrynyMenu\SharePointProjectItem.spdata">
@@ -74,8 +76,11 @@
     <None Include="Features\CustomActions\CustomActions.feature">
       <FeatureId>{2e1ac316-908f-43c3-8f6f-334601c5c214}</FeatureId>
     </None>
-    <None Include="Features\ObslugaWiadomosciTJ\ObslugaWiadomosciTJ.feature">
-      <FeatureId>{a72269f1-06a4-4040-8c0e-a43b848c6746}</FeatureId>
+    <None Include="Features\TimerJob_ObslugaWiadomosci\TimerJob_ObslugaWiadomosci.feature">
+      <FeatureId>{7ff5f04b-1a9f-43fe-a3af-ba4d9359abe7}</FeatureId>
+    </None>
+    <None Include="Features\TimerJob_PrzygotowanieWiadomosci\TimerJob_PrzygotowanieWiadomosci.feature">
+      <FeatureId>{6b810cb8-7321-4bf8-bc0b-43268af6b1c2}</FeatureId>
     </None>
     <None Include="Features\Workflows\Workflows.feature">
       <FeatureId>{4d389d2d-9dab-46c5-9d22-66072383dd1b}</FeatureId>
@@ -106,9 +111,11 @@
     <Content Include="Features\CustomActions\CustomActions.Template.xml">
       <DependentUpon>CustomActions.feature</DependentUpon>
     </Content>
-    <Content Include="Features\ObslugaWiadomosciTJ\ObslugaWiadomosciTJ.Template.xml">
-      <DependentUpon>ObslugaWiadomosciTJ.feature</DependentUpon>
-      <SubType>Designer</SubType>
+    <Content Include="Features\TimerJob_ObslugaWiadomosci\TimerJob_ObslugaWiadomosci.Template.xml">
+      <DependentUpon>TimerJob_ObslugaWiadomosci.feature</DependentUpon>
+    </Content>
+    <Content Include="Features\TimerJob_PrzygotowanieWiadomosci\TimerJob_PrzygotowanieWiadomosci.Template.xml">
+      <DependentUpon>TimerJob_PrzygotowanieWiadomosci.feature</DependentUpon>
     </Content>
     <Content Include="Features\Workflows\Workflows.Template.xml">
       <DependentUpon>Workflows.feature</DependentUpon>
@@ -132,6 +139,10 @@
     <Content Include="pkg\SiteAssets\Elements.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{2C8ECD80-A047-4795-99B3-C0EFC6961A9E}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EventReceivers\EventReceivers.csproj">
       <Project>{55BA1847-ED27-481D-B213-C6A4C8BCC3ED}</Project>
       <Name>EventReceivers</Name>

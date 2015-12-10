@@ -12,3 +12,4 @@ C:\_GitHub\Animus\TimerJobs\bin\Debug\STAFix24.Animus.TimerJobs.dll
 C:\_GitHub\Animus\TimerJobs\bin\Debug\STAFix24.Animus.TimerJobs.pdb
 C:\_GitHub\Animus\TimerJobs\obj\Debug\STAFix24.Animus.TimerJobs.dll
 C:\_GitHub\Animus\TimerJobs\obj\Debug\STAFix24.Animus.TimerJobs.pdb
+C:\_GitHub\Animus\TimerJobs\obj\Debug\TimerJobs.csprojResolveAssemblyReference.cache

@@ -1,0 +1,2 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Obsługa wiadomości TJ" Id="408f4c1e-e3fc-4d6b-a665-0dafccb39f42" ReceiverAssembly="STAFix24.Animus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8ab5e47d51a735fd" ReceiverClass="Animus.Features.MsgMgmtTJ.MsgMgmtTJEventReceiver" Scope="Site"></Feature>

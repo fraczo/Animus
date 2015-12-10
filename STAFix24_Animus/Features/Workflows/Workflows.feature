@@ -5,5 +5,6 @@
     <projectItemReference itemId="b2fdea66-cd38-43b2-98c3-f78aabf4eb3b" projectPath="..\Workflows\Workflows.csproj" />
     <projectItemReference itemId="ed67c847-7cba-4151-94bb-a4c006d05bce" projectPath="..\Workflows\Workflows.csproj" />
     <projectItemReference itemId="319d9e60-832a-4002-b9cc-e7fe292da6f3" projectPath="..\Workflows\Workflows.csproj" />
+    <projectItemReference itemId="7675178c-df89-42ec-9d61-ceaa48c352b6" projectPath="..\Workflows\Workflows.csproj" />
   </projectItems>
 </feature>

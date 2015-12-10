@@ -416,5 +416,23 @@ namespace BLL
             BLL.Tools.Set_SPFieldMultiChoiceValue(item, "_KomponentyKK", komponenty);
             item.SystemUpdate();
         }
+
+        /// <summary>
+        /// Zwraca listę wiadomości gotowych do wysyłki w danym momencie
+        /// </summary>
+        public static Array Select_Batch(SPWeb web)
+        {
+            Debug.WriteLine("BLL.tabWiadomosci.Select_Batch");
+
+            SPList list = web.Lists.TryGetList(targetList);
+
+            return list.Items.Cast<SPListItem>()
+                .Where(i => (bool)i["colCzyWyslana"] != true)
+                .Where(i => i["colPlanowanaDataNadania"] == null
+                    || (i["colPlanowanaDataNadania"] != null
+                       && (DateTime)i["colPlanowanaDataNadania"] <= DateTime.Now))
+                .ToArray();
+
+        }
     }
 }

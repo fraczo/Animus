@@ -1,0 +1,2 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<feature xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="0b33b28a-e5a8-4ac7-abb7-ebbc7aa07ce1" featureId="0b33b28a-e5a8-4ac7-abb7-ebbc7aa07ce1" imageUrl="" scope="Site" solutionId="00000000-0000-0000-0000-000000000000" title="STAFix24_Animus Przygotowanie wiadomości TJ" version="" deploymentPath="$SharePoint.Project.FileNameWithoutExtension$_$SharePoint.Feature.FileNameWithoutExtension$" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/FeatureModel" />
