@@ -11,6 +11,7 @@ namespace BLL
     {
         const string targetList = "Karty kontrolne";
         const string colPOTWIERDZENIE_ODBIORU_DOKUMENTOW = "colPotwierdzenieOdbioruDokumento";
+        private static object _STATUS_ZADANIA_ZWOLNIONE = "Zwolnione do wysyłki";
 
         public static int Ensure_KartaKontrolna(SPWeb web, int klientId, int okresId, BLL.Models.Klient iok)
         {
@@ -462,6 +463,22 @@ namespace BLL
                 .Where(i => BLL.Tools.Get_LookupId(i, "selKlient").Equals(klientId)
                             && BLL.Tools.Get_LookupId(i, "selOkres").Equals(okresId))
                 .FirstOrDefault();
+        }
+
+        public static Array Get_ZwolnioneDoWysylki(SPWeb web)
+        {
+            //ustaw okres karencji
+            int offset = int.Parse(BLL.admSetup.GetValue(web, "KK_IGNORE_UPDATES_MINUTES"));
+            DateTime targetDate = DateTime.Now.AddMinutes(-1 * offset);
+
+            return web.Lists.TryGetList(targetList).Items.Cast<SPListItem>()
+                .Where(i => BLL.Tools.Get_Date(i, "Modified") < targetDate) //nie ruszaj modyfikowanych w ciągu istatnicj x minut
+                .Where(i => BLL.Tools.Get_Text(i, "colZUS_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
+                            || BLL.Tools.Get_Text(i, "colPD_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
+                            || BLL.Tools.Get_Text(i, "colVAT_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE)
+                            || BLL.Tools.Get_Text(i, "colRBR_StatusZadania").Equals(_STATUS_ZADANIA_ZWOLNIONE))
+
+                .ToArray();
         }
     }
 }

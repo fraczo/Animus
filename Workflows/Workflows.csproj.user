@@ -7,6 +7,15 @@
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{BB1F664B-9266-4fd6-B973-E1E44974B511}">
+        <ProjectItemStore Id="{b11d2f4f-359d-4cde-aeff-ce8d0d67625e}">
+          <DisplayName>Obsługa kart kontrolnych</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+        </ProjectItemStore>
         <ProjectItemStore Id="{b2fdea66-cd38-43b2-98c3-f78aabf4eb3b}">
           <DisplayName>Generuj formatki rozliczeniowe dla klienta</DisplayName>
           <HistoryList>Workflow History</HistoryList>

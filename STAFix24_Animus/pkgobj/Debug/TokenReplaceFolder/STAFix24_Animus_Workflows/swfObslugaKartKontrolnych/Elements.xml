@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 
 <!-- Customize the text in square brackets. 
 Remove brackets when filling in, e.g.
@@ -6,11 +6,11 @@ Name="[NAME]" ==> Name="MyWorkflow" -->
 
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
   <Workflow
-     Name="Obsługa kolejki wiadomości"
+     Name="Obsługa kart kontrolnych"
      Description="My SharePoint Workflow"
-     Id="708534f6-6f8d-4cfc-ab14-49cc67241987"
-     CodeBesideClass="Workflows.swfObslugaWiadomosciOczekujacych.swfObslugaWiadomosciOczekujacych"
-     CodeBesideAssembly="$assemblyname$">
+     Id="fb837195-86f8-4c88-8156-f8b9a3ba8462"
+     CodeBesideClass="Workflows.swfObslugaKartKontrolnych.swfObslugaKartKontrolnych"
+     CodeBesideAssembly="STAFix24.Animus.Workflows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7c2016d13a1c5fef">
     <Categories/>
     <MetaData>
       <AssociationCategories>Site</AssociationCategories>

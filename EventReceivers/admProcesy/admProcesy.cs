@@ -16,6 +16,7 @@ namespace EventReceivers.admProcesy
         private string _WF_GFR_K = "Generuj formatki rozliczeniowe dla klienta";
         private string _ZLECENIE_ZAKONCZONE = "Zakończony";
         private string _ZLECENIE_OBSLUGA = "Obsługa";
+        private string _WF_OBSLUGA_KK = @"Obsługa kart kontrolnych";
 
         public override void ItemAdded(SPItemEventProperties properties)
         {
@@ -61,7 +62,10 @@ namespace EventReceivers.admProcesy
                         this.EventFiringEnabled = false;
                         BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_OBSLUGA);
                         item.SystemUpdate();
-                        ObslugaKartKontrolnych.Execute(item);
+                        //ObslugaKartKontrolnych.Execute(item);
+
+                        BLL.Workflows.StartWorkflow(item, _WF_OBSLUGA_KK);
+
                         BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_ZAKONCZONE);
                         item.SystemUpdate();
                         this.EventFiringEnabled = true;

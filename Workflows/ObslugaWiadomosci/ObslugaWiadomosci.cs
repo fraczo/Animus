@@ -41,6 +41,8 @@ namespace Workflows.ObslugaWiadomosci
 
         private void onWorkflowActivated1_Invoked(object sender, ExternalDataEventArgs e)
         {
+            Debug.WriteLine("ObslugaWiadomosci - ACTIVATED");
+
             item = workflowProperties.Item;
         }
 

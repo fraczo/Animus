@@ -120,7 +120,7 @@ namespace Workflows.swfStratyZLatUbieglych
 
         private void onWorkflowActivated1_Invoked(object sender, ExternalDataEventArgs e)
         {
-
+            Debug.WriteLine("swfStratyZLatUbieglych - ACTIVATED");
         }
 
         public static DependencyProperty logNowyRekord_HistoryOutcome1Property = DependencyProperty.Register("logNowyRekord_HistoryOutcome1", typeof(System.String), typeof(Workflows.swfStratyZLatUbieglych.swfStratyZLatUbieglych));

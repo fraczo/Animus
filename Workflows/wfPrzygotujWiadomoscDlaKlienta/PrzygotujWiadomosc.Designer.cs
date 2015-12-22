@@ -80,6 +80,7 @@ namespace Workflows.PrzygotujWiadomosc
             this.ifZgodaNaWysylkeMaili = new System.Workflow.Activities.IfElseBranchActivity();
             this.cancellationHandlerActivity1 = new System.Workflow.ComponentModel.CancellationHandlerActivity();
             this.faultHandlersActivity1 = new System.Workflow.ComponentModel.FaultHandlersActivity();
+            this.logEnd = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Czy_są_zwolnione_do_wysyłki = new System.Workflow.Activities.IfElseActivity();
             this.Przygotowanie_komponentów_wiadomości = new System.Workflow.Activities.ParallelActivity();
             this.Czy_można_wysyłać_maile = new System.Workflow.Activities.IfElseActivity();
@@ -386,6 +387,16 @@ namespace Workflows.PrzygotujWiadomosc
             this.faultHandlersActivity1.Activities.Add(this.faultHandlerActivity1);
             this.faultHandlersActivity1.Name = "faultHandlersActivity1";
             // 
+            // logEnd
+            // 
+            this.logEnd.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logEnd.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            this.logEnd.HistoryDescription = "Zakończony";
+            this.logEnd.HistoryOutcome = "";
+            this.logEnd.Name = "logEnd";
+            this.logEnd.OtherData = "";
+            this.logEnd.UserId = -1;
+            // 
             // Czy_są_zwolnione_do_wysyłki
             // 
             this.Czy_są_zwolnione_do_wysyłki.Activities.Add(this.ifDaneDoWysylki);
@@ -426,6 +437,7 @@ namespace Workflows.PrzygotujWiadomosc
             this.Activities.Add(this.Czy_można_wysyłać_maile);
             this.Activities.Add(this.Przygotowanie_komponentów_wiadomości);
             this.Activities.Add(this.Czy_są_zwolnione_do_wysyłki);
+            this.Activities.Add(this.logEnd);
             this.Activities.Add(this.faultHandlersActivity1);
             this.Activities.Add(this.cancellationHandlerActivity1);
             this.Name = "PrzygotujWiadomosc";
@@ -434,6 +446,8 @@ namespace Workflows.PrzygotujWiadomosc
         }
 
         #endregion
+
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logEnd;
 
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logStatusyZadanPowiazanych;
 
@@ -534,6 +548,7 @@ namespace Workflows.PrzygotujWiadomosc
         private IfElseActivity Czy_są_zwolnione_do_wysyłki;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 

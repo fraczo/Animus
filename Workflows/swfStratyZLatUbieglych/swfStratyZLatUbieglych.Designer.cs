@@ -39,6 +39,7 @@ namespace Workflows.swfStratyZLatUbieglych
             this.ifRecordExist = new System.Workflow.Activities.IfElseBranchActivity();
             this.SprawdzCzyIstnieje = new System.Workflow.Activities.IfElseActivity();
             this.Manage_Records = new System.Workflow.Activities.SequenceActivity();
+            this.logEnd = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.sendCompleted = new Microsoft.SharePoint.WorkflowActions.SendEmail();
             this.whileCompleted = new System.Workflow.Activities.WhileActivity();
             this.Get_ExistingKEYs = new System.Workflow.Activities.CodeActivity();
@@ -83,6 +84,16 @@ namespace Workflows.swfStratyZLatUbieglych
             // 
             this.Manage_Records.Activities.Add(this.SprawdzCzyIstnieje);
             this.Manage_Records.Name = "Manage_Records";
+            // 
+            // logEnd
+            // 
+            this.logEnd.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logEnd.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            this.logEnd.HistoryDescription = "Zakończony";
+            this.logEnd.HistoryOutcome = "";
+            this.logEnd.Name = "logEnd";
+            this.logEnd.OtherData = "";
+            this.logEnd.UserId = -1;
             // 
             // sendCompleted
             // 
@@ -156,12 +167,15 @@ namespace Workflows.swfStratyZLatUbieglych
             this.Activities.Add(this.Get_ExistingKEYs);
             this.Activities.Add(this.whileCompleted);
             this.Activities.Add(this.sendCompleted);
+            this.Activities.Add(this.logEnd);
             this.Name = "swfStratyZLatUbieglych";
             this.CanModifyActivities = false;
 
         }
 
         #endregion
+
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logEnd;
 
         private SequenceActivity Manage_Records;
 
@@ -186,6 +200,7 @@ namespace Workflows.swfStratyZLatUbieglych
         private Microsoft.SharePoint.WorkflowActions.SendEmail sendInitiated;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 

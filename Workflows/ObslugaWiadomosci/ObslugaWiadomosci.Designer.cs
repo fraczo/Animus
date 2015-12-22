@@ -64,6 +64,7 @@ namespace Workflows.ObslugaWiadomosci
             this.isMailSent = new System.Workflow.Activities.IfElseBranchActivity();
             this.faultHandlersActivity1 = new System.Workflow.ComponentModel.FaultHandlersActivity();
             this.cancellationHandlerActivity1 = new System.Workflow.ComponentModel.CancellationHandlerActivity();
+            this.logEnd = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.CzyWiadomośćWysłana = new System.Workflow.Activities.IfElseActivity();
             this.logToHistoryListActivity2 = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Ignoruj_status_wysyłki = new System.Workflow.Activities.CodeActivity();
@@ -286,6 +287,16 @@ namespace Workflows.ObslugaWiadomosci
             // 
             this.cancellationHandlerActivity1.Name = "cancellationHandlerActivity1";
             // 
+            // logEnd
+            // 
+            this.logEnd.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logEnd.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            this.logEnd.HistoryDescription = "Zakończony";
+            this.logEnd.HistoryOutcome = "";
+            this.logEnd.Name = "logEnd";
+            this.logEnd.OtherData = "";
+            this.logEnd.UserId = -1;
+            // 
             // CzyWiadomośćWysłana
             // 
             this.CzyWiadomośćWysłana.Activities.Add(this.isMailSent);
@@ -329,6 +340,7 @@ namespace Workflows.ObslugaWiadomosci
             this.Activities.Add(this.Ignoruj_status_wysyłki);
             this.Activities.Add(this.logToHistoryListActivity2);
             this.Activities.Add(this.CzyWiadomośćWysłana);
+            this.Activities.Add(this.logEnd);
             this.Activities.Add(this.cancellationHandlerActivity1);
             this.Activities.Add(this.faultHandlersActivity1);
             this.Name = "ObslugaWiadomosci";
@@ -337,6 +349,8 @@ namespace Workflows.ObslugaWiadomosci
         }
 
         #endregion
+
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logEnd;
 
         private CodeActivity ReportError_Zadanie;
 
@@ -407,6 +421,7 @@ namespace Workflows.ObslugaWiadomosci
         private IfElseActivity CzyWiadomośćWysłana;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 

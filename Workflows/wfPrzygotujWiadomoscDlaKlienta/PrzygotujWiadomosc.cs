@@ -160,6 +160,7 @@ namespace Workflows.PrzygotujWiadomosc
 
         private void onWorkflowActivated1_Invoked(object sender, ExternalDataEventArgs e)
         {
+            Debug.WriteLine("wfPrzygotujWiadomoscDlaKlienta - ACTIVATED");
             item = workflowProperties.Item;
         }
 
@@ -645,10 +646,10 @@ namespace Workflows.PrzygotujWiadomosc
             string odbiorca = mailTo;
 
             string kopiaDla = BLL.Tools.Append_EmailCC(item.Web, klientId, string.Empty);
-            
+
             string temat = mailSubject;
             string trescHTML = sbBody.ToString();
-            
+
 
             BLL.tabWiadomosci.Ensure_ColumnExist(item.Web, "_KartaKontrolnaId");
             int messageId = BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, false, false, temat, string.Empty, trescHTML, new DateTime(), 0, klientId, item.ID, BLL.Models.Marker.Ignore);

@@ -37,7 +37,8 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             results = BLL.tabWiadomosci.Select_Batch(workflowProperties.Web);
             myEnum = results.GetEnumerator();
 
-            logSelected.HistoryDescription = "";
+            if (results != null) logSelected_HistoryOutcome = results.Length.ToString();
+            else logSelected_HistoryOutcome = "0";
         }
 
         private void whileRecordExist(object sender, ConditionalEventArgs e)
@@ -51,9 +52,19 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             SPListItem item = myEnum.Current as SPListItem;
 
             BLL.Workflows.StartWorkflow(item, "Obsługa wiadomości");
-            Debug.WriteLine("Workflow initiated for message #" + item.ID.ToString());
+
+            logSelected_HistoryOutcome = BLL.Tools.Get_LookupValue(item, "selKlient");
 
         }
+
+        private void onWorkflowActivated1_Invoked(object sender, ExternalDataEventArgs e)
+        {
+            Debug.WriteLine("swfObslugaWiadomosciOczekujacych - ACTIVATED");
+        }
+
+        public String logSelected_HistoryOutcome = default(System.String);
+        public String logCurrentMessage_HistoryOutcome = default(System.String);
+        public String logWorkflow_HistoryOutcome = default(System.String);
 
 
     }

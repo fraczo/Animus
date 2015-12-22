@@ -21,8 +21,16 @@ namespace Animus.Features.Workflows
             SPWeb web = site.RootWeb;
 
             try
-            {
-                BLL.Workflows.AssociateSiteWorkflow(web, "b398c228-9469-4f23-986f-3468821729d3", "Wyślij zestawienie godzin", workFlowTaskListName, workFlowHistoryListName);
+            {                
+                //swfStratyZLatUbieglych
+                BLL.Workflows.AssociateSiteWorkflow(web, "188a4129-23b8-4c76-9462-3dca1a2ee653", "Generator rekordów - Straty z lat ubiegłych", workFlowTaskListName, workFlowHistoryListName);
+                
+                //swfObslugaKolejkiWiadomosci
+                BLL.Workflows.AssociateSiteWorkflow(web, "708534f6-6f8d-4cfc-ab14-49cc67241987", "Obsługa kolejki wiadomości", workFlowTaskListName, workFlowHistoryListName);
+
+                //swfObslugaKartKontrolnych
+                BLL.Workflows.AssociateSiteWorkflow(web, "fb837195-86f8-4c88-8156-f8b9a3ba8462", "Obsługa kart kontrolnych", workFlowTaskListName, workFlowHistoryListName);
+            
             }
             catch (Exception ex)
             {
