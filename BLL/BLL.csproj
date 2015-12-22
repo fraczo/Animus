@@ -93,7 +93,6 @@
     <Compile Include="tabWiadomosci.cs" />
     <Compile Include="tabZadania.cs" />
     <Compile Include="Tools.cs" />
-    <Compile Include="WorkflowHelpers.cs" />
     <Compile Include="Workflows.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -56,5 +56,27 @@ namespace BLL
             }
 
         }
+
+        public static void AssociateSiteWorkflow(SPWeb web, string workflowTemplateBaseGuid,string workflowAssociationName, string workFlowTaskListName, string workFlowHistoryListName  )
+        {
+            SPWorkflowTemplateCollection workflowTemplates = web.WorkflowTemplates;
+            SPWorkflowTemplate workflowTemplate = workflowTemplates.GetTemplateByBaseID(new Guid(workflowTemplateBaseGuid));
+
+            if (workflowTemplate != null)
+            {
+                // Create the workflow association
+                SPList taskList = web.Lists[workFlowTaskListName];
+                SPList historyList = web.Lists[workFlowHistoryListName];
+                SPWorkflowAssociation workflowAssociation = web.WorkflowAssociations.GetAssociationByName(workflowAssociationName, CultureInfo.InvariantCulture);
+
+                if (workflowAssociation == null)
+                {
+                    workflowAssociation = SPWorkflowAssociation.CreateWebAssociation(workflowTemplate, workflowAssociationName, taskList, historyList);
+                    workflowAssociation.AllowManual = true;
+                    //workflowAssociation.Enabled = true;
+                    web.WorkflowAssociations.Add(workflowAssociation);
+                }
+            }
+        }
     }
 }

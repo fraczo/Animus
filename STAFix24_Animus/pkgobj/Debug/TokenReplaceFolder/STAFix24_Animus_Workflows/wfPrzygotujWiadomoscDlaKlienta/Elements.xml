@@ -6,10 +6,10 @@ Name="[NAME]" ==> Name="MyWorkflow" -->
 
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
   <Workflow
-     Name="Obsługa wiadomości"
-     Description="Przekazuje wiadomość do serwera pocztowego"
-     Id="268cce03-92d8-4016-a6e0-4b4a46aedad1"
-     CodeBesideClass="Workflows.ObslugaWiadomosci.ObslugaWiadomosci"
+     Name="Przygotuj wiadomość dla klienta"
+     Description="Na podstawie informacji dostępnych na karcie kontrolnej generuje do kolejki wiadomości informację zbiorczą dla klienta."
+     Id="33dac20c-9435-4860-ac7b-823d7a11528f"
+     CodeBesideClass="Workflows.PrzygotujWiadomosc.PrzygotujWiadomosc"
      CodeBesideAssembly="STAFix24.Animus.Workflows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7c2016d13a1c5fef">
     <Categories/>
     <MetaData>
