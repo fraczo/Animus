@@ -62,6 +62,7 @@
     <Compile Include="GFR_K\GFR_K.Designer.cs">
       <DependentUpon>GFR_K.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\enumStatusWysylki.cs" />
     <Compile Include="ObslugaWiadomosci\enumStatusWysylki.cs" />
     <Compile Include="ObslugaWiadomosci\ObslugaWiadomosci.cs">
       <SubType>Component</SubType>
@@ -70,16 +71,16 @@
       <DependentUpon>ObslugaWiadomosci.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PrzygotujWiadomosc\PrzygotujWiadomosc.cs">
+    <Compile Include="wfPrzygotujWiadomoscDlaKlienta\PrzygotujWiadomosc.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PrzygotujWiadomosc\PrzygotujWiadomosc.Designer.cs">
+    <Compile Include="wfPrzygotujWiadomoscDlaKlienta\PrzygotujWiadomosc.Designer.cs">
       <DependentUpon>PrzygotujWiadomosc.cs</DependentUpon>
     </Compile>
-    <Compile Include="swfObslugaWiadomosciOczekujacych\swfObslugaWiadomosciOczekujacych.cs">
+    <Compile Include="swfObslugaKolejkiWiadomosci\swfObslugaWiadomosciOczekujacych.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="swfObslugaWiadomosciOczekujacych\swfObslugaWiadomosciOczekujacych.Designer.cs">
+    <Compile Include="swfObslugaKolejkiWiadomosci\swfObslugaWiadomosciOczekujacych.Designer.cs">
       <DependentUpon>swfObslugaWiadomosciOczekujacych.cs</DependentUpon>
     </Compile>
     <Compile Include="swfStratyZLatUbieglych\swfStratyZLatUbieglych.cs">
@@ -96,7 +97,7 @@
     </None>
     <None Include="key.snk" />
     <None Include="ObslugaWiadomosci\SharePointProjectItem.spdata">
-      <SharePointProjectItemId>{d03c6008-5ea7-445d-b8ce-45b9fe070301}</SharePointProjectItemId>
+      <SharePointProjectItemId>{b1387522-047c-49a0-a9b2-153ae875787f}</SharePointProjectItemId>
     </None>
     <None Include="Package\Package.package">
       <PackageId>{36270ecd-bca4-47c9-b205-7870ccdc6991}</PackageId>
@@ -104,10 +105,10 @@
     <None Include="Package\Package.Template.xml">
       <DependentUpon>Package.package</DependentUpon>
     </None>
-    <None Include="PrzygotujWiadomosc\SharePointProjectItem.spdata">
+    <None Include="wfPrzygotujWiadomoscDlaKlienta\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{ed67c847-7cba-4151-94bb-a4c006d05bce}</SharePointProjectItemId>
     </None>
-    <None Include="swfObslugaWiadomosciOczekujacych\SharePointProjectItem.spdata">
+    <None Include="swfObslugaKolejkiWiadomosci\SharePointProjectItem.spdata">
       <SharePointProjectItemId>{7675178c-df89-42ec-9d61-ceaa48c352b6}</SharePointProjectItemId>
     </None>
     <None Include="swfStratyZLatUbieglych\SharePointProjectItem.spdata">
@@ -119,11 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="GFR_K\Elements.xml" />
-    <Content Include="ObslugaWiadomosci\Elements.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="PrzygotujWiadomosc\Elements.xml" />
-    <Content Include="swfObslugaWiadomosciOczekujacych\Elements.xml" />
+    <Content Include="ObslugaWiadomosci\Elements.xml" />
+    <Content Include="wfPrzygotujWiadomoscDlaKlienta\Elements.xml" />
+    <Content Include="swfObslugaKolejkiWiadomosci\Elements.xml" />
     <Content Include="swfStratyZLatUbieglych\Elements.xml" />
   </ItemGroup>
   <ItemGroup>

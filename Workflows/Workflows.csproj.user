@@ -2,25 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SharePointSiteUrl>http://spf2010/sites/animus/</SharePointSiteUrl>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{BB1F664B-9266-4fd6-B973-E1E44974B511}">
-        <ProjectItemStore Id="{d03c6008-5ea7-445d-b8ce-45b9fe070301}">
-          <DisplayName>Obsługa wiadomości</DisplayName>
-          <HistoryList>Workflow History</HistoryList>
-          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
-          <TaskList>Workflow Tasks</TaskList>
-          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
-          <AutoAssociate>true</AutoAssociate>
-          <ManualStart>true</ManualStart>
-          <ListURL>http://spf2010/sites/animus/Lists/tabWiadomosci/Kolejka%20wiadomoci.aspx</ListURL>
-          <TargetList>Wiadomości</TargetList>
-          <TargetListGuid>{a757bac9-6dc1-4ea3-aa50-8813fcd31495}</TargetListGuid>
-          <StartOnCreate>false</StartOnCreate>
-          <StartOnChange>false</StartOnChange>
-        </ProjectItemStore>
         <ProjectItemStore Id="{b2fdea66-cd38-43b2-98c3-f78aabf4eb3b}">
           <DisplayName>Generuj formatki rozliczeniowe dla klienta</DisplayName>
           <HistoryList>Workflow History</HistoryList>

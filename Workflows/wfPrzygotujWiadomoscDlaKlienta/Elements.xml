@@ -7,7 +7,7 @@ Name="[NAME]" ==> Name="MyWorkflow" -->
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
   <Workflow
      Name="Przygotuj wiadomość dla klienta"
-     Description="My SharePoint Workflow"
+     Description="Na podstawie informacji dostępnych na karcie kontrolnej generuje do kolejki wiadomości informację zbiorczą dla klienta."
      Id="33dac20c-9435-4860-ac7b-823d7a11528f"
      CodeBesideClass="Workflows.PrzygotujWiadomosc.PrzygotujWiadomosc"
      CodeBesideAssembly="$assemblyname$">

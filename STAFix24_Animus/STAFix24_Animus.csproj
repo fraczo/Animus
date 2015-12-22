@@ -51,11 +51,15 @@
     <Reference Include="Microsoft.SharePoint.Security" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\TimerJob_ObslugaWiadomosci\TimerJob_ObslugaWiadomosci.EventReceiver.cs">
-      <DependentUpon>TimerJob_ObslugaWiadomosci.feature</DependentUpon>
+    <Compile Include="Features\TimerJobs\TimerJobs.EventReceiver.cs">
+      <DependentUpon>TimerJobs.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Workflows\Workflows.EventReceiver.cs">
+      <DependentUpon>Workflows.feature</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimerJobs\ObslugaWiadomosci.cs" />
+    <Compile Include="TimerJobs\ObslugaWiadomosciTJ.cs" />
+    <Compile Include="TimerJobs\PrzygotowanieWiadomosciTJ.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CustomActions\AkcjeWitrynyMenu\SharePointProjectItem.spdata">
@@ -76,11 +80,8 @@
     <None Include="Features\CustomActions\CustomActions.feature">
       <FeatureId>{2e1ac316-908f-43c3-8f6f-334601c5c214}</FeatureId>
     </None>
-    <None Include="Features\TimerJob_ObslugaWiadomosci\TimerJob_ObslugaWiadomosci.feature">
+    <None Include="Features\TimerJobs\TimerJobs.feature">
       <FeatureId>{7ff5f04b-1a9f-43fe-a3af-ba4d9359abe7}</FeatureId>
-    </None>
-    <None Include="Features\TimerJob_PrzygotowanieWiadomosci\TimerJob_PrzygotowanieWiadomosci.feature">
-      <FeatureId>{6b810cb8-7321-4bf8-bc0b-43268af6b1c2}</FeatureId>
     </None>
     <None Include="Features\Workflows\Workflows.feature">
       <FeatureId>{4d389d2d-9dab-46c5-9d22-66072383dd1b}</FeatureId>
@@ -111,11 +112,8 @@
     <Content Include="Features\CustomActions\CustomActions.Template.xml">
       <DependentUpon>CustomActions.feature</DependentUpon>
     </Content>
-    <Content Include="Features\TimerJob_ObslugaWiadomosci\TimerJob_ObslugaWiadomosci.Template.xml">
-      <DependentUpon>TimerJob_ObslugaWiadomosci.feature</DependentUpon>
-    </Content>
-    <Content Include="Features\TimerJob_PrzygotowanieWiadomosci\TimerJob_PrzygotowanieWiadomosci.Template.xml">
-      <DependentUpon>TimerJob_PrzygotowanieWiadomosci.feature</DependentUpon>
+    <Content Include="Features\TimerJobs\TimerJobs.Template.xml">
+      <DependentUpon>TimerJobs.feature</DependentUpon>
     </Content>
     <Content Include="Features\Workflows\Workflows.Template.xml">
       <DependentUpon>Workflows.feature</DependentUpon>
@@ -146,10 +144,6 @@
     <ProjectReference Include="..\EventReceivers\EventReceivers.csproj">
       <Project>{55BA1847-ED27-481D-B213-C6A4C8BCC3ED}</Project>
       <Name>EventReceivers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TimerJobs\TimerJobs.csproj">
-      <Project>{1C9C88D5-6A79-47DC-A888-138CA7DB8A28}</Project>
-      <Name>TimerJobs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Workflows\Workflows.csproj">
       <Project>{F3947A43-D462-47CC-ABA9-F3AC493957C3}</Project>
