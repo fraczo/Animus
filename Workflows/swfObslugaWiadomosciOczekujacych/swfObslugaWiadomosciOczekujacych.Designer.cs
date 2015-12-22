@@ -35,6 +35,7 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             this.logCurrentMessage = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Initialize_ChildWorkflow = new System.Workflow.Activities.CodeActivity();
             this.ObsługaPojedynczejWiadomości = new System.Workflow.Activities.SequenceActivity();
+            this.faultHandlersActivity1 = new System.Workflow.ComponentModel.FaultHandlersActivity();
             this.whileActivity1 = new System.Workflow.Activities.WhileActivity();
             this.logSelected = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Select_ListaWiadomosciOczekujacych = new System.Workflow.Activities.CodeActivity();
@@ -62,6 +63,10 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             this.ObsługaPojedynczejWiadomości.Activities.Add(this.Initialize_ChildWorkflow);
             this.ObsługaPojedynczejWiadomości.Activities.Add(this.logCurrentMessage);
             this.ObsługaPojedynczejWiadomości.Name = "ObsługaPojedynczejWiadomości";
+            // 
+            // faultHandlersActivity1
+            // 
+            this.faultHandlersActivity1.Name = "faultHandlersActivity1";
             // 
             // whileActivity1
             // 
@@ -107,12 +112,15 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             this.Activities.Add(this.Select_ListaWiadomosciOczekujacych);
             this.Activities.Add(this.logSelected);
             this.Activities.Add(this.whileActivity1);
+            this.Activities.Add(this.faultHandlersActivity1);
             this.Name = "swfObslugaWiadomosciOczekujacych";
             this.CanModifyActivities = false;
 
         }
 
         #endregion
+
+        private FaultHandlersActivity faultHandlersActivity1;
 
         private CodeActivity Initialize_ChildWorkflow;
 
@@ -127,6 +135,7 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
         private CodeActivity Select_ListaWiadomosciOczekujacych;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 

@@ -41,9 +41,8 @@ namespace TimerJobs
         }
 
         public ObslugaWiadomosciTJ(SPSite site)
-            : base(string.Format("XXXXX ({0})", site.Url), site.WebApplication, null, SPJobLockType.Job)
+            : base(string.Format("Animus_Wysyłka wiadomości Timer Job ({0})", site.Url), site.WebApplication, null, SPJobLockType.Job)
         {
-            //Animus_Obsluga wiadomosci Timer Job ({0})
             Title = Name;
             SiteUrl = site.Url;
         }
