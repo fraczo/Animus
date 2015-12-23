@@ -53,7 +53,7 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
 
             BLL.Workflows.StartWorkflow(item, "Obsługa wiadomości");
 
-            logSelected_HistoryOutcome = BLL.Tools.Get_LookupValue(item, "selKlient");
+            logSelected_HistoryOutcome = item.ID.ToString();
 
         }
 
@@ -65,6 +65,26 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
         public String logSelected_HistoryOutcome = default(System.String);
         public String logCurrentMessage_HistoryOutcome = default(System.String);
         public String logWorkflow_HistoryOutcome = default(System.String);
+        public String logErrorMessage_HistoryDescription = default(System.String);
+        public String logErrorMessage_HistoryOutcome = default(System.String);
+
+        private void cmdErrorHandler_ExecuteCode(object sender, EventArgs e)
+        {
+            FaultHandlerActivity fa = ((Activity)sender).Parent as FaultHandlerActivity;
+            if (fa != null)
+            {
+                Debug.WriteLine(fa.Fault.Source);
+                Debug.WriteLine(fa.Fault.Message);
+                Debug.WriteLine(fa.Fault.StackTrace);
+
+                logErrorMessage_HistoryDescription = string.Format("{0}::{1}",
+                    fa.Fault.Message,
+                    fa.Fault.StackTrace);
+
+                ElasticEmail.EmailGenerator.ReportErrorFromWorkflow(workflowProperties, fa.Fault.Message, fa.Fault.StackTrace);
+            }
+
+        }
 
 
     }

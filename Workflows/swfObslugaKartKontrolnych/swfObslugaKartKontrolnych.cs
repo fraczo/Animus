@@ -14,6 +14,7 @@ using System.Workflow.Activities.Rules;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Workflow;
 using Microsoft.SharePoint.WorkflowActions;
+using System.Diagnostics;
 
 namespace Workflows.swfObslugaKartKontrolnych
 {
@@ -57,22 +58,27 @@ namespace Workflows.swfObslugaKartKontrolnych
 
             BLL.Workflows.StartWorkflow(item, "Przygotuj wiadomość dla klienta");
 
-            logSelected_HistoryOutcome = BLL.Tools.Get_LookupValue(item, "selKlient");
+            logWorkflowStarted_HistoryOutcome = BLL.Tools.Get_LookupValue(item, "selKlient");
         }
 
         public String logWorkflowStarted_HistoryOutcome = default(System.String);
 
         private void cmdErrorHandler_ExecuteCode(object sender, EventArgs e)
         {
-             FaultHandlerActivity fa = ((Activity)sender).Parent as FaultHandlerActivity;
+            FaultHandlerActivity fa = ((Activity)sender).Parent as FaultHandlerActivity;
             if (fa != null)
             {
                 logErrorMessage_HistoryDescription = string.Format("{0}::{1}",
                     fa.Fault.Message,
                     fa.Fault.StackTrace);
 
-                ElasticEmail.EmailGenerator.ReportErrorFromWorkflow(workflowProperties, fa.Fault.Message, fa.Fault.StackTrace);   
+                ElasticEmail.EmailGenerator.ReportErrorFromWorkflow(workflowProperties, fa.Fault.Message, fa.Fault.StackTrace);
             }
+        }
+
+        private void onWorkflowActivated1_Invoked(object sender, ExternalDataEventArgs e)
+        {
+            Debug.WriteLine("swfObslugaKartKontrolnych - ACTIVATED");
         }
     }
 }

@@ -16,6 +16,6 @@
     <FeatureManifest Location="STAFix24_Animus_EventReceivers\Feature.xml" />
     <FeatureManifest Location="STAFix24_Animus_Workflows\Feature.xml" />
     <FeatureManifest Location="STAFix24_Animus_CustomActions\Feature.xml" />
-    <FeatureManifest Location="STAFix24_Animus_MsgMgmtTJ\Feature.xml" />
+    <FeatureManifest Location="STAFix24_Animus_TimerJobs\Feature.xml" />
   </FeatureManifests>
 </Solution>

@@ -27,13 +27,18 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
         {
             this.CanModifyActivities = true;
             System.Workflow.ComponentModel.ActivityBind activitybind1 = new System.Workflow.ComponentModel.ActivityBind();
-            System.Workflow.Activities.CodeCondition codecondition1 = new System.Workflow.Activities.CodeCondition();
             System.Workflow.ComponentModel.ActivityBind activitybind2 = new System.Workflow.ComponentModel.ActivityBind();
-            System.Workflow.ComponentModel.ActivityBind activitybind4 = new System.Workflow.ComponentModel.ActivityBind();
-            System.Workflow.Runtime.CorrelationToken correlationtoken1 = new System.Workflow.Runtime.CorrelationToken();
             System.Workflow.ComponentModel.ActivityBind activitybind3 = new System.Workflow.ComponentModel.ActivityBind();
+            System.Workflow.Activities.CodeCondition codecondition1 = new System.Workflow.Activities.CodeCondition();
+            System.Workflow.ComponentModel.ActivityBind activitybind4 = new System.Workflow.ComponentModel.ActivityBind();
+            System.Workflow.ComponentModel.ActivityBind activitybind6 = new System.Workflow.ComponentModel.ActivityBind();
+            System.Workflow.Runtime.CorrelationToken correlationtoken1 = new System.Workflow.Runtime.CorrelationToken();
+            System.Workflow.ComponentModel.ActivityBind activitybind5 = new System.Workflow.ComponentModel.ActivityBind();
+            this.logErrorMessage = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
+            this.cmdErrorHandler = new System.Workflow.Activities.CodeActivity();
             this.logWorkflow = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.Initialize_ChildWorkflow = new System.Workflow.Activities.CodeActivity();
+            this.faultHandlerActivity1 = new System.Workflow.ComponentModel.FaultHandlerActivity();
             this.ObsługaPojedynczejWiadomości = new System.Workflow.Activities.SequenceActivity();
             this.faultHandlersActivity1 = new System.Workflow.ComponentModel.FaultHandlersActivity();
             this.logEnd = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
@@ -42,22 +47,48 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             this.Select_ListaWiadomosciOczekujacych = new System.Workflow.Activities.CodeActivity();
             this.onWorkflowActivated1 = new Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated();
             // 
+            // logErrorMessage
+            // 
+            this.logErrorMessage.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
+            this.logErrorMessage.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
+            activitybind1.Name = "swfObslugaWiadomosciOczekujacych";
+            activitybind1.Path = "logErrorMessage_HistoryDescription";
+            activitybind2.Name = "swfObslugaWiadomosciOczekujacych";
+            activitybind2.Path = "logErrorMessage_HistoryOutcome";
+            this.logErrorMessage.Name = "logErrorMessage";
+            this.logErrorMessage.OtherData = "";
+            this.logErrorMessage.UserId = -1;
+            this.logErrorMessage.SetBinding(Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity.HistoryDescriptionProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind1)));
+            this.logErrorMessage.SetBinding(Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity.HistoryOutcomeProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind2)));
+            // 
+            // cmdErrorHandler
+            // 
+            this.cmdErrorHandler.Name = "cmdErrorHandler";
+            this.cmdErrorHandler.ExecuteCode += new System.EventHandler(this.cmdErrorHandler_ExecuteCode);
+            // 
             // logWorkflow
             // 
             this.logWorkflow.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
             this.logWorkflow.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
             this.logWorkflow.HistoryDescription = "WF uruchomiony";
-            activitybind1.Name = "swfObslugaWiadomosciOczekujacych";
-            activitybind1.Path = "logWorkflow_HistoryOutcome";
+            activitybind3.Name = "swfObslugaWiadomosciOczekujacych";
+            activitybind3.Path = "logWorkflow_HistoryOutcome";
             this.logWorkflow.Name = "logWorkflow";
             this.logWorkflow.OtherData = "";
             this.logWorkflow.UserId = -1;
-            this.logWorkflow.SetBinding(Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity.HistoryOutcomeProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind1)));
+            this.logWorkflow.SetBinding(Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity.HistoryOutcomeProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind3)));
             // 
             // Initialize_ChildWorkflow
             // 
             this.Initialize_ChildWorkflow.Name = "Initialize_ChildWorkflow";
             this.Initialize_ChildWorkflow.ExecuteCode += new System.EventHandler(this.Initialize_ChildWorkflow_ExecuteCode);
+            // 
+            // faultHandlerActivity1
+            // 
+            this.faultHandlerActivity1.Activities.Add(this.cmdErrorHandler);
+            this.faultHandlerActivity1.Activities.Add(this.logErrorMessage);
+            this.faultHandlerActivity1.FaultType = typeof(System.SystemException);
+            this.faultHandlerActivity1.Name = "faultHandlerActivity1";
             // 
             // ObsługaPojedynczejWiadomości
             // 
@@ -67,6 +98,7 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             // 
             // faultHandlersActivity1
             // 
+            this.faultHandlersActivity1.Activities.Add(this.faultHandlerActivity1);
             this.faultHandlersActivity1.Name = "faultHandlersActivity1";
             // 
             // logEnd
@@ -91,19 +123,19 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             this.logSelected.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
             this.logSelected.EventId = Microsoft.SharePoint.Workflow.SPWorkflowHistoryEventType.WorkflowComment;
             this.logSelected.HistoryDescription = "Liczba wiadomości do obsługi";
-            activitybind2.Name = "swfObslugaWiadomosciOczekujacych";
-            activitybind2.Path = "logSelected_HistoryOutcome";
+            activitybind4.Name = "swfObslugaWiadomosciOczekujacych";
+            activitybind4.Path = "logSelected_HistoryOutcome";
             this.logSelected.Name = "logSelected";
             this.logSelected.OtherData = "";
             this.logSelected.UserId = -1;
-            this.logSelected.SetBinding(Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity.HistoryOutcomeProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind2)));
+            this.logSelected.SetBinding(Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity.HistoryOutcomeProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind4)));
             // 
             // Select_ListaWiadomosciOczekujacych
             // 
             this.Select_ListaWiadomosciOczekujacych.Name = "Select_ListaWiadomosciOczekujacych";
             this.Select_ListaWiadomosciOczekujacych.ExecuteCode += new System.EventHandler(this.Select_ListaWiadomosciOczekujacych_ExecuteCode);
-            activitybind4.Name = "swfObslugaWiadomosciOczekujacych";
-            activitybind4.Path = "workflowId";
+            activitybind6.Name = "swfObslugaWiadomosciOczekujacych";
+            activitybind6.Path = "workflowId";
             // 
             // onWorkflowActivated1
             // 
@@ -112,11 +144,11 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
             this.onWorkflowActivated1.CorrelationToken = correlationtoken1;
             this.onWorkflowActivated1.EventName = "OnWorkflowActivated";
             this.onWorkflowActivated1.Name = "onWorkflowActivated1";
-            activitybind3.Name = "swfObslugaWiadomosciOczekujacych";
-            activitybind3.Path = "workflowProperties";
+            activitybind5.Name = "swfObslugaWiadomosciOczekujacych";
+            activitybind5.Path = "workflowProperties";
             this.onWorkflowActivated1.Invoked += new System.EventHandler<System.Workflow.Activities.ExternalDataEventArgs>(this.onWorkflowActivated1_Invoked);
-            this.onWorkflowActivated1.SetBinding(Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated.WorkflowIdProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind4)));
-            this.onWorkflowActivated1.SetBinding(Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated.WorkflowPropertiesProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind3)));
+            this.onWorkflowActivated1.SetBinding(Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated.WorkflowIdProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind6)));
+            this.onWorkflowActivated1.SetBinding(Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated.WorkflowPropertiesProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind5)));
             // 
             // swfObslugaWiadomosciOczekujacych
             // 
@@ -132,6 +164,12 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
         }
 
         #endregion
+
+        private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logErrorMessage;
+
+        private CodeActivity cmdErrorHandler;
+
+        private FaultHandlerActivity faultHandlerActivity1;
 
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logEnd;
 
@@ -150,6 +188,9 @@ namespace Workflows.swfObslugaWiadomosciOczekujacych
         private CodeActivity Select_ListaWiadomosciOczekujacych;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
+
+
 
 
 

@@ -4,7 +4,8 @@
     <ElementManifest Location="GFR_K\Elements.xml" />
     <ElementManifest Location="wfPrzygotujWiadomoscDlaKlienta\Elements.xml" />
     <ElementManifest Location="swfStratyZLatUbieglych\Elements.xml" />
-    <ElementManifest Location="swfObslugaKolejkiWiadomosci\Elements.xml" />
+    <ElementManifest Location="swfObslugaWiadomosciOczekujacych\Elements.xml" />
     <ElementManifest Location="swfObslugaKartKontrolnych\Elements.xml" />
+    <ElementManifest Location="ObslugaWiadomosci\Elements.xml" />
   </ElementManifests>
 </Feature>

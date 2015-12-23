@@ -6,14 +6,14 @@ Name="[NAME]" ==> Name="MyWorkflow" -->
 
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
   <Workflow
-     Name="Przygotuj wiadomość dla klienta"
+     Name="Obsługa kart kontrolnych"
      Description="My SharePoint Workflow"
-     Id="33dac20c-9435-4860-ac7b-823d7a11528f"
-     CodeBesideClass="Workflows.PrzygotujWiadomosc.PrzygotujWiadomosc"
+     Id="fb837195-86f8-4c88-8156-f8b9a3ba8462"
+     CodeBesideClass="Workflows.swfObslugaKartKontrolnych.swfObslugaKartKontrolnych"
      CodeBesideAssembly="STAFix24.Animus.Workflows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7c2016d13a1c5fef">
     <Categories/>
     <MetaData>
-      <AssociationCategories>List</AssociationCategories>
+      <AssociationCategories>Site</AssociationCategories>
       <!-- Tags to specify InfoPath forms for the workflow; delete tags for forms that you do not have -->
       <!--<Association_FormURN>[URN FOR ASSOCIATION FORM]</Association_FormURN>
        <Instantiation_FormURN>[URN FOR INSTANTIATION FORM]</Instantiation_FormURN>

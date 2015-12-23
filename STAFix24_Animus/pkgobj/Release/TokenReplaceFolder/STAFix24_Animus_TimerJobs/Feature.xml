@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Timer Jobs" Description="Obsługa wiadomości, Przygotowanie wiadomości" Id="a5a0bd30-d551-4e5b-bfc2-fa686420b82d" ReceiverAssembly="STAFix24.Animus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8ab5e47d51a735fd" ReceiverClass="Animus.Features.TimerJobs.TimerJob_ObslugaWiadomosciEventReceiver" Scope="Site"></Feature>

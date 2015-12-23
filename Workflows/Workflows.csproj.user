@@ -62,6 +62,20 @@
           <AutoAssociate>true</AutoAssociate>
           <ManualStart>true</ManualStart>
         </ProjectItemStore>
+        <ProjectItemStore Id="{b1387522-047c-49a0-a9b2-153ae875787f}">
+          <DisplayName>Obsługa wiadomości</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+          <ListURL>http://spf2010/sites/animus/Lists/tabWiadomosci/Kolejka%20wiadomoci.aspx</ListURL>
+          <TargetList>Wiadomości</TargetList>
+          <TargetListGuid>{a757bac9-6dc1-4ea3-aa50-8813fcd31495}</TargetListGuid>
+          <StartOnCreate>false</StartOnCreate>
+          <StartOnChange>false</StartOnChange>
+        </ProjectItemStore>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>

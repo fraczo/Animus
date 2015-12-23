@@ -97,7 +97,11 @@ namespace EventReceivers.tabZadania
                 else
                 {
                     //aktualizuj informacje o dostarczeniu dokumentów na karcie kontrolnej
-                    BLL.tabKartyKontrolne.Update_POD(item);
+                    if (item.ContentType.Name == "Rozliczenie podatku dochodowego"
+                        | item.ContentType.Name == "Rozliczenie podatku dochodowego spółki")
+                    {
+                        BLL.tabKartyKontrolne.Update_POD(item);
+                    }
                 }
 
                 item.SystemUpdate();

@@ -28,7 +28,9 @@ namespace BLL
 
                         try
                         {
-                            manager.StartWorkflow(listItem, objWorkflowAssociation, objWorkflowAssociation.AssociationData, true);
+                            var result = manager.StartWorkflow(listItem, objWorkflowAssociation, objWorkflowAssociation.AssociationData, SPWorkflowRunOptions.SynchronousAllowPostpone);
+                            
+                            //manager.StartWorkflow(listItem, objWorkflowAssociation, objWorkflowAssociation.AssociationData, true);
                             //The above line will start the workflow...
                         }
                         catch (Exception)

@@ -9,6 +9,7 @@ namespace EventReceivers.admProcesy
     internal class ObslugaWiadomosci
     {
         const string targetList = @"Wiadomości";
+        
 
         internal static void Execute(SPListItem item)
         {

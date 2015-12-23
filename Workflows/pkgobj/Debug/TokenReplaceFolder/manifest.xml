@@ -3,4 +3,7 @@
   <Assemblies>
     <Assembly Location="STAFix24.Animus.Workflows.dll" DeploymentTarget="GlobalAssemblyCache" />
   </Assemblies>
+  <FeatureManifests>
+    <FeatureManifest Location="Workflows_Feature1\Feature.xml" />
+  </FeatureManifests>
 </Solution>

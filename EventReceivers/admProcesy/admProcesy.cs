@@ -17,6 +17,7 @@ namespace EventReceivers.admProcesy
         private string _ZLECENIE_ZAKONCZONE = "Zakończony";
         private string _ZLECENIE_OBSLUGA = "Obsługa";
         private string _WF_OBSLUGA_KK = @"Obsługa kart kontrolnych";
+        private string _WF_OBSLUGA_WIADOMOSCI_OCZEKUJACYCH = "Obsługa wiadomości oczekujących";
 
         public override void ItemAdded(SPItemEventProperties properties)
         {
@@ -53,7 +54,10 @@ namespace EventReceivers.admProcesy
                         this.EventFiringEnabled = false;
                         BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_OBSLUGA);
                         item.SystemUpdate();
+
                         ObslugaWiadomosci.Execute(item);
+                        //BLL.Workflows.StartSiteWorkflow(item.Web.Site, _WF_OBSLUGA_WIADOMOSCI_OCZEKUJACYCH); <<< używane przez timer job
+
                         BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_ZAKONCZONE);
                         item.SystemUpdate();
                         this.EventFiringEnabled = true;
@@ -62,9 +66,9 @@ namespace EventReceivers.admProcesy
                         this.EventFiringEnabled = false;
                         BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_OBSLUGA);
                         item.SystemUpdate();
-                        //ObslugaKartKontrolnych.Execute(item);
-
-                        BLL.Workflows.StartWorkflow(item, _WF_OBSLUGA_KK);
+                        
+                        ObslugaKartKontrolnych.Execute(item);
+                        //BLL.Workflows.StartSiteWorkflow(item.Web.Site, _WF_OBSLUGA_KK); <<< używane przez timer job
 
                         BLL.Tools.Set_Text(item, "enumStatusZlecenia", _ZLECENIE_ZAKONCZONE);
                         item.SystemUpdate();

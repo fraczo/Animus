@@ -4,7 +4,7 @@ C:\_GitHub\Biuromagda\STAFix24_Biuromagda\EventReceivers\bin\Release\BRMagda.Eve
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\EventReceivers\obj\Release\BRMagda.EventReceivers.pdb
 C:\_GitHub\Biuromagda\STAFix24_Biuromagda\EventReceivers\obj\Release\EventReceivers.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.EventReceivers.dll
+C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.EventReceivers.pdb
 C:\_GitHub\Animus\EventReceivers\obj\Release\EventReceivers.csprojResolveAssemblyReference.cache
 C:\_GitHub\Animus\EventReceivers\obj\Release\STAFix24.Animus.EventReceivers.dll
-C:\_GitHub\Animus\EventReceivers\bin\Release\STAFix24.Animus.EventReceivers.pdb
 C:\_GitHub\Animus\EventReceivers\obj\Release\STAFix24.Animus.EventReceivers.pdb

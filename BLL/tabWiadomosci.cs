@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.SharePoint;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace BLL
 {
@@ -12,6 +13,9 @@ namespace BLL
     {
         const string targetList = "Wiadomości";
         private const string _INFO_HTML_TEMPLATE_NAME = "INFO_TEMPLATE";
+        private static object _FN_POD = @"Weryfikuj POD";
+        private static object _FN_BT = @"Szablon bazowy";
+        private static object _FN_ZM = @"Zastąp markery";
 
         public static int AddNew(SPWeb web, SPListItem item, string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId, int kartaKontrolnaId, BLL.Models.Marker marker)
         {
@@ -186,7 +190,7 @@ namespace BLL
             StringBuilder sbINFO = new StringBuilder(BLL.dicSzablonyKomunikacji.Ensure_HTMLByKod(item.Web, _INFO_HTML_TEMPLATE_NAME));
 
 
-            CreateMailMessage_Wiadomosc(item, klientId, subject, body.ToString());
+            CreateMailMessage_Wiadomosc(item, klientId, subject, body.ToString(), string.Empty);
         }
 
         private static void AppendTR(ref StringBuilder rows, SPListItem item, string col, string desc, string trTemplate)
@@ -203,7 +207,7 @@ namespace BLL
 
 
 
-        private static void CreateMailMessage_Wiadomosc(SPListItem item, int klientId, string subject, string bodyHTML)
+        private static void CreateMailMessage_Wiadomosc(SPListItem item, int klientId, string subject, string bodyHTML, string funkcjeSzablonu)
         {
             Debug.WriteLine("BLL.tabWiadomosci.CreateMailMessage_Wiadomosc");
 
@@ -230,9 +234,27 @@ namespace BLL
                 //string nadawca = BLL.Tools.Get_CurrentUser(item); - wymusza przypisanie stopki operatora na podstawie aktualnego adresu nadawcy
                 string nadawca = string.Empty; // wymusza przypisanie stopki operatora na podstawie aktualnie wybranego operatora
 
+                //sprawdz czy nie nadpisać szablonu
+
                 BLL.dicSzablonyKomunikacji.Get_TemplateByKod(item, "EMAIL_DEFAULT_BODY.Include", out temat, out trescHTML, nadawca);
                 temat = subject;
-                trescHTML = trescHTML.Replace("___BODY___", bodyHTML);
+                if (_HasActiveFunction(funkcjeSzablonu, _FN_BT)) 
+                {
+                    //nie pakuj w szablon komunikacji
+                    trescHTML = bodyHTML; 
+                }
+                else
+                {
+                    //opakuj szablonem komunikacji
+                    trescHTML = trescHTML.Replace("___BODY___", bodyHTML);
+                }
+
+                //sprawdź czy nie trzeba zastąpić markerów
+                if (_HasActiveFunction(funkcjeSzablonu,_FN_ZM))
+                {
+                    _ReplaceKnownMarkers(temat, klientId);
+                    _ReplaceKnownMarkers(trescHTML, klientId);
+                }
 
                 switch (cmd)
                 {
@@ -274,7 +296,7 @@ namespace BLL
             string bodyHTML = BLL.Tools.Get_Text(item, "colTresc");
             //string subject = BLL.Tools.Get_Text(item, "colTematWiadomosci");
             string subject = item.Title;
-            CreateMailMessage_Wiadomosc(item, klientId, subject, bodyHTML);
+            CreateMailMessage_Wiadomosc(item, klientId, subject, bodyHTML, string.Empty);
         }
 
         private static void CreateMailMessage_WiadomoscZSzablonu(SPListItem item, int klientId)
@@ -289,36 +311,29 @@ namespace BLL
 
             //obsługa funkcji specjalnych
 
+            bool allowSend = true;
+
             if (!string.IsNullOrEmpty(funkcjeSzablonu))
             {
                 Debug.WriteLine("Aktywne funkcje szablonu: " + funkcjeSzablonu);
 
-                Array funkcje = Regex.Split(funkcjeSzablonu, ";#");
-                foreach (string f in funkcje)
+                if (_HasActiveFunction(funkcjeSzablonu, _FN_POD))
                 {
-                    switch (f)
-                    {
-                        case "Weryfikuj POD":
-                            if (!_IsAllowedToSendPODReminder(item.Web, klientId))
-                            {
-                                Debug.WriteLine("_IsAllowedToSendPODReminder=false");
-                                return;
-                            }
-                            else
-                            {
-                                Debug.WriteLine("_IsAllowedToSendPODReminder=true");
-                            }
-                            break;
-                        case "Zastąp markery":
-                            _ReplaceKnownMarkers(bodyHTML, klientId);
-                            break;
-                        default:
-                            break;
-                    }
+                    //sprawdź czy nie wykluczyć
                 }
             }
 
-            CreateMailMessage_Wiadomosc(item, klientId, subject, bodyHTML);
+            if (allowSend) CreateMailMessage_Wiadomosc(item, klientId, subject, bodyHTML, funkcjeSzablonu);
+        }
+
+        private static bool _HasActiveFunction(string funkcjeSzablonu, object _FN_POD)
+        {
+            Array funkcje = Regex.Split(funkcjeSzablonu, ";#");
+            foreach (string f in funkcje)
+            {
+                if (f.Equals(_FN_POD)) return true;
+            }
+            return false;
         }
 
         private static void _ReplaceKnownMarkers(string bodyHTML, int klientId)
@@ -371,12 +386,45 @@ namespace BLL
                 Array klientListItems = BLL.tabKlienci.Get_WybraniKlienci(item);
                 Debug.WriteLine("klienci: " + klientListItems.Length);
 
+                //obsługa duplikatów maili
+                if (BLL.Tools.Get_Flag(item, "colUsunDuplikaty"))
+                {
+                    klientListItems = Remove_DuplicatedEmails(klientListItems);
+                }
+
                 foreach (SPListItem klientItem in klientListItems)
                 {
                     Debug.WriteLine("KlientId: " + klientItem.ID.ToString());
                     CreateMailMessage_WiadomoscZReki(item, klientItem.ID);
                 }
             }
+        }
+
+        private static Array Remove_DuplicatedEmails(Array klienci)
+        {
+            ArrayList results = new ArrayList();
+            foreach (SPListItem k in klienci)
+            {
+                bool isFound = false;
+
+                string email = BLL.Tools.Get_Email(k, "colEmail");
+                if (!string.IsNullOrEmpty(email))
+                {
+                    foreach (SPListItem item in results)
+                    {
+                        string email1 = BLL.Tools.Get_Email(item, "colEmail");
+                        if (!string.IsNullOrEmpty(email1) && email1.Equals(email))
+                        {
+                            isFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!isFound) results.Add(k);
+                }
+            }
+
+            return results.ToArray();
         }
 
         private static void CreateMailMessage_WiadomoscDoGrupyZSzablonu(SPListItem item)
@@ -393,6 +441,12 @@ namespace BLL
             {
                 Array klientListItems = BLL.tabKlienci.Get_WybraniKlienci(item);
                 Debug.WriteLine("klienci: " + klientListItems.Length);
+
+                // obsługa duplikatów maili
+                if (BLL.Tools.Get_Flag(item, "colUsunDuplikaty"))
+                {
+                    klientListItems = Remove_DuplicatedEmails(klientListItems);
+                }
 
                 foreach (SPListItem klientItem in klientListItems)
                 {

@@ -6,7 +6,7 @@ Name="[NAME]" ==> Name="MyWorkflow" -->
 
 <Elements xmlns="http://schemas.microsoft.com/sharepoint/">
   <Workflow
-     Name="Obsługa kolejki wiadomości"
+     Name="Obsługa wiadomości oczekujących"
      Description="My SharePoint Workflow"
      Id="708534f6-6f8d-4cfc-ab14-49cc67241987"
      CodeBesideClass="Workflows.swfObslugaWiadomosciOczekujacych.swfObslugaWiadomosciOczekujacych"

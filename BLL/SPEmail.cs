@@ -61,6 +61,10 @@ namespace SPEmail
             SendMailWithAttachment(item, message);
         }
 
+        
+        /// <summary>
+        /// główna procedura dystrybucji wiadomości
+        /// </summary>
         public static bool SendMailWithAttachment(SPListItem item, MailMessage message)
         {
             bool result = false;
@@ -91,6 +95,19 @@ namespace SPEmail
                     SPFile file = item.ParentList.ParentWeb.GetFile(url);
                     message.Attachments.Add(new Attachment(file.OpenBinaryStream(), file.Name));
                 }
+
+                // jeżeli brak integracji z domeną to nadpisz informacje o wysyłającym na 
+                string defaultSenderEmail = BLL.admSetup.GetValue(item.Web, "EMAIL_DEFAULT_SENDER");
+                if (BLL.Tools.IsValidEmail(defaultSenderEmail))
+                {
+                    message.From = new MailAddress(defaultSenderEmail, message.From.DisplayName);
+                }
+                else
+                {
+                    message.From = new MailAddress("noreply@stafix24.pl", message.From.DisplayName);
+                }
+               
+
 
                 client.Send(message);
 

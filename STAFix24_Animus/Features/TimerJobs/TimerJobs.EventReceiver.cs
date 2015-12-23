@@ -16,6 +16,7 @@ namespace Animus.Features.TimerJobs
             try
             {
                 Animus.TimerJobs.ObslugaWiadomosciTJ.CreateTimerJob(site);
+                Animus.TimerJobs.PrzygotowanieWiadomosciTJ.CreateTimerJob(site);
             }
             catch (Exception ex)
             {
@@ -27,6 +28,7 @@ namespace Animus.Features.TimerJobs
         {
             var site = properties.Feature.Parent as SPSite;
             Animus.TimerJobs.ObslugaWiadomosciTJ.DelteTimerJob(site);
+            Animus.TimerJobs.PrzygotowanieWiadomosciTJ.DelteTimerJob(site);
         }
     }
 }

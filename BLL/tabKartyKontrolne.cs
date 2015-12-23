@@ -440,20 +440,26 @@ namespace BLL
             item[col] = status;
         }
 
+        /// <summary>
+        /// Aktualizuje informacje o dostarczeniu dokumentów niezależnie od wybrania akcji
+        /// </summary>
+        /// <param name="zadanieItem"></param>
         public static void Update_POD(SPListItem zadanieItem)
         {
-            string KEY = Create_KEY(zadanieItem);
-            int formId = Get_KartaKontrolnaId(zadanieItem, KEY);
 
-            SPListItem form = Get_KartaKontrolnaById(zadanieItem.Web, formId);
-            bool pod = BLL.Tools.Get_Flag(zadanieItem, "colPotwierdzenieOdbioruDokumentow");
-            if (BLL.Tools.Get_Flag(form, "colPotwierdzenieOdbioruDokumentow") != pod)
-            {
-                Debug.WriteLine("wymagana aktualizacja flagi POD na karcie kontrolnej");
-                BLL.Tools.Set_Flag(form, "colPotwierdzenieOdbioruDokumentow", pod);
-                form.SystemUpdate();
-                Debug.WriteLine("flaga POD=" + pod.ToString());
-            }
+                string KEY = Create_KEY(zadanieItem);
+                int formId = Get_KartaKontrolnaId(zadanieItem, KEY);
+
+                SPListItem form = Get_KartaKontrolnaById(zadanieItem.Web, formId);
+                bool pod = BLL.Tools.Get_Flag(zadanieItem, "colPotwierdzenieOdbioruDokumentow");
+                if (BLL.Tools.Get_Flag(form, "colPotwierdzenieOdbioruDokumentow") != pod)
+                {
+                    Debug.WriteLine("wymagana aktualizacja flagi POD na karcie kontrolnej");
+                    BLL.Tools.Set_Flag(form, "colPotwierdzenieOdbioruDokumentow", pod);
+                    form.SystemUpdate();
+                    Debug.WriteLine("flaga POD=" + pod.ToString());
+                }
+ 
 
         }
 

@@ -7,3 +7,4 @@ C:\_GitHub\Animus\TimerJobs\bin\Release\STAFix24.Animus.TimerJobs.dll
 C:\_GitHub\Animus\TimerJobs\bin\Release\STAFix24.Animus.TimerJobs.pdb
 C:\_GitHub\Animus\TimerJobs\obj\Release\STAFix24.Animus.TimerJobs.dll
 C:\_GitHub\Animus\TimerJobs\obj\Release\STAFix24.Animus.TimerJobs.pdb
+C:\_GitHub\Animus\TimerJobs\obj\Release\TimerJobs.csprojResolveAssemblyReference.cache

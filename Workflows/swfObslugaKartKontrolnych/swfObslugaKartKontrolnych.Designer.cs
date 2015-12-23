@@ -146,6 +146,7 @@ namespace Workflows.swfObslugaKartKontrolnych
             this.onWorkflowActivated1.Name = "onWorkflowActivated1";
             activitybind5.Name = "swfObslugaKartKontrolnych";
             activitybind5.Path = "workflowProperties";
+            this.onWorkflowActivated1.Invoked += new System.EventHandler<System.Workflow.Activities.ExternalDataEventArgs>(this.onWorkflowActivated1_Invoked);
             this.onWorkflowActivated1.SetBinding(Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated.WorkflowIdProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind6)));
             this.onWorkflowActivated1.SetBinding(Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated.WorkflowPropertiesProperty, ((System.Workflow.ComponentModel.ActivityBind)(activitybind5)));
             // 
@@ -187,6 +188,7 @@ namespace Workflows.swfObslugaKartKontrolnych
         private CodeActivity cmdGet_KartyKontrolne;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 
