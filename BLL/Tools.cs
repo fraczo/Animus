@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Net.Sockets;
+using System.Collections;
 
 namespace BLL
 {
@@ -490,6 +491,21 @@ namespace BLL
             }
 
             return kopiaDla;
+        }
+
+        public static void CopyAttachemensUrl(SPListItem srcItem, ref ArrayList a)
+        {
+            for (int attachmentIndex = 0; attachmentIndex < srcItem.Attachments.Count; attachmentIndex++)
+            {
+                string url = srcItem.Attachments.UrlPrefix + srcItem.Attachments[attachmentIndex];
+                SPFile file = srcItem.ParentList.ParentWeb.GetFile(url);
+
+                if (file.Exists)
+                {
+                    a.Add(url);
+                }
+            }
+
         }
     }
 }

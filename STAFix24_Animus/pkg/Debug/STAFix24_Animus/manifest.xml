@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Solution xmlns="http://schemas.microsoft.com/sharepoint/" SolutionId="1e96213e-4c6f-48a5-afd2-106a06e268a8" SharePointProductVersion="14.0">
   <Assemblies>
     <Assembly Location="STAFix24.Animus.BLL.dll" DeploymentTarget="GlobalAssemblyCache" />

@@ -54,6 +54,7 @@ namespace Workflows.PrzygotujWiadomosc
             this.Create_PD = new System.Workflow.Activities.CodeActivity();
             this.Create_ZUSPD = new System.Workflow.Activities.CodeActivity();
             this.Create_ZUS = new System.Workflow.Activities.CodeActivity();
+            this.Reset_ItemAttCollector = new System.Workflow.Activities.CodeActivity();
             this.logErrorMessage = new Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity();
             this.FaultHandler = new System.Workflow.Activities.CodeActivity();
             this.STOP = new System.Workflow.ComponentModel.TerminateActivity();
@@ -220,6 +221,11 @@ namespace Workflows.PrzygotujWiadomosc
             this.Create_ZUS.Name = "Create_ZUS";
             this.Create_ZUS.ExecuteCode += new System.EventHandler(this.Create_ZUS_ExecuteCode);
             // 
+            // Reset_ItemAttCollector
+            // 
+            this.Reset_ItemAttCollector.Name = "Reset_ItemAttCollector";
+            this.Reset_ItemAttCollector.ExecuteCode += new System.EventHandler(this.Reset_ItemAttCollector_ExecuteCode);
+            // 
             // logErrorMessage
             // 
             this.logErrorMessage.Duration = System.TimeSpan.Parse("-10675199.02:48:05.4775808");
@@ -253,6 +259,7 @@ namespace Workflows.PrzygotujWiadomosc
             // 
             // GenerujWiadomość
             // 
+            this.GenerujWiadomość.Activities.Add(this.Reset_ItemAttCollector);
             this.GenerujWiadomość.Activities.Add(this.Create_ZUS);
             this.GenerujWiadomość.Activities.Add(this.Create_ZUSPD);
             this.GenerujWiadomość.Activities.Add(this.Create_PD);
@@ -447,6 +454,8 @@ namespace Workflows.PrzygotujWiadomosc
 
         #endregion
 
+        private CodeActivity Reset_ItemAttCollector;
+
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logEnd;
 
         private Microsoft.SharePoint.WorkflowActions.LogToHistoryListActivity logStatusyZadanPowiazanych;
@@ -548,6 +557,7 @@ namespace Workflows.PrzygotujWiadomosc
         private IfElseActivity Czy_są_zwolnione_do_wysyłki;
 
         private Microsoft.SharePoint.WorkflowActions.OnWorkflowActivated onWorkflowActivated1;
+
 
 
 

@@ -72,6 +72,8 @@ namespace Workflows.PrzygotujWiadomosc
         private int selectedOperatorId;
         private string _STATUS_ZADANIA_WYSYLKA = "Wysyłka";
 
+        private ArrayList attUrls;
+
 
         #region Helpers
 
@@ -244,6 +246,17 @@ namespace Workflows.PrzygotujWiadomosc
                 if (!string.IsNullOrEmpty(taskInfo)) sbInfo.Append(taskInfo);
 
                 ReplaceString(sbZUS, "colInformacjaDlaKlienta", sbInfo.ToString());
+
+                // dodaj załączniki z zadania do kolektora zbiorczego
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_ZUS");
+                if (zadanieId > 0)
+                {
+                    SPListItem zadanieItem = BLL.tabZadania.Get_ZadanieById(item.Web, zadanieId);
+                    if (zadanieItem != null && zadanieItem.Attachments.Count > 0)
+                    {
+                        BLL.Tools.CopyAttachemensUrl(zadanieItem, ref attUrls);
+                    }
+                }
             }
             else
             {
@@ -288,6 +301,17 @@ namespace Workflows.PrzygotujWiadomosc
                 if (!string.IsNullOrEmpty(taskInfo)) sbInfo.Append(taskInfo);
 
                 ReplaceString(sbZUSPD, "colInformacjaDlaKlienta", sbInfo.ToString());
+
+                // dodaj załączniki z zadania do kolektora zbiorczego
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_ZUS");
+                if (zadanieId > 0)
+                {
+                    SPListItem zadanieItem = BLL.tabZadania.Get_ZadanieById(item.Web, zadanieId);
+                    if (zadanieItem != null && zadanieItem.Attachments.Count > 0)
+                    {
+                        BLL.Tools.CopyAttachemensUrl(zadanieItem, ref attUrls);
+                    }
+                }
             }
             else
             {
@@ -380,6 +404,17 @@ namespace Workflows.PrzygotujWiadomosc
 
                 ReplaceString(sbPD, "colInformacjaDlaKlienta", sbInfo.ToString());
 
+                // dodaj załączniki z zadania do kolektora zbiorczego
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_PD");
+                if (zadanieId > 0)
+                {
+                    SPListItem zadanieItem = BLL.tabZadania.Get_ZadanieById(item.Web, zadanieId);
+                    if (zadanieItem != null && zadanieItem.Attachments.Count > 0)
+                    {
+                        BLL.Tools.CopyAttachemensUrl(zadanieItem, ref attUrls);
+                    }
+                }
+
             }
             else
             {
@@ -469,6 +504,17 @@ namespace Workflows.PrzygotujWiadomosc
                 if (!string.IsNullOrEmpty(taskInfo)) sbInfo.Append(taskInfo);
 
                 ReplaceString(sbVAT, "colInformacjaDlaKlienta", sbInfo.ToString());
+
+                // dodaj załączniki z zadania do kolektora zbiorczego
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_VAT");
+                if (zadanieId > 0)
+                {
+                    SPListItem zadanieItem = BLL.tabZadania.Get_ZadanieById(item.Web, zadanieId);
+                    if (zadanieItem != null && zadanieItem.Attachments.Count > 0)
+                    {
+                        BLL.Tools.CopyAttachemensUrl(zadanieItem, ref attUrls);
+                    }
+                }
             }
             else
             {
@@ -519,6 +565,17 @@ namespace Workflows.PrzygotujWiadomosc
                 if (!string.IsNullOrEmpty(taskInfo)) sbInfo.Append(taskInfo);
 
                 ReplaceString(sbRBR, "colInformacjaDlaKlienta", sbInfo.ToString());
+
+                // dodaj załączniki z zadania do kolektora zbiorczego
+                int zadanieId = BLL.Tools.Get_LookupId(item, "selZadanie_RBR");
+                if (zadanieId > 0)
+                {
+                    SPListItem zadanieItem = BLL.tabZadania.Get_ZadanieById(item.Web, zadanieId);
+                    if (zadanieItem != null && zadanieItem.Attachments.Count > 0)
+                    {
+                        BLL.Tools.CopyAttachemensUrl(zadanieItem, ref attUrls);
+                    }
+                }
             }
             else
             {
@@ -652,7 +709,9 @@ namespace Workflows.PrzygotujWiadomosc
 
 
             BLL.tabWiadomosci.Ensure_ColumnExist(item.Web, "_KartaKontrolnaId");
-            int messageId = BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, false, false, temat, string.Empty, trescHTML, new DateTime(), 0, klientId, item.ID, BLL.Models.Marker.Ignore);
+            //int messageId = BLL.tabWiadomosci.AddNew(item.Web, item, nadawca, odbiorca, kopiaDla, false, false, temat, string.Empty, trescHTML, new DateTime(), 0, klientId, item.ID, BLL.Models.Marker.Ignore);
+            int messageId = BLL.tabWiadomosci.AddNew(item.Web, attUrls, nadawca, odbiorca, kopiaDla, false, false, temat, string.Empty, trescHTML, new DateTime(), 0, klientId, item.ID);
+
 
             ArrayList komponenty = Get_Komponenty();
             BLL.tabWiadomosci.Update_Komponenty(item.Web, messageId, komponenty);
@@ -818,6 +877,11 @@ namespace Workflows.PrzygotujWiadomosc
                 else e.Result = true;
             }
             else e.Result = false;
+        }
+
+        private void Reset_ItemAttCollector_ExecuteCode(object sender, EventArgs e)
+        {
+            attUrls = new ArrayList();
         }
 
 

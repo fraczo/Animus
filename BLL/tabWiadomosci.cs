@@ -488,5 +488,64 @@ namespace BLL
                 .ToArray();
 
         }
+
+        public static int AddNew(SPWeb web, ArrayList attUrls, string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId, int kartaKontrolnaId)
+        {
+            SPListItem newItem = CreateMessageItem(web, ref nadawca, odbiorca, kopiaDla, KopiaDoNadawcy, KopiaDoBiura, temat, tresc, trescHTML, planowanaDataNadania, zadanieId, klientId, kartaKontrolnaId);
+
+            //obsługa wysyłki załączników jeżeli Item został przekazany w wywołaniu procedury
+            if (attUrls.Count > 0)
+            {
+                foreach (string url in attUrls)
+                {
+                    SPFile file = web.GetFile(url);
+
+                    if (file.Exists)
+                    {
+                        try
+                        {
+                            BLL.Tools.Copy_Attachement(newItem, file);
+                        }
+                        catch (Exception)
+                        { }
+                    }
+                }
+            }
+
+            newItem.SystemUpdate();
+
+            return newItem.ID;
+        }
+
+        public static SPListItem CreateMessageItem(SPWeb web, ref string nadawca, string odbiorca, string kopiaDla, bool KopiaDoNadawcy, bool KopiaDoBiura, string temat, string tresc, string trescHTML, DateTime planowanaDataNadania, int zadanieId, int klientId, int kartaKontrolnaId)
+        {
+            SPList list = web.Lists.TryGetList(targetList);
+            SPListItem newItem = list.AddItem();
+            newItem["Title"] = temat;
+            if (string.IsNullOrEmpty(nadawca)) nadawca = BLL.admSetup.GetValue(web, "EMAIL_BIURA");
+
+            newItem["colNadawca"] = nadawca;
+            newItem["colOdbiorca"] = odbiorca;
+
+            if (!string.IsNullOrEmpty(kopiaDla))
+            {
+                newItem["colKopiaDla"] = kopiaDla;
+            }
+
+            newItem["colTresc"] = tresc;
+            newItem["colTrescHTML"] = trescHTML;
+            if (!string.IsNullOrEmpty(planowanaDataNadania.ToString()) && planowanaDataNadania != new DateTime())
+            {
+                newItem["colPlanowanaDataNadania"] = planowanaDataNadania.ToString();
+            }
+            newItem["colKopiaDoNadawcy"] = KopiaDoNadawcy;
+            newItem["colKopiaDoBiura"] = KopiaDoBiura;
+            if (zadanieId > 0) newItem["_ZadanieId"] = zadanieId;
+
+            if (klientId > 0) newItem["selKlient_NazwaSkrocona"] = klientId;
+
+            if (kartaKontrolnaId > 0) newItem["_KartaKontrolnaId"] = kartaKontrolnaId;
+            return newItem;
+        }
     }
 }
