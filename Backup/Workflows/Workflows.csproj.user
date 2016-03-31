@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SharePointSiteUrl>http://spf2010/sites/animus/</SharePointSiteUrl>
+    <ProjectView>ShowAllFiles</ProjectView>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{BB1F664B-9266-4fd6-B973-E1E44974B511}">
+        <ProjectItemStore Id="{b11d2f4f-359d-4cde-aeff-ce8d0d67625e}">
+          <DisplayName>Obsługa kart kontrolnych</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+        </ProjectItemStore>
+        <ProjectItemStore Id="{b2fdea66-cd38-43b2-98c3-f78aabf4eb3b}">
+          <DisplayName>Generuj formatki rozliczeniowe dla klienta</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+          <ListURL>http://spf2010/sites/animus/Lists/admProcesy/AllItems.aspx</ListURL>
+          <TargetList>admProcesy</TargetList>
+          <TargetListGuid>{c4bab191-885d-4d15-a474-3ec0f6feca49}</TargetListGuid>
+          <StartOnCreate>false</StartOnCreate>
+          <StartOnChange>false</StartOnChange>
+        </ProjectItemStore>
+        <ProjectItemStore Id="{ed67c847-7cba-4151-94bb-a4c006d05bce}">
+          <DisplayName>Przygotuj wiadomość dla klienta</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+          <ListURL>http://spf2010/sites/animus/Lists/tabKartyKontrolne/Informacja%20o%20wysykach.aspx</ListURL>
+          <TargetList>Karty kontrolne</TargetList>
+          <TargetListGuid>{c829183a-3775-40f8-8da9-9abd757d60bd}</TargetListGuid>
+          <StartOnCreate>false</StartOnCreate>
+          <StartOnChange>false</StartOnChange>
+        </ProjectItemStore>
+        <ProjectItemStore Id="{319d9e60-832a-4002-b9cc-e7fe292da6f3}">
+          <DisplayName>Generator rekordów - Straty z lat ubiegłych</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+        </ProjectItemStore>
+        <ProjectItemStore Id="{7675178c-df89-42ec-9d61-ceaa48c352b6}">
+          <DisplayName>Obsługa wiadomości oczekujących</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+        </ProjectItemStore>
+        <ProjectItemStore Id="{b1387522-047c-49a0-a9b2-153ae875787f}">
+          <DisplayName>Obsługa wiadomości</DisplayName>
+          <HistoryList>Workflow History</HistoryList>
+          <HistoryListGuid>{14545afc-994d-4b9d-9af3-e34840669152}</HistoryListGuid>
+          <TaskList>Workflow Tasks</TaskList>
+          <TaskListGuid>{20282f23-9e1a-415c-bbf7-e00b3f3f0bcf}</TaskListGuid>
+          <AutoAssociate>true</AutoAssociate>
+          <ManualStart>true</ManualStart>
+          <ListURL>http://spf2010/sites/animus/Lists/tabWiadomosci/Kolejka%20wiadomoci.aspx</ListURL>
+          <TargetList>Wiadomości</TargetList>
+          <TargetListGuid>{a757bac9-6dc1-4ea3-aa50-8813fcd31495}</TargetListGuid>
+          <StartOnCreate>false</StartOnCreate>
+          <StartOnChange>false</StartOnChange>
+        </ProjectItemStore>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

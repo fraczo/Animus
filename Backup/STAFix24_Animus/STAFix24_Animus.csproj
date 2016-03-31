@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AA4C79FD-6B0C-4AB3-8DDB-C00C0AA8B74C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Animus</RootNamespace>
+    <AssemblyName>STAFix24.Animus</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{BB1F664B-9266-4fd6-B973-E1E44974B511};{14822709-B5A1-4724-98CA-57A101D1B079};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SandboxedSolution>False</SandboxedSolution>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.SharePoint" />
+    <Reference Include="Microsoft.SharePoint.Security" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Features\TimerJobs\TimerJobs.EventReceiver.cs">
+      <DependentUpon>TimerJobs.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Workflows\Workflows.EventReceiver.cs">
+      <DependentUpon>Workflows.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimerJobs\ObslugaWiadomosciTJ.cs" />
+    <Compile Include="TimerJobs\PrzygotowanieWiadomosciTJ.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CustomActions\AkcjeWitrynyMenu\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{38af4049-052e-4ec2-859a-bf8371d30740}</SharePointProjectItemId>
+    </None>
+    <None Include="CustomActions\ObslugaKolejkiWiadomosci\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{ffa7a45f-d211-4963-a26c-726cdc74b90e}</SharePointProjectItemId>
+    </None>
+    <None Include="CustomActions\GenerujFormatkiRozliczeniowe\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{03bbfeac-ebcd-4bf7-bc9d-8c9aeb6f24df}</SharePointProjectItemId>
+    </None>
+    <None Include="CustomActions\PrzygotujWiadomosciZKartKontrolnych\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{eda6c31c-a6f7-413e-a71e-08bcac5fd0e8}</SharePointProjectItemId>
+    </None>
+    <None Include="Features\EventReceivers\EventReceivers.feature">
+      <FeatureId>{238ee3f0-273f-4479-8f86-e8795048cec7}</FeatureId>
+    </None>
+    <None Include="Features\CustomActions\CustomActions.feature">
+      <FeatureId>{2e1ac316-908f-43c3-8f6f-334601c5c214}</FeatureId>
+    </None>
+    <None Include="Features\TimerJobs\TimerJobs.feature">
+      <FeatureId>{7ff5f04b-1a9f-43fe-a3af-ba4d9359abe7}</FeatureId>
+    </None>
+    <None Include="Features\Workflows\Workflows.feature">
+      <FeatureId>{4d389d2d-9dab-46c5-9d22-66072383dd1b}</FeatureId>
+    </None>
+    <None Include="Images\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{348bef8e-f411-4079-adeb-8646bc1f082e}</SharePointProjectItemId>
+    </None>
+    <None Include="key.snk" />
+    <None Include="Layouts\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{9cdaf123-6239-4db2-ad9c-e13458fa951d}</SharePointProjectItemId>
+    </None>
+    <None Include="Package\Package.package">
+      <PackageId>{1e96213e-4c6f-48a5-afd2-106a06e268a8}</PackageId>
+    </None>
+    <None Include="Package\Package.Template.xml">
+      <DependentUpon>Package.package</DependentUpon>
+    </None>
+    <None Include="pkg\SiteAssets\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{c9cb0a61-553b-4fe1-b25f-8cd2fc955a1a}</SharePointProjectItemId>
+    </None>
+    <Content Include="CustomActions\AkcjeWitrynyMenu\Elements.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="CustomActions\PrzygotujWiadomosciZKartKontrolnych\Elements.xml" />
+    <Content Include="Features\EventReceivers\EventReceivers.Template.xml">
+      <DependentUpon>EventReceivers.feature</DependentUpon>
+    </Content>
+    <Content Include="Features\CustomActions\CustomActions.Template.xml">
+      <DependentUpon>CustomActions.feature</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Features\TimerJobs\TimerJobs.Template.xml">
+      <DependentUpon>TimerJobs.feature</DependentUpon>
+    </Content>
+    <Content Include="Features\Workflows\Workflows.Template.xml">
+      <DependentUpon>Workflows.feature</DependentUpon>
+    </Content>
+    <Content Include="pkg\SiteAssets\Templates\DW-Podatek.pdf" />
+    <Content Include="pkg\SiteAssets\Templates\DW-Przelew-color.pdf" />
+    <Content Include="pkg\SiteAssets\Templates\DW-Przelew.pdf" />
+    <Content Include="pkg\SiteAssets\Templates\DW-ZUS.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Layouts\STAFix24_Animus\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CustomActions\ObslugaKolejkiWiadomosci\Elements.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="CustomActions\GenerujFormatkiRozliczeniowe\Elements.xml" />
+    <Content Include="Images\STAFix24_Animus\SETTINGS.GIF" />
+    <Content Include="Images\STAFix24_Animus\SETTINGS16.GIF" />
+    <Content Include="Images\STAFix24_Animus\SETTINGS32.GIF" />
+    <Content Include="pkg\SiteAssets\Elements.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{2C8ECD80-A047-4795-99B3-C0EFC6961A9E}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EventReceivers\EventReceivers.csproj">
+      <Project>{55BA1847-ED27-481D-B213-C6A4C8BCC3ED}</Project>
+      <Name>EventReceivers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Workflows\Workflows.csproj">
+      <Project>{F3947A43-D462-47CC-ABA9-F3AC493957C3}</Project>
+      <Name>Workflows</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\SharePointTools\Microsoft.VisualStudio.SharePoint.targets" />
+</Project>
