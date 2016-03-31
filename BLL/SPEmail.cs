@@ -109,7 +109,8 @@ namespace SPEmail
                
 
 
-                client.Send(message);
+                //client.Send(message);
+                BLL.Tools.DoWithRetry(() => client.Send(message));
 
                 result = true;
             }

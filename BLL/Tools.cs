@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections;
+using System.Threading;
+using System.Diagnostics;
 
 namespace BLL
 {
@@ -506,6 +508,40 @@ namespace BLL
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Wywołanie funkcji:
+        /// DoWithRetry(DoSomething)
+        /// example:
+        /// BLL.Tools.DoWithRetry(() => client.Send(message));
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="sleepPeriod"></param>
+        /// <param name="retryCount"></param>
+        public static void DoWithRetry(Action action)
+        {
+            TimeSpan sleepPeriod = TimeSpan.FromSeconds(5);
+            int retryCount = 3;
+
+            Debug.WriteLine("DoWithRetry activated");
+
+            while (true)
+            {
+                try
+                {
+                    action();
+                    break; // success!      
+                }
+                catch (Exception ex)
+                {
+                    if (--retryCount == 0)
+                        throw;
+                    else Thread.Sleep(sleepPeriod);
+
+                    var r = ElasticEmail.EmailGenerator.ReportError(ex, "No of retries left: " + retryCount.ToString());
+                }
+            }
         }
     }
 }
