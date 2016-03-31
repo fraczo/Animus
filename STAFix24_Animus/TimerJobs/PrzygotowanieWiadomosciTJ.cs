@@ -12,11 +12,12 @@ namespace Animus.TimerJobs
         public static void CreateTimerJob(SPSite site)
         {
             var timerJob = new PrzygotowanieWiadomosciTJ(site);
-            timerJob.Schedule = new SPMinuteSchedule
+            timerJob.Schedule = new SPDailySchedule
             {
-                BeginSecond = 0,
-                EndSecond = 0,
-                Interval = 1
+                BeginHour =17,
+                BeginMinute = 30,
+                EndHour = 17,
+                EndMinute = 45,
             };
 
             timerJob.Update();
