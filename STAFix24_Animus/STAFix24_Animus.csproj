@@ -111,6 +111,7 @@
     </Content>
     <Content Include="Features\CustomActions\CustomActions.Template.xml">
       <DependentUpon>CustomActions.feature</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Features\TimerJobs\TimerJobs.Template.xml">
       <DependentUpon>TimerJobs.feature</DependentUpon>
