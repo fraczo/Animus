@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Id="00a748f7-8f41-42a5-a057-2b6d414b9bbc" Scope="Web" Title="STAFix24_Animus Event Receivers">
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Event Receivers" Id="00a748f7-8f41-42a5-a057-2b6d414b9bbc" Scope="Web">
   <ElementManifests>
     <ElementManifest Location="tabKlienci\Elements.xml" />
     <ElementManifest Location="dicUrzedySkarbowe\Elements.xml" />

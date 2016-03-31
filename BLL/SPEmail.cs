@@ -74,20 +74,16 @@ namespace SPEmail
                 SmtpClient client = new SmtpClient();
                 client.Host = item.Web.Site.WebApplication.OutboundMailServiceInstance.Server.Address;
 
-                //nazwa witryny
-                if (string.IsNullOrEmpty(message.From.Address))
-                {
-                    message.From = new MailAddress(BLL.admSetup.GetValue(item.Web, "EMAIL_BIURA"),
-                      item.Web.Title != null ? item.Web.Title : BLL.admSetup.GetValue(item.Web, "EMAIL_NAZWA_FIRMY"));
-                }
-                else
-                {
-                    message.From = new MailAddress(message.From.Address, Format_SenderDisplayName(item.Web, message.From.Address));
-                }
 
-                //ustaw adres zwrotny
-                //message.ReplyTo = message.From;
-                message.ReplyTo = new MailAddress(message.From.Address, Format_SenderDisplayName(item.Web, message.From.Address));
+                //ustaw adres nadawcy na sztywno
+                string emailDefaultSender = BLL.admSetup.GetValue(item.Web, "EMAIL_DEFAULT_SENDER");
+                string emailNazwaFirmy = BLL.admSetup.GetValue(item.Web, "EMAIL_NAZWA_FIRMY");
+                message.From = new MailAddress(emailDefaultSender, emailNazwaFirmy);
+
+
+                //ustaw adres zwrotny na sztywno
+                string emailBiura = BLL.admSetup.GetValue(item.Web, "EMAIL_BIURA");
+                message.ReplyTo = new MailAddress(emailBiura, emailNazwaFirmy);
 
                 for (int attachmentIndex = 0; attachmentIndex < item.Attachments.Count; attachmentIndex++)
                 {
@@ -95,20 +91,7 @@ namespace SPEmail
                     SPFile file = item.ParentList.ParentWeb.GetFile(url);
                     message.Attachments.Add(new Attachment(file.OpenBinaryStream(), file.Name));
                 }
-
-                // jeżeli brak integracji z domeną to nadpisz informacje o wysyłającym na 
-                string defaultSenderEmail = BLL.admSetup.GetValue(item.Web, "EMAIL_DEFAULT_SENDER");
-                if (BLL.Tools.IsValidEmail(defaultSenderEmail))
-                {
-                    message.From = new MailAddress(defaultSenderEmail, message.From.DisplayName);
-                }
-                else
-                {
-                    message.From = new MailAddress("noreply@stafix24.pl", message.From.DisplayName);
-                }
                
-
-
                 //client.Send(message);
                 BLL.Tools.DoWithRetry(() => client.Send(message));
 
