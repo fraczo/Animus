@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="STAFix24_Animus Workflows" Description="Generuj formatki dla klienta, Przygotuj wiadomość dla klienta, Generuj rekordy-straty z lat ubiegłych, Obsluga kolejki wiadomości, Obsługa kart kontrolnych" Id="e30fd305-bdc8-4295-b11e-6f9afe0419e4" ReceiverAssembly="STAFix24.Animus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8ab5e47d51a735fd" ReceiverClass="Animus.Features.Workflows.WorkflowsEventReceiver" Scope="Site">
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Description="Generuj formatki dla klienta, Przygotuj wiadomość dla klienta, Generuj rekordy-straty z lat ubiegłych, Obsluga kolejki wiadomości, Obsługa kart kontrolnych" Id="e30fd305-bdc8-4295-b11e-6f9afe0419e4" ReceiverAssembly="STAFix24.Animus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8ab5e47d51a735fd" ReceiverClass="Animus.Features.Workflows.WorkflowsEventReceiver" Scope="Site" Title="STAFix24_Animus Workflows">
   <ElementManifests>
     <ElementManifest Location="GFR_K\Elements.xml" />
     <ElementManifest Location="wfPrzygotujWiadomoscDlaKlienta\Elements.xml" />

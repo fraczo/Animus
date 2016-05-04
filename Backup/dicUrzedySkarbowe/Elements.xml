@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <Receivers ListUrl="Lists/dicUrzedySkarbowe">
+
+  <Receiver>
+<Name>dicUrzedySkarboweItemAdded</Name>
+<Type>ItemAdded</Type>
+<Assembly>$SharePoint.Project.AssemblyFullName$</Assembly>
+<Class>EventReceivers.dicUrzedySkarbowe.dicUrzedySkarbowe</Class>
+<SequenceNumber>1000</SequenceNumber>
+</Receiver>
+<Receiver>
+<Name>dicUrzedySkarboweItemUpdated</Name>
+<Type>ItemUpdated</Type>
+<Assembly>$SharePoint.Project.AssemblyFullName$</Assembly>
+<Class>EventReceivers.dicUrzedySkarbowe.dicUrzedySkarbowe</Class>
+<SequenceNumber>1000</SequenceNumber>
+</Receiver>
+</Receivers>
+</Elements>

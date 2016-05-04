@@ -363,10 +363,10 @@ namespace Workflows.PrzygotujWiadomosc
                         ReplaceString(sbPD, "colFormaOpodatkowaniaPD", "PIT-5L");
                         break;
                     case "Karta podatkowa":
-                        ReplaceString(sbPD, "colFormaOpodatkowaniaPD", "PPE");
+                        ReplaceString(sbPD, "colFormaOpodatkowaniaPD", "KP");
                         break;
                     case "Ryczałt":
-                        ReplaceString(sbPD, "colFormaOpodatkowaniaPD", "CIT-8");
+                        ReplaceString(sbPD, "colFormaOpodatkowaniaPD", "PPE");
                         break;
                     default:
                         ReplaceString(sbPD, "colFormaOpodatkowaniaPD", string.Empty);
@@ -429,11 +429,11 @@ namespace Workflows.PrzygotujWiadomosc
                 //z karty kontrolnej
                 ReplaceCurrency(sbVAT, item, "colVAT_WartoscNadwyzkiZaPoprzedniMiesiac");
                 ReplaceCurrency(sbVAT, item, "colVAT_WartoscDoZaplaty");
-                //ReplaceCurrency(sbVAT, item, "colVAT_WartoscDoPrzeniesienia");
-                //ReplaceCurrency(sbVAT, item, "colVAT_WartoscDoZwrotu");
+                ReplaceCurrency(sbVAT, item, "colVAT_WartoscDoPrzeniesienia");//
+                ReplaceCurrency(sbVAT, item, "colVAT_WartoscDoZwrotu");//
                 ReplaceDate(sbVAT, item, "colVAT_TerminPlatnosciPodatku");
                 ReplaceString(sbVAT, item, "colFormaOpodatkowaniaVAT");
-                //ReplaceString(sbVAT, item, "colVAT_TerminZwrotuPodatku");
+                ReplaceString(sbVAT, item, "colVAT_TerminZwrotuPodatku");//
                 ReplaceString(sbVAT, item, "colVAT_Decyzja");
 
                 //z parametrów klienta
