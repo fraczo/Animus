@@ -466,8 +466,7 @@ namespace Workflows.PrzygotujWiadomosc
                     case "Do przeniesienia i do zwrotu":
                         sbVAT.Replace("[[Tytul]]", _VAT_TYTUL_PRZENIESIENIE_ZWROT);
 
-                        Append_VAT_DoPrzeniesienia();
-                        Append_VAT_DoZwrotu();
+                        Append_VAT_DoPrzeniesieniaDoZwrotu();
 
                         break;
                     default:
@@ -529,7 +528,7 @@ namespace Workflows.PrzygotujWiadomosc
             //do zwrotu
             szablon = BLL.dicSzablonyKomunikacji.Get_HTMLByKod(item.Web, "VAT.TR_TEMPLATE.Include");
             szablon = szablon.Replace("[[Opis]]", string.Format("Wartość do zwrtoru ({0})", BLL.Tools.Get_Text(item, "colVAT_TerminZwrotuPodatku")));
-            szablon = szablon.Replace("[[Wartosc]]", BLL.Tools.Format_Currency(BLL.Tools.Get_Value(item, "colVAT_WartoscDoPrzeniesienia")));
+            szablon = szablon.Replace("[[Wartosc]]", BLL.Tools.Format_Currency(BLL.Tools.Get_Value(item, "colVAT_WartoscDoZwrotu")));
 
             sbVAT.Replace("[[VAT.TR]]", szablon);
         }
@@ -543,6 +542,24 @@ namespace Workflows.PrzygotujWiadomosc
             szablon = szablon.Replace("[[Wartosc]]", BLL.Tools.Format_Currency(BLL.Tools.Get_Value(item, "colVAT_WartoscDoPrzeniesienia")));
 
             sbVAT.Replace("[[VAT.TR]]", szablon);
+        }
+
+        private void Append_VAT_DoPrzeniesieniaDoZwrotu()
+        {
+            string szablon;
+            szablon = BLL.dicSzablonyKomunikacji.Get_HTMLByKod(item.Web, "VAT.TR_TEMPLATE.Include");
+
+            //do przeniesienia
+            string tr1;
+            tr1 = szablon.Replace("[[Opis]]", "Wartość do przeniesienia");
+            tr1 = tr1.Replace("[[Wartosc]]", BLL.Tools.Format_Currency(BLL.Tools.Get_Value(item, "colVAT_WartoscDoPrzeniesienia")));
+
+            //do zwrotu
+            string tr2;
+            tr2 = szablon.Replace("[[Opis]]", string.Format("Wartość do zwrtoru ({0})", BLL.Tools.Get_Text(item, "colVAT_TerminZwrotuPodatku")));
+            tr2 = tr2.Replace("[[Wartosc]]", BLL.Tools.Format_Currency(BLL.Tools.Get_Value(item, "colVAT_WartoscDoZwrotu")));
+
+            sbVAT.Replace("[[VAT.TR]]", string.Concat(tr1, tr2));
         }
 
         private void Create_RBR_ExecuteCode(object sender, EventArgs e)
