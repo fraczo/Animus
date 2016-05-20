@@ -66,6 +66,12 @@ namespace Workflows.ObslugaWiadomosci
             {
                 mail.To.Add(new MailAddress(item["colOdbiorca"].ToString()));
 
+                //kopia na adres dodatkowy
+                if (item["colKopiaDla"] != null ? true : false)
+                {
+                    mail.CC.Add(new MailAddress(item["colKopiaDla"].ToString()));
+                }
+
                 //CC
                 bool isKopiaDoNadawcy = item["colKopiaDoNadawcy"] != null ? (bool)item["colKopiaDoNadawcy"] : false;
                 if (isKopiaDoNadawcy)
